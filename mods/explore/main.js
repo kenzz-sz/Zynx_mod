@@ -36,6 +36,7 @@
                     </div>
                 </div>`;
                 rc.appendChild(cat)
+                maint.appendChild(scene)
  }
  createui()
 })()
