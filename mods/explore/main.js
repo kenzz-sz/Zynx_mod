@@ -70,6 +70,8 @@
             `
             }
  }
- ref()
  createui()
+ setTimeout(() => {
+     ref()
+ }, 500)
 })()
