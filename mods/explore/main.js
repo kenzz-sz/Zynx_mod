@@ -51,7 +51,7 @@
                     <div class="cat-content">
                         <div class="cat-inner">
                             <p style="font-size:12px; opacity:0.6; margin-bottom:10px;">
-                                ${i.descripsion || 'No description'}
+                                ${i.description || 'No description'}
                             </p>
                             <div class="feature-item">
                                 <button class="btn-primary" onclick="pushmods('${(JSON.stringify(i)).replaceAll('"', '`')}');" style="margin-top: -10px">
