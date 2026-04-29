@@ -1,7 +1,7 @@
 (function(){
  window.listmodsexplore = []
  window.createui = async function(){
-     listmodsexplore = await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/mods.json");
+     listmodsexplore = JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/mods.json"))
     const maint = document.getElementById("app-container")
     maint.innerHTML += `<div id="scene-explore-mods" class="panel">
                 <div style="display: flex; align-items: center; margin-bottom: 20px;">
@@ -37,9 +37,7 @@
     const mvin = document.getElementById("AXdivexploremods");
     if (!mvin) return; 
         mvin.innerHTML = ""; 
-        
             let res = "";
-            
             listmodsexplore.forEach(i => {
                 if(!i.name){
                 const idthisvalue = "cat-" + i.directory + "-mymodsvalueid";
