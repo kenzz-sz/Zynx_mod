@@ -75,5 +75,5 @@ window.handlePushMod = function(index) {
  createui()
  setTimeout(() => {
      ref()
- }, 500)
+ }, 1000)
 })()
