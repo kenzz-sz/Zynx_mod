@@ -41,7 +41,7 @@
             listmodsexplore.forEach(i => {
                 const exists = installedmods.find(m => m.directory === i.directory);
                 const btnText = exists ? "Re-install" : "Download";
-                const idthisvalue = "cat-" + i.directory + "-modsvalueid";
+                const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
                 mvin.innerHTML += `
                 <div class="category" id="${idthisvalue}">
                     <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
