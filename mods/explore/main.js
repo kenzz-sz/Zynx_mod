@@ -1,5 +1,5 @@
 (function(){
- window.listmodsexplore = []
+ let listmodsexplore = []
  window.createui = async function(){
      listmodsexplore = JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/mods.json"))
     const maint = document.getElementById("app-container")
