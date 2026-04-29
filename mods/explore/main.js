@@ -35,40 +35,35 @@
                 
  }
  window.ref = async function(){
-    const sxx = document.getElementById("AXdivexploremods");
-        sxx.innerHTML = ""; 
+    const mvin = document.getElementById("AXdivexploremods");
+        mvin.innerHTML = ""; 
             let res = "";
             listmodsexplore.forEach(i => {
-                if(!i.name){
-                const idthisvalue = "cat-" + i.directory + "-mymodsvalueid";
-                sxx.innerHTML += `
+                const exists = installedmods.find(m => m.directory === i.directory);
+                const btnText = exists ? "Re-install" : "Download";
+                const idthisvalue = "cat-" + i.directory + "-modsvalueid";
+                mvin.innerHTML += `
                 <div class="category" id="${idthisvalue}">
                     <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
-                        <div><span class="cat-icon">${i.icon || "📦"}</span> ${i.display || i.name  || "-"}</div>
+                        <div><span class="cat-icon">${i.icon || "📦"}</span> ${i.display}</div>
                         <div class="cat-chevron">▶</div>
                     </div>
                     <div class="cat-content">
                         <div class="cat-inner">
                             <p style="font-size:12px; opacity:0.6; margin-bottom:10px;">
-                                ${i.descripsion || i.description || 'No description'}
+                                ${i.descripsion || 'No description'}
                             </p>
                             <div class="feature-item">
-                                <button class="btn-primary" onclick="deleteinstalledmods('${i.directory || null}')" style="margin-top: -10px">
-                                    Delete
+                                <button class="btn-primary" onclick="pushmods('${(JSON.stringify(i)).replaceAll('"', '`')}');" style="margin-top: -10px">
+                                    ${btnText}
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>`;
-            }});
-            if(listmodsexplore.length == 1){
-                sxx.innerHTML = `
-                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
-                    <p style="opacity: 0.6; font-size: 14px;">[ YOU DONT HAVE ANY MODS ]</p>
-                    <p style="opacity: 0.6; font-size: 12px; font-weight: normal;">Download mods in mods menu.</p>
-                </div>
-            `
-            }
+                console.log(i)
+                console.log(mvin.innerHTML)
+            });
  }
  createui()
  setTimeout(() => {
