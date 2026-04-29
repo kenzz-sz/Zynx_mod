@@ -2,8 +2,7 @@
  window.createui = function(){
     const maint = document.getElementById("app-container")
     const scene = document.createElement("div");
-    scene.innerHTML = `
-    <div id="scene-explore-mods" class="panel">
+    scene.innerHTML = `<div id="scene-explore-mods" class="panel">
                 <div style="display: flex; align-items: center; margin-bottom: 20px;">
                     <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
                         <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
@@ -16,9 +15,7 @@
                     <p style="opacity: 0.6; font-size: 12px; font-weight: normal;">Website Subtitle</p>
                 </div>
             </div>
-    `
-    
-    
+    `;
   const rc = document.getElementById("scene-dashboard")
   const cat = document.createElement("div");
   cat.innerHTML = `<div class="category" id="Axexport">
