@@ -3,5 +3,6 @@
   "description": "You can explore, download mods, and another.",
   "display": "Explore Mods",
   "code": "rmfs('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/main.js');",
-  "url": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/main.json"
+  "url": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/main.json",
+  "icon": "🌐"
 }
