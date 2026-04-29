@@ -2,6 +2,7 @@
  let listmodsexplore = []
  window.createui = async function(){
      listmodsexplore = JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/mods.json"))
+     console.log(JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/mods.json")))
     const maint = document.getElementById("app-container")
     maint.innerHTML += `<div id="scene-explore-mods" class="panel">
                 <div style="display: flex; align-items: center; margin-bottom: 20px;">
