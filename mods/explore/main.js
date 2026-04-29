@@ -1,8 +1,7 @@
 (function(){
  window.createui = function(){
     const maint = document.getElementById("app-container")
-    const scene = document.createElement("div");
-    scene.innerHTML = `<div id="scene-explore-mods" class="panel">
+    maint.innerHTML += `<div id="scene-explore-mods" class="panel">
                 <div style="display: flex; align-items: center; margin-bottom: 20px;">
                     <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
                         <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
@@ -33,7 +32,7 @@
                     </div>
                 </div>`;
                 rc.appendChild(cat)
-                maint.appendChild(scene)
+                
  }
  createui()
 })()
