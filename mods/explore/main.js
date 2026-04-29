@@ -34,37 +34,44 @@
                 rc.appendChild(cat)
                 
  }
- window.ref = async function(){
+ window.ref = async function() {
     const mvin = document.getElementById("AXdivexploremods");
-        mvin.innerHTML = ""; 
-            let res = "";
-            listmodsexplore.forEach(i => {
-                const exists = installedmods.find(m => m.directory === i.directory);
-                const btnText = exists ? "Re-install" : "Download";
-                const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
-                mvin.innerHTML += `
-                <div class="category" id="${idthisvalue}">
-                    <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
-                        <div><span class="cat-icon">${i.icon || "📦"}</span> ${i.display}</div>
-                        <div class="cat-chevron">▶</div>
+    mvin.innerHTML = "";
+    
+    listmodsexplore.forEach((i, index) => { // Added index here
+        const exists = installedmods.find(m => m.directory === i.directory);
+        const btnText = exists ? "Re-install" : "Download";
+        const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
+        
+        // We pass the 'index' to a helper function instead of the whole object
+        mvin.innerHTML += `
+        <div class="category" id="${idthisvalue}">
+            <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
+                <div><span class="cat-icon">${i.icon || "📦"}</span> ${i.display}</div>
+                <div class="cat-chevron">▶</div>
+            </div>
+            <div class="cat-content">
+                <div class="cat-inner">
+                    <p style="font-size:12px; opacity:0.6; margin-bottom:10px;">
+                        ${i.description || 'No description'}
+                    </p>
+                    <div class="feature-item">
+                        <button class="btn-primary" onclick="handlePushMod(${index})" style="margin-top: -10px">
+                            ${btnText}
+                        </button>
                     </div>
-                    <div class="cat-content">
-                        <div class="cat-inner">
-                            <p style="font-size:12px; opacity:0.6; margin-bottom:10px;">
-                                ${i.description || 'No description'}
-                            </p>
-                            <div class="feature-item">
-                                <button class="btn-primary" onclick="pushmods('${(JSON.stringify(i)).replaceAll('"', '`')}');" style="margin-top: -10px">
-                                    ${btnText}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-                console.log(i)
-                console.log(mvin.innerHTML)
-            });
- }
+                </div>
+            </div>
+        </div>`;
+    });
+};
+
+// Helper function to bridge the click to your existing pushmods logic
+window.handlePushMod = function(index) {
+    const modData = listmodsexplore[index];
+    pushmods(JSON.stringify(modData)); // Or just pushmods(modData) if your function accepts objects
+};
+
  createui()
  setTimeout(() => {
      ref()
