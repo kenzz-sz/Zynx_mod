@@ -4,7 +4,7 @@
  "display":"run javascript",
  "code":"rmfs('https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/javascriptrunner.js')",
 "url": "https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/list.json"},
-{
+ {
   "directory": "toplevelsecurity",
   "description": "This mod updates security for the app.",
   "display": "TopLevelSecurity",
