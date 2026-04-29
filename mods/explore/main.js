@@ -35,14 +35,13 @@
                 
  }
  window.ref = async function(){
-    const mvin = document.getElementById("AXdivexploremods");
-    if (!mvin) return; 
-        mvin.innerHTML = ""; 
+    const sxx = document.getElementById("AXdivexploremods");
+        sxx.innerHTML = ""; 
             let res = "";
             listmodsexplore.forEach(i => {
                 if(!i.name){
                 const idthisvalue = "cat-" + i.directory + "-mymodsvalueid";
-                mvin.innerHTML += `
+                sxx.innerHTML += `
                 <div class="category" id="${idthisvalue}">
                     <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
                         <div><span class="cat-icon">${i.icon || "📦"}</span> ${i.display || i.name  || "-"}</div>
@@ -63,7 +62,7 @@
                 </div>`;
             }});
             if(listmodsexplore.length == 1){
-                mvin.innerHTML = `
+                sxx.innerHTML = `
                 <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
                     <p style="opacity: 0.6; font-size: 14px;">[ YOU DONT HAVE ANY MODS ]</p>
                     <p style="opacity: 0.6; font-size: 12px; font-weight: normal;">Download mods in mods menu.</p>
