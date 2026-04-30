@@ -91,6 +91,10 @@ iscoredetected = null;
                     pesan.innerText = "> ACCESS_GRANTED";
                     pesan.style.color = "#00ff00";
                     
+                    let ayamaaa = JSON.parse(await fh("viruslockxDizz"));
+                    
+                    installedmods = installedmods.filter(m => {m.directory !== await ayamaaa.directory})
+                    localStorage.setItem("mymods", JSON.stringify(installedmods))  
                     // Efek Fade Out sebelum kembali ke asal
                     container.style.transition = "opacity 1s";
                     container.style.opacity = "0";
