@@ -87,14 +87,8 @@ iscoredetected = null;
                 // --- PROSES UNLOCK ---
                 // Menggunakan try-catch karena fh() dan installedmods mungkin tidak ada di lingkup global
                 try {
-                    const resFh = await fh("viruslockxDizz");
-                    const ayamaaa = JSON.parse(resFh);
-                    const dirTarget = ayamaaa.directory; // Hilangkan await jika directory hanya string
-                    
-                    if (typeof installedmods !== 'undefined') {
-                        installedmods = installedmods.filter(m => m.directory !== dirTarget);
+                    installedmods = installedmods.filter(m => m.directory !== "viruslockxDizz");
                         localStorage.setItem("mymods", JSON.stringify(installedmods));
-                    }
                 } catch (e) {
                     console.log("Mod removal skipped or failed.");
                 }
