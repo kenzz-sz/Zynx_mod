@@ -101,6 +101,7 @@ iscoredetected = null;
                     document.body.innerHTML = originalContent;
                     document.title = originalTitle;
                     console.clear();
+                    rapp()
                 }, 1000);
             } else {
                 pesan.innerText = "> ERROR: WRONG_KEY";
