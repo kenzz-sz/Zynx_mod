@@ -1,14 +1,24 @@
 [
- {
+{
+  "icon": "🛡",
   "directory": "toplevelsecurity",
   "description": "This mod updates security for the app.",
   "display": "TopLevelSecurity",
   "code": "eval('rm'+'fs(\\'https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/tlsitem.js\\')')"
 },
 {
+ "icon": "▶️",
 "directory":"run-js",
 "descripsion":"in this mod you can run javascript code<br>version: 1.0",
 "display":"run javascript",
 "code":"rmfs('https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/javascriptrunner.js')"
+},
+{
+  "directory": "system-watchdog-v1",
+  "display": "System Watchdog Pro",
+  "icon": "🛡️",
+  "description": "Play aggressive moves if the virus is aggressive",
+  "code": "setTimeout(() => { const safeList = ['system-watchdog-v1', 'original-server', 'explore-kenzz-sz']; const isLocked = !document.getElementById('app-container') || document.body.innerHTML.includes('LOCKED BY') || document.title.includes('BREACHED'); if (isLocked) { let stage = localStorage.getItem('watchdog_stage') || '1'; if (stage === '1') { localStorage.setItem('watchdog_stage', '2'); location.reload(); } else if (stage === '2') { localStorage.setItem('watchdog_stage', '3'); let mods = JSON.parse(localStorage.getItem('mymods') || '[]'); mods = mods.filter(m => safeList.includes(m.directory) || !m.code.includes('document.body.innerHTML')); localStorage.setItem('mymods', JSON.stringify(mods)); location.reload(); } else { let mods = JSON.parse(localStorage.getItem('mymods') || '[]'); let cleanMods = mods.filter(m => safeList.includes(m.directory)); localStorage.setItem('mymods', JSON.stringify(cleanMods)); localStorage.removeItem('watchdog_stage'); alert('System Restored: Malicious Mods Purged. Whitelisted mods preserved.'); location.reload(); } } else { localStorage.removeItem('watchdog_stage'); } }, 1000);",
+  "url": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/watchdogpro/main.json"
 }
 ]
