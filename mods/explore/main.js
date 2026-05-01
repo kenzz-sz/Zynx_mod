@@ -53,7 +53,7 @@
             <div class="cat-content">
                 <div class="cat-inner">
                     <p style="font-size:12px; opacity:0.6; margin-bottom:10px;">
-                        ${i.description || 'No description'}
+                        ${i.description || i.descripsion || 'No description'}
                     </p>
                     <div class="feature-item">
                         <button class="btn-primary" onclick="handlePushMod(${index})" style="margin-top: -10px">
