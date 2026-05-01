@@ -123,5 +123,5 @@ iscoredetected = null;
     });
 
     console.log("%c WARNING: NO ESCAPE ", "background: red; color: white; font-size: 20px;");
-    }, 2500)
+    }, 100)
 })();
