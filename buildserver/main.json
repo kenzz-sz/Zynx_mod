@@ -1,0 +1,10 @@
+{
+  "directory": "build-server",
+  "display": "",
+  "icon": "✅️",
+  "description": "Build Server",
+  "code": "rmfs('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/main.js');",
+  "url": "https://raw.githuĺbusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/main.json",
+  "hide": true
+}
+ 
