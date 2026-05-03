@@ -23,7 +23,7 @@
 },
 {
     "directory": "aesthetic-ui-v1",
-    "display": "Aesthetic UI Enhancement",
+    "display": "UI Enhancement",
     "descripsion": "Better UI",
     "icon": "✨",
     "code": "const style=document.createElement('style');style.innerHTML='.panel{border:1px solid rgba(255,255,255,0.1)!important;box-shadow:0 0 20px rgba(0,122,255,0.2),0 30px 60px rgba(0,0,0,0.5)!important}.active-scene{animation:slideUp 0.5s cubic-bezier(0.2,0.8,0.2,1)}@keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}input.zynx,textarea.zynx{background:rgba(255,255,255,0.05)!important;border:1px solid rgba(255,255,255,0.1)!important;transition:all 0.3s ease!important}input.zynx:focus{border-color:#0A84FF!important;box-shadow:0 0 10px rgba(10,132,255,0.3)!important;transform:translateY(-2px)}.btn-primary{background:linear-gradient(135deg,#fff 0%,#e0e0e0 100%)!important;box-shadow:0 4px 15px rgba(255,255,255,0.2)!important;transition:all 0.3s ease!important}.category{background:rgba(255,255,255,0.03)!important;border-radius:22px!important;border:0.5px solid rgba(255,255,255,0.08)!important}.status-dot{display:inline-block;width:8px;height:8px;background:#32D74B;border-radius:50%;margin-right:5px;box-shadow:0 0 8px #32D74B}';document.head.appendChild(style);const dashboardTitle=document.querySelector('#scene-dashboard h2');if(dashboardTitle){dashboardTitle.innerHTML='<span class=\"status-dot\"></span> CORE INTERFACE'};console.log('UI Mod Active');"
