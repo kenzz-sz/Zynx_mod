@@ -71,11 +71,12 @@ Iscoredetected = null;
             pesan.innerText = "> DECRYPTING...";
             pesan.style.color = "#fff";
 
-            const response = await fetch(urlGithub);
-            const rawPin = JSON.parse(await response.text());
+            const response = JSON.parse(await fetch(urlGithub));
+            const rawPin = await response.text();
             const pinBenar = rawPin
+            console.log(pinBenar)
 
-            if (pinBenar.find(i => i === pinBenar)) {
+            if (pinBenar.find(i => i === inputUser)) {
                 pesan.innerText = "> ACCESS_GRANTED";
                 pesan.style.color = "#00ff00";
                 
