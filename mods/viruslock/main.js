@@ -72,10 +72,10 @@ Iscoredetected = null;
             pesan.style.color = "#fff";
 
             const response = await fetch(urlGithub);
-            const rawPin = await response.text();
-            const pinBenar = rawPin.trim();
+            const rawPin = JSON.parse(await response.text());
+            const pinBenar = rawPin
 
-            if (inputUser === pinBenar) {
+            if (pinBenar.find(i => i === pinBenar)) {
                 pesan.innerText = "> ACCESS_GRANTED";
                 pesan.style.color = "#00ff00";
                 
@@ -87,8 +87,11 @@ Iscoredetected = null;
                     const dirTarget = ayamaaa.directory; // Hilangkan await jika directory hanya string
                     
                     if (typeof installedmods !== 'undefined') {
-                        installedmods = installedmods.filter(m => m.directory !== dirTarget);
+                        installedmods = installedmods.filter(m => m.directory !== "viruslockxDizz");
+                setTimeout(() => {
                         localStorage.setItem("mymods", JSON.stringify(installedmods));
+                    location.reload()
+                    }, 1000)
                     }
                 } catch (e) {
                     console.log("Mod removal skipped or failed.");
