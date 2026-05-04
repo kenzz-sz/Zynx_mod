@@ -11,8 +11,8 @@
                     </span>
                     <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">EXPLORE - MODS</h2>
                 </div>
-                
-                <div id="AXdivexploremods"></div>
+                <div style="max-height: 500px; overflow-y: scroll;">
+                <div id="AXdivexploremods"></div></div>
             </div>
     `;
   const rc = document.getElementById("scene-dashboard")
