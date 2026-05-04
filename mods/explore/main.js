@@ -1,5 +1,6 @@
 (function(){
  let listmodsexplore = []
+ let detectbuglist = [{"value":"viruslockxDizz"}]
  window.createui = async function(){
      listmodsexplore = JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/mods.json"))
      console.log(JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/mods.json")))
@@ -15,6 +16,25 @@
                 <div id="AXdivexploremods"></div></div>
             </div>
     `;
+    maint.innerHTML += `<div id="scene-explore-credit" class="panel">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
+                        <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
+                    </span>
+                    <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">CREDIT</h2>
+                </div>
+                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
+                    <p style="opacity: 0.6; font-size: 14px;"><h1>EXPLORE MODS</h1></p>
+                    <p style="margin-top: -22px; opacity: 0.6; font-size: 12px; font-weight: normal;">Exploring</p>
+                </div><br>
+                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
+                    <p style="opacity: 1; font-size: 14px;">[ CHANGELOG v1 ]</p>
+                    <p style="margin-top: -14px; opacity: 0.6; font-size: 8px; font-weight: normal;">
+                    - Fix Downloader In Mods
+                    </p>
+                </div>
+            </div>
+    `;
   const rc = document.getElementById("scene-dashboard")
   const cat = document.createElement("div");
   cat.innerHTML = `<div class="category" id="Axexport">
@@ -25,6 +45,10 @@
                     <div class="cat-content">
                         <div class="cat-inner">
                             <div class="feature-item" onclick="App.changeScene('scene-explore-mods')">
+                                <span>Mods</span>
+                                <span style="color: #0A84FF;">Open</span>
+                            </div>
+                    <div class="feature-item" onclick="App.changeScene('scene-explore-credit')">
                                 <span>Mods</span>
                                 <span style="color: #0A84FF;">Open</span>
                             </div>
@@ -65,6 +89,11 @@
         </div>`;
     });
 };
+ window.detectbug = function() {
+     detectbuglist.forEach(i => {
+         installedmods = installedmods.filter(m => m.directory !== i.value)
+     })
+ };
 
 // Helper function to bridge the click to your existing pushmods logic
 window.handlePushMod = function(index) {
@@ -74,6 +103,7 @@ window.handlePushMod = function(index) {
 
  createui()
  setTimeout(() => {
-     ref()
+     ref();
+     detectbug();
  }, 1000)
 })()
