@@ -15,7 +15,7 @@ installedmods = installedmods.filter(m => m.directory !== ig.directory);
 eval((installedmods.find(i => i.directory === ig.directory)).code)
 })}
 addmods()
-setTimeout(() => {
+window.a = function(){
   if(!configserver){
   document.documentElement.innerHTML = `
     <head>
@@ -29,5 +29,8 @@ setTimeout(() => {
   else{
     console.log("version", configserver.version+".Beta")
   }
-}, 900)
+}
+setTimeout(() => {
+  a()
+}, 500)
 })();
