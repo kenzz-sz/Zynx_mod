@@ -22,7 +22,7 @@ setTimeout(() => {
         <title>Repair</title>
     </head>
     <body>
-        The main core server is currently being upgraded to Zynx 1.4. Please be patient. The server will reopen on May 4, 2026.
+        The main core server is currently being upgraded to Zynx 1.4. Please be patient. The server will reopen on May 6, 2026.
     </body>
     `;
 }
