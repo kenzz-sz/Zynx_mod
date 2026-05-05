@@ -17,7 +17,7 @@ eval((installedmods.find(i => i.directory === ig.directory)).code)
 addmods()
 window.a = function(){
   if(!configserver){
-  document.documentElement.innerHTML = `
+   document.documentElement.innerHTML = `
     <head>
         <title>Repair</title>
     </head>
