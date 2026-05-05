@@ -30,7 +30,7 @@
                 <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
                     <p style="opacity: 1; font-size: 14px;">[ CHANGELOG v1 ]</p>
                     <p style="margin-top: -14px; opacity: 0.6; font-size: 8px; font-weight: normal;">
-                    - Fix Downloader In Mods
+                    - Fix Downloader In Mods<br>- Fixed ui exceeding limit bug for zynx 1.3+ versions 
                     </p>
                 </div>
             </div>
