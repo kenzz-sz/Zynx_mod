@@ -15,7 +15,7 @@ installedmods = installedmods.filter(m => m.directory !== ig.directory);
 eval((installedmods.find(i => i.directory === ig.directory)).code)
 })}
 addmods()
-window.a = function(){
+window.agfgfgfgdjkd = function(){
   
    document.documentElement.innerHTML = `
     <head>
@@ -31,6 +31,6 @@ window.a = function(){
 }
 setTimeout(() => {
   if(!configserver){
-  a()}
-}, 500)
+  agfgfgfgdjkd()}
+}, 800)
 })();
