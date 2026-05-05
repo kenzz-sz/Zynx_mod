@@ -23,7 +23,7 @@ const whitelistversion = [
   "1.4"
 ]
 
-function agfgfgfgfunction(){
+  function agfgfgfgfunction(){
    document.documentElement.innerHTML = `
     <head>
         <title>Repair</title>
@@ -33,7 +33,6 @@ function agfgfgfgfunction(){
     </body>
     `;
 }
-setTimeout(() => {
-  if(!configserver){
-   agfgfgfgdjkd()}
-}, 800)
+  if(configserver === undefined){
+   agfgfgfgdjkd()
+  }
