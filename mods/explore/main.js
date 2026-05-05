@@ -35,6 +35,7 @@
                 </div>
             </div>
     `;
+    
   const rc = document.getElementById("scene-dashboard")
   const cat = document.createElement("div");
   cat.innerHTML = `<div class="category" id="Axexport">
@@ -48,8 +49,12 @@
                                 <span>Mods</span>
                                 <span style="color: #0A84FF;">Open</span>
                             </div>
+                            <div class="feature-item" onclick="App.changeScene('scene-explore-browser')">
+                                <span>Browser</span>
+                                <span style="color: #0A84FF;">Open</span>
+                            </div>
                     <div class="feature-item" onclick="App.changeScene('scene-explore-credit')">
-                                <span>Mods</span>
+                                <span>Credit</span>
                                 <span style="color: #0A84FF;">Open</span>
                             </div>
                         </div>
