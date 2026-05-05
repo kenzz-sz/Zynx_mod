@@ -35,4 +35,6 @@ const whitelistversion = [
 }
   if(configserver === undefined){
    agfgfgfgdjkd()
+   alert("function running...")
   }
+  alert('build-server running...')
