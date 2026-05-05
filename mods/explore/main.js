@@ -24,7 +24,7 @@
                     <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">CREDIT</h2>
                 </div>
                 <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
-                    <p style="opacity: 0.6; font-size: 14px;"><h1>EXPLORE MODS</h1></p>
+                    <p style="opacity: 0.6; font-size: 14px;"><h1>EXPLORE</h1></p>
                     <p style="margin-top: -22px; opacity: 0.6; font-size: 12px; font-weight: normal;">Exploring</p>
                 </div><br>
                 <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
