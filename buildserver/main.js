@@ -33,7 +33,7 @@ const whitelistversion = [
     </body>
     `;
 }
-  if(configserver === undefined){
+  if(!configserver){
    agfgfgfgdjkd()
    alert("function running...")
   }
