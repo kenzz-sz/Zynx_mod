@@ -33,6 +33,6 @@ function agfgfgfgfunction(){
     `;
 }
 if(!configserver){
-  if(!whitelistversion.find(i => i === configserver)){
+  
    agfgfgfgdjkd()
-  }}
+  }
