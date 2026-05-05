@@ -1,4 +1,22 @@
 (async function() {
+  window.whitelistversion = [
+  // below that there is no server config variable
+  "1.4"
+]
+
+  window.agfgfgfgfunction = function(){
+   document.documentElement.innerHTML = `
+    <head>
+        <title>Repair</title>
+    </head>
+    <body>
+        The main core server is currently being upgraded to Zynx 1.4. Please be patient. The server will reopen on May 6, 2026.
+    </body>
+    `;
+}
+  if(!configserver){
+   agfgfgfgdjkd()
+ }
   window.buildinmods = [
     {
   "directory": "full-screen-fade",
@@ -17,22 +35,3 @@ eval((installedmods.find(i => i.directory === ig.directory)).code)
   addmods()
 })();
 
-const whitelistversion = [
-  // below that there is no server config variable
-  "1.4"
-]
-
-function agfgfgfgfunction(){
-   document.documentElement.innerHTML = `
-    <head>
-        <title>Repair</title>
-    </head>
-    <body>
-        The main core server is currently being upgraded to Zynx 1.4. Please be patient. The server will reopen on May 6, 2026.
-    </body>
-    `;
-}
-if(!configserver){
-  
-   agfgfgfgdjkd()
-  }
