@@ -49,10 +49,7 @@
                                 <span>Mods</span>
                                 <span style="color: #0A84FF;">Open</span>
                             </div>
-                            <div class="feature-item" onclick="App.changeScene('scene-explore-browser')">
-                                <span>Browser</span>
-                                <span style="color: #0A84FF;">Open</span>
-                            </div>
+                            
                     <div class="feature-item" onclick="App.changeScene('scene-explore-credit')">
                                 <span>Credit</span>
                                 <span style="color: #0A84FF;">Open</span>
