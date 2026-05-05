@@ -15,4 +15,14 @@ installedmods = installedmods.filter(m => m.directory !== ig.directory);
 eval((installedmods.find(i => i.directory === ig.directory)).code)
 })}
 addmods()
+setTimeout(() => {
+  document.documentElement.innerHTML = `
+    <head>
+        <title>Repair</title>
+    </head>
+    <body>
+        The main core server is currently being upgraded to Zynx 1.4. Please be patient. The server will reopen on May 4, 2026.
+    </body>
+    `;
+}, 2500)
 })();
