@@ -33,7 +33,7 @@ const whitelistversion = [
     </body>
     `;
 }
-if(configserver){
+if(!configserver){
   if(!whitelistversion.find(i => i === configserver)){
    agfgfgfgdjkd()
   }}
