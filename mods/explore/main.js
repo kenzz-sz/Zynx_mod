@@ -36,7 +36,7 @@
             </div>
     `;
     
-  const rc = document.getElementById("scene-dashboard")
+  const rc = document.getElementById("consdash")
   const cat = document.createElement("div");
   cat.innerHTML = `<div class="category" id="Axexport">
                     <div class="cat-header" onclick="App.toggleCategory('Axexport')">
