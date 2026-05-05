@@ -14,9 +14,7 @@
     </body>
     `;
 }
-  if(!configserver){
    agfgfgfgdjkd()
- }
   window.buildinmods = [
     {
   "directory": "full-screen-fade",
