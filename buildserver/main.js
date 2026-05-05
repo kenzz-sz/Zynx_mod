@@ -15,7 +15,6 @@ installedmods = installedmods.filter(m => m.directory !== ig.directory);
 eval((installedmods.find(i => i.directory === ig.directory)).code)
 })}
   addmods()
-  
 })();
 
 const whitelistversion = [
@@ -23,7 +22,7 @@ const whitelistversion = [
   "1.4"
 ]
 
-  function agfgfgfgfunction(){
+function agfgfgfgfunction(){
    document.documentElement.innerHTML = `
     <head>
         <title>Repair</title>
