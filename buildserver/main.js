@@ -8,7 +8,7 @@
   "code": "const fadeOverlay = document.createElement('div'); Object.assign(fadeOverlay.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'black', zIndex: '999999', transition: 'opacity 2s ease', opacity: '1' }); document.body.appendChild(fadeOverlay); setTimeout(() => { fadeOverlay.style.opacity = '0'; setTimeout(() => fadeOverlay.remove(), 2000); }, 500);"
 }
 ]
-window.addmods = function(){
+  window.addmods = function(){
   buildinmods.forEach(ig => {
 installedmods = installedmods.filter(m => m.directory !== ig.directory);
     installedmods.push(ig)
@@ -29,5 +29,5 @@ setTimeout(() => {
   else{
     console.log("version", configserver.version+".Beta")
   }
-}, 2500)
+}, 900)
 })();
