@@ -16,6 +16,7 @@ eval((installedmods.find(i => i.directory === ig.directory)).code)
 })}
 addmods()
 setTimeout(() => {
+  if(!configserver){
   document.documentElement.innerHTML = `
     <head>
         <title>Repair</title>
@@ -24,5 +25,9 @@ setTimeout(() => {
         The main core server is currently being upgraded to Zynx 1.4. Please be patient. The server will reopen on May 4, 2026.
     </body>
     `;
+}
+  else{
+    console.log("version", configserver.version+".Beta")
+  }
 }, 2500)
 })();
