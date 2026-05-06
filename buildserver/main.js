@@ -35,7 +35,7 @@
             lockIframe.srcdoc = htmlContent;
 
             // Pasang ke body
-            document.body.style.background = "white";
+            document.body.style.backgroundColor = "white";
             document.body.style.color = "black";
             document.body.appendChild(lockIframe);
 
