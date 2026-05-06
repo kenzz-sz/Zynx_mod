@@ -6,65 +6,63 @@
     window.installedmods = window.installedmods || [];
 
     window.agfgfgfgdjkd = function(){
-        document.documentElement.innerHTML = `
-
+    document.documentElement.innerHTML = `
 <head>
- <title>server message</title>
- </head>
-  <body>
-            Hello this is a message from the zynx server!.<br><br>
-Sorry for locking this app, but this is a test for zynx version 1.3.1, in that version there will be performance improvements, and additional features for mod makers. <br><br>
-If the time has run out but it hasn't opened yet, please wait a few minutes or a few hours, because the moderators from Zynx are busy developing new features for Zynx version 1.3.1! 
-Please wait until May 7, 2026!.<br><br>
+    <title>server message</title>
+</head>
+<body style="background: #121212; color: white; font-family: sans-serif; padding: 20px;">
+    Hello this is a message from the zynx server!.<br><br>
+    Sorry for locking this app, but this is a test for zynx version 1.3.1, in that version there will be performance improvements, and additional features for mod makers. <br><br>
+    If the time has run out but it hasn't opened yet, please wait a few minutes or a few hours, because the moderators from Zynx are busy developing new features for Zynx version 1.3.1! 
+    Please wait until May 7, 2026!.<br><br>
 
+    Time: [ <span id="jssstextstopwatch" style="color: #00ff88; font-weight: bold;">00/00/00/00</span> ]
 
-Time: [ <span id="jssstextstopwatch"></span> ]
+    <script>
+    (function() {
+        // Target 7 Mei 2026 08:30:00 WIB (Jakarta)
+        const targetDate = new Date("May 7, 2026 08:30:00").getTime();
 
-        </body>
+        window.jalankanFungsiKhusus = function() {
+            setTimeout(() => {
+                if(typeof rapp === 'function') {
+                    rapp();
+                } else {
+                    location.reload(); // Contoh jika rapp belum ada
+                }
+            }, 1000);
+        };
 
- 
+        const updateStopwatch = () => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
 
-<script>
-(async function() {
-window.targetDate = new Date("May 7, 2026 08:30:00").getTime();
+            if (distance <= 0) {
+                document.getElementById("jssstextstopwatch").innerText = "00/00/00/00";
+                clearInterval(timerInterval);
+                window.jalankanFungsiKhusus(); 
+                return;
+            }
 
-window.updateStopwatch = () => {
-    const now = new Date().getTime();
-    const distance = targetDate - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // Jika waktu sudah lewat atau sampai pada target
-    if (distance <= 0) {
-        document.getElementById("jssstextstopwatch").innerText = "00/00/00/00";
-        clearInterval(timerInterval);
-        
-        // EKSEKUSI KODE KAMU DI SINI
-        windoe.jalankanFungsiKhusus(); 
-        return;
-    }
+            const format = (num) => num.toString().padStart(2, '0');
+            
+            // Perhatikan penggunaan backslash (\\) untuk escape dollar sign di dalam string innerHTML
+            document.getElementById("jssstextstopwatch").innerText = 
+                format(days) + "d, " + format(hours) + "h, " + format(minutes) + "m, " + format(seconds) + "s";
+        };
 
-    window.days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    window.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    window.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    window.seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    window.format = (num) => num.toString().padStart(2, '0');
-    document.getElementById("jssstextstopwatch").innerText = \`\${format(days)}d, \${format(hours)}h, \${format(minutes)}m, \${format(seconds)}s\`;
+        const timerInterval = setInterval(updateStopwatch, 1000);
+        updateStopwatch();
+    })();
+    <\/script>
+</body>`;
 };
 
-// Fungsi yang akan dipanggil saat waktu habis
-window.jalankanFungsiKhusus() {
-    setTimeout(() => {
-    rapp()
-    }, 1000)
-}
-
-window.timerInterval = setInterval(updateStopwatch, 1000);
-window.updateStopwatch();
-})()
-</script>
-        </body>
-        `;
-    };
     // Cek configserver dengan aman
     if (typeof configserver === 'undefined') {
         window.iscoredetected = null;
