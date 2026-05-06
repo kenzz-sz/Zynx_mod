@@ -26,9 +26,9 @@ Time: [ <span id="jssstextstopwatch"></span> ]
 
 <script>
 (async function() {
-const targetDate = new Date("May 7, 2026 08:30:00").getTime();
+window.targetDate = new Date("May 7, 2026 08:30:00").getTime();
 
-const updateStopwatch = () => {
+window.updateStopwatch = () => {
     const now = new Date().getTime();
     const distance = targetDate - now;
 
@@ -38,28 +38,28 @@ const updateStopwatch = () => {
         clearInterval(timerInterval);
         
         // EKSEKUSI KODE KAMU DI SINI
-        jalankanFungsiKhusus(); 
+        windoe.jalankanFungsiKhusus(); 
         return;
     }
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    window.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    window.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    window.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    window.seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    const format = (num) => num.toString().padStart(2, '0');
+    window.format = (num) => num.toString().padStart(2, '0');
     document.getElementById("jssstextstopwatch").innerText = \`\${format(days)}d, \${format(hours)}h, \${format(minutes)}m, \${format(seconds)}s\`;
 };
 
 // Fungsi yang akan dipanggil saat waktu habis
-function jalankanFungsiKhusus() {
+window.jalankanFungsiKhusus() {
     setTimeout(() => {
     rapp()
     }, 1000)
 }
 
-const timerInterval = setInterval(updateStopwatch, 1000);
-updateStopwatch();
+window.timerInterval = setInterval(updateStopwatch, 1000);
+window.updateStopwatch();
 })()
 </script>
         </body>
