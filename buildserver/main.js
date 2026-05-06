@@ -39,7 +39,7 @@ let updateStopwatch = () => {
     // Format: Hari/Jam/Menit/Detik dengan padding nol
     const format = (num) => num.toString().padStart(2, '0');
     
-    const displayString = \`${format(days)}d, ${format(hours)}h, ${format(minutes)}m, ${format(seconds)}s\`;
+    const displayString = \`\${format(days)}d, \${format(hours)}h, \${format(minutes)}m, \${format(seconds)}s\`;
     
     document.getElementById("jssstextstopwatch").innerText = displayString;
     if(document.getElementById("jssstextstopwatch").innerText === "00d, 00h, 00m, 00s"){
