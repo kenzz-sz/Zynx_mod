@@ -36,6 +36,7 @@
 
             // Pasang ke body
             document.body.style.backgroundColor = "white";
+           document.body.style.backgroundImage = "url()"
             document.body.style.color = "black";
             document.body.appendChild(lockIframe);
 
