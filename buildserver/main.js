@@ -16,7 +16,8 @@
     If the time has run out but it hasn't opened yet, please wait a few minutes or a few hours, because the moderators from Zynx are busy developing new features for Zynx version 1.3.1! 
     Please wait until May 7, 2026!.<br><br>
 
-    Time: [ <span id="jssstextstopwatch" style="color: #00ff88; font-weight: bold;">00/00/00/00</span> ]
+    Time: [ <span id="jssstextstopwatch" style="color: #00ff88; font-weight: bold;">00/00/00/00</span> ]<br><br>
+    <button onclick="location.reload()">Restart</button>
 
     <script>
     (function() {
