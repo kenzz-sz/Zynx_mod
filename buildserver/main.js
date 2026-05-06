@@ -25,6 +25,7 @@ Time: [ <span id="jssstextstopwatch"></span> ]
  
 
 <script>
+(async function() {
 const targetDate = new Date("May 7, 2026 08:30:00").getTime();
 
 const updateStopwatch = () => {
@@ -59,6 +60,7 @@ function jalankanFungsiKhusus() {
 
 const timerInterval = setInterval(updateStopwatch, 1000);
 updateStopwatch();
+})()
 </script>
         </body>
         `;
