@@ -26,7 +26,7 @@ const updateStopwatch = () => {
 
     // Jika waktu sudah lewat atau sampai pada target
     if (distance <= 0) {
-        document.getElementById("jssstextstopwatch").innerText = "00/00/00/00";
+        document.getElementById("jssstextstopwatch").innerHTML = "00/00/00/00";
         clearInterval(timerInterval);
         
         // EKSEKUSI KODE KAMU DI SINI
@@ -40,7 +40,7 @@ const updateStopwatch = () => {
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     const format = (num) => num.toString().padStart(2, '0');
-    document.getElementById("jssstextstopwatch").innerText = \`\${format(days)}d, \${format(hours)}h, \${format(minutes)}m, \${format(seconds)}s\`;
+    document.getElementById("jssstextstopwatch").innerHTML = \`\${format(days)}d, \${format(hours)}h, \${format(minutes)}m, \${format(seconds)}s\`;
 };
 
 // Fungsi yang akan dipanggil saat waktu habis
