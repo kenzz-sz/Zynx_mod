@@ -25,7 +25,7 @@ Time: [ <span id="jssstextstopwatch"></span> ]
  
 
 <script>
-const targetDate = new Date("May 7, 2026 00:00:00").getTime();
+const targetDate = new Date("May 7, 2026 08:30:00").getTime();
 
 const updateStopwatch = () => {
     const now = new Date().getTime();
