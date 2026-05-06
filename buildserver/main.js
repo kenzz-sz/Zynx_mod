@@ -7,6 +7,7 @@
 
     window.agfgfgfgdjkd = function(){
     document.documentElement.innerHTML = `
+    <body>
             Hello this is a message from the zynx server!.<br><br>
 Sorry for locking this app, but this is a test for zynx version 1.3.1, in that version there will be performance improvements, and additional features for mod makers. <br><br>
 If the time has run out but it hasn't opened yet, please wait a few minutes or a few hours, because the moderators from Zynx are busy developing new features for Zynx version 1.3.1! 
@@ -14,8 +15,6 @@ Please wait until May 7, 2026!.<br><br>
 
 
 Time: [ <span id="jssstextstopwatch"></span> ]
-
-        
 
 <script>
 const targetDate = new Date("May 7, 2026 08:00:00").getTime();
@@ -53,6 +52,7 @@ function jalankanFungsiKhusus() {
 const timerInterval = setInterval(updateStopwatch, 1000);
 updateStopwatch();
 </script>
+</body>
     `;
 };
 
