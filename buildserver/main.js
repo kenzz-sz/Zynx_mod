@@ -4,7 +4,7 @@ if(configserver) isLocked = false;
     // URL file lock.html di GitHub kamu
     const lockUrl = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/lock.html";
 
-    if (isLocked === true) {
+    if (typeof configserver == undefined) {
         try {
             // Ambil kode HTML dari GitHub
             const response = await fetch(lockUrl);
