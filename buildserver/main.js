@@ -4,7 +4,7 @@
   "1.4"
 ]
 
-  window.agfgfgfgfunction = function(){
+  window.agfgfgfgdjkd = function(){
    document.documentElement.innerHTML = `
     <head>
         <title>Repair</title>
