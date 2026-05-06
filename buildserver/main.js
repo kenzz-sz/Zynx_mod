@@ -1,15 +1,10 @@
-/* =========================================
-   ZYNX IFRAME LOCK SYSTEM
-   ========================================= */
+let isLocked = true;
+if(configserver) isLocked = false;
 (async function() {
     // URL file lock.html di GitHub kamu
     const lockUrl = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/lock.html";
-    
-    // (Opsional) Cek dulu apakah perlu dilock atau tidak. 
-    // Misalnya kamu cek configserver atau kondisi lainnya di sini.
-    const isLocked = true; // Ganti dengan logika kamu jika perlu
 
-    if (isLocked) {
+    if (isLocked === true) {
         try {
             // Ambil kode HTML dari GitHub
             const response = await fetch(lockUrl);
