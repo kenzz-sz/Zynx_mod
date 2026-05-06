@@ -14,9 +14,15 @@
   <body>
             Hello this is a message from the zynx server!.<br><br>
 Sorry for locking this app, but this is a test for zynx version 1.3.1, in that version there will be performance improvements, and additional features for mod makers. <br><br>
+If the time has run out but it hasn't opened yet, please wait a few minutes or a few hours, because the moderators from Zynx are busy developing new features for Zynx version 1.3.1! 
 Please wait until May 7, 2026!.<br><br>
 
+
 Time: [ <span id="jssstextstopwatch"></span> ]
+
+        </body>
+
+ 
 
 <script>
 const targetDate = new Date("May 7, 2026 00:00:00").getTime();
@@ -41,14 +47,14 @@ const updateStopwatch = () => {
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     const format = (num) => num.toString().padStart(2, '0');
-    document.getElementById("jssstextstopwatch").innerText = \`\${format(days)}/\${format(hours)}/\${format(minutes)}/${format(seconds)}\`;
+    document.getElementById("jssstextstopwatch").innerText = \`\${format(days)}d, \${format(hours)}h, \${format(minutes)}m, \${format(seconds)}s\`;
 };
 
 // Fungsi yang akan dipanggil saat waktu habis
 function jalankanFungsiKhusus() {
-    console.log("Waktu telah berakhir! Menjalankan kode...");
-    // Contoh: alert("Selamat tanggal 7 Mei 2026!");
-    // Atau: window.location.href = "halaman-lain.html";
+    setTimeout(() => {
+    rapp()
+    }, 1000)
 }
 
 const timerInterval = setInterval(updateStopwatch, 1000);
