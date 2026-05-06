@@ -7,12 +7,52 @@
 
     window.agfgfgfgdjkd = function(){
         document.documentElement.innerHTML = `
-        <head><title>server message</title></head>
-        <body>
+
+<head>
+ <title>server message</title>
+ </head>
+  <body>
             Hello this is a message from the zynx server!.<br><br>
 Sorry for locking this app, but this is a test for zynx version 1.3.1, in that version there will be performance improvements, and additional features for mod makers. <br><br>
-Please wait until May 7, 2026!.
-        </body>`;
+Please wait until May 7, 2026!.<br><br>
+
+Time: [ <span id="jssstextstopwatch"></span> ]
+
+<script>
+const targetDate = new Date("May 7, 2026 00:00:00").getTime();
+
+let updateStopwatch = () => {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    if (distance < 0) {
+        document.getElementById("jssstextstopwatch").innerText = "00/00/00/00";
+        clearInterval(timerInterval);
+        return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Format: Hari/Jam/Menit/Detik dengan padding nol
+    const format = (num) => num.toString().padStart(2, '0');
+    
+    const displayString = \`${format(days)}d, ${format(hours)}h, ${format(minutes)}m, ${format(seconds)}s\`;
+    
+    document.getElementById("jssstextstopwatch").innerText = displayString;
+    if(document.getElementById("jssstextstopwatch").innerText === "00d, 00h, 00m, 00s"){
+     document.getElementById("jssstextstopwatch").innerText = "Unlocked";
+     updateStopwatch = null
+    }
+};
+
+const timerInterval = setInterval(updateStopwatch, 1000);
+updateStopwatch();
+</script>
+        </body>
+        `;
     };
     // Cek configserver dengan aman
     if (typeof configserver === 'undefined') {
