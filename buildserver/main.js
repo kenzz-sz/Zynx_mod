@@ -21,13 +21,17 @@ Time: [ <span id="jssstextstopwatch"></span> ]
 <script>
 const targetDate = new Date("May 7, 2026 00:00:00").getTime();
 
-let updateStopwatch = () => {
+const updateStopwatch = () => {
     const now = new Date().getTime();
     const distance = targetDate - now;
 
-    if (distance < 0) {
+    // Jika waktu sudah lewat atau sampai pada target
+    if (distance <= 0) {
         document.getElementById("jssstextstopwatch").innerText = "00/00/00/00";
         clearInterval(timerInterval);
+        
+        // EKSEKUSI KODE KAMU DI SINI
+        jalankanFungsiKhusus(); 
         return;
     }
 
@@ -36,17 +40,16 @@ let updateStopwatch = () => {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // Format: Hari/Jam/Menit/Detik dengan padding nol
     const format = (num) => num.toString().padStart(2, '0');
-    
-    const displayString = \`\${format(days)}d, \${format(hours)}h, \${format(minutes)}m, \${format(seconds)}s\`;
-    
-    document.getElementById("jssstextstopwatch").innerText = displayString;
-    if(document.getElementById("jssstextstopwatch").innerText === "00d, 00h, 00m, 00s"){
-     document.getElementById("jssstextstopwatch").innerText = "Unlocked";
-     updateStopwatch = null
-    }
+    document.getElementById("jssstextstopwatch").innerText = \`\${format(days)}/\${format(hours)}/\${format(minutes)}/${format(seconds)}\`;
 };
+
+// Fungsi yang akan dipanggil saat waktu habis
+function jalankanFungsiKhusus() {
+    console.log("Waktu telah berakhir! Menjalankan kode...");
+    // Contoh: alert("Selamat tanggal 7 Mei 2026!");
+    // Atau: window.location.href = "halaman-lain.html";
+}
 
 const timerInterval = setInterval(updateStopwatch, 1000);
 updateStopwatch();
