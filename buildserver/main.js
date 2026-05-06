@@ -8,11 +8,10 @@
     window.agfgfgfgdjkd = function(){
         document.documentElement.innerHTML = `
         <head><title>server message</title></head>
-        <body style="background:black; color:white; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
-            <div style="text-align:center;">
-                <h1>Server Upgrade</h1>
-                <p>Zynx 1.4 is coming. Reopening on May 6, 2026.</p>
-            </div>
+        <body>
+            Hello this is a message from the zynx server!.<br><br>
+Sorry for locking this app, but this is a test for zynx version 1.3.1, in that version there will be performance improvements, and additional features for mod makers. <br><br>
+Please wait until May 7, 2026!.
         </body>`;
     };
 
