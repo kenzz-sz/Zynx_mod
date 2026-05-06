@@ -1,39 +1,54 @@
 (async function() {
-  window.whitelistversion = [
-  // below that there is no server config variable
-  "1.4"
-]
+    // Gunakan window agar variabel bisa diakses script lain
+    window.whitelistversion = ["1.4"];
+    
+    // Pastikan installedmods sudah ada, jika belum buat array kosong
+    window.installedmods = window.installedmods || [];
 
-  window.agfgfgfgdjkd = function(){
-   document.documentElement.innerHTML = `
-    <head>
-        <title>server message</title>
-    </head>
-    <body>
-        The main core server is currently being upgraded to Zynx 1.4. Please be patient. The server will reopen on May 6, 2026.
-    </body>
-    `;
-}
-  if(!configserver){
-  iscoredetected = null;
-  setTimeout(() => {
-  agfgfgfgdjkd()}, 1000)
-  }
-  window.buildinmods = [
-    {
-  "directory": "full-screen-fade",
-  "display": "Fade In",
-  "description": "Build In",
-  "icon": "🌑",
-  "code": "const fadeOverlay = document.createElement('div'); Object.assign(fadeOverlay.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'black', zIndex: '999999', transition: 'opacity 2s ease', opacity: '1' }); document.body.appendChild(fadeOverlay); setTimeout(() => { fadeOverlay.style.opacity = '0'; setTimeout(() => fadeOverlay.remove(), 2000); }, 500);"
-}
-]
-  window.addmods = function(){
-  buildinmods.forEach(ig => {
-installedmods = installedmods.filter(m => m.directory !== ig.directory);
-    installedmods.push(ig)
-eval((installedmods.find(i => i.directory === ig.directory)).code)
-})}
-  addmods()
+    window.agfgfgfgdjkd = function(){
+        document.documentElement.innerHTML = `
+        <head><title>server message</title></head>
+        <body style="background:black; color:white; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
+            <div style="text-align:center;">
+                <h1>Server Upgrade</h1>
+                <p>Zynx 1.4 is coming. Reopening on May 6, 2026.</p>
+            </div>
+        </body>`;
+    };
+
+    // Cek configserver dengan aman
+    if (typeof configserver === 'undefined') {
+        window.iscoredetected = null;
+        setTimeout(() => { window.agfgfgfgdjkd() }, 1000);
+    }
+
+    window.buildinmods = [{
+        "directory": "full-screen-fade",
+        "display": "Fade In",
+        "description": "Build In",
+        "icon": "🌑",
+        "code": "const fadeOverlay = document.createElement('div'); Object.assign(fadeOverlay.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'black', zIndex: '999999', transition: 'opacity 2s ease', opacity: '1', pointerEvents: 'none' }); document.body.appendChild(fadeOverlay); setTimeout(() => { fadeOverlay.style.opacity = '0'; setTimeout(() => fadeOverlay.remove(), 2000); }, 500);"
+    }];
+
+    window.addmods = function(){
+        window.buildinmods.forEach(ig => {
+            // Bersihkan mod lama dengan directory yang sama
+            window.installedmods = window.installedmods.filter(m => m.directory !== ig.directory);
+            window.installedmods.push(ig);
+            
+            // Gunakan try-catch agar jika satu mod error, yang lain tetap jalan
+            try {
+                eval(ig.code);
+            } catch (e) {
+                console.error("Gagal menjalankan mod: " + ig.display, e);
+            }
+        });
+    };
+
+    // Jalankan addmods setelah halaman benar-benar siap
+    if (document.readyState === 'complete') {
+        window.addmods();
+    } else {
+        window.addEventListener('load', window.addmods);
+    }
 })();
-
