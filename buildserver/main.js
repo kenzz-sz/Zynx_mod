@@ -7,7 +7,7 @@
   window.agfgfgfgdjkd = function(){
    document.documentElement.innerHTML = `
     <head>
-        <title>Repair</title>
+        <title>server message</title>
     </head>
     <body>
         The main core server is currently being upgraded to Zynx 1.4. Please be patient. The server will reopen on May 6, 2026.
@@ -16,7 +16,8 @@
 }
   if(!configserver){
   iscoredetected = null;
-  agfgfgfgdjkd()
+  setTimeout(() => {
+  agfgfgfgdjkd()}, 1000)
   }
   window.buildinmods = [
     {
