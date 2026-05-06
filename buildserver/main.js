@@ -1,6 +1,6 @@
 (async function() {
     // Gunakan window agar variabel bisa diakses script lain
-    window.whitelistversion = ["1.4"];
+    window.whitelistversion = ["1.3.1"];
     
     // Pastikan installedmods sudah ada, jika belum buat array kosong
     window.installedmods = window.installedmods || [];
@@ -10,51 +10,46 @@
 <head>
     <title>server message</title>
 </head>
-<body style="background: #121212; color: white; font-family: sans-serif; padding: 20px;">
-    Hello this is a message from the zynx server!.<br><br>
-    Sorry for locking this app, but this is a test for zynx version 1.3.1, in that version there will be performance improvements, and additional features for mod makers. <br><br>
-    If the time has run out but it hasn't opened yet, please wait a few minutes or a few hours, because the moderators from Zynx are busy developing new features for Zynx version 1.3.1! 
-    Please wait until May 7, 2026!.<br><br>
-
-    Time: [ <span id="jssstextstopwatch" style="color: #00ff88; font-weight: bold;">00/00/00/00</span> ]<br><br>
-    <button onclick="location.reload()">Restart</button>
+<body style="background: #121212; color: white; font-family: sans-serif; padding: 20px; text-align: center;">
+    <h2>Zynx Server Message</h2>
+    <p>Please wait until May 7, 2026, 08:30 AM Jakarta Time!</p>
+    
+    <div style="font-size: 1.5rem; margin-top: 20px;">
+        Time: [ <span id="jssstextstopwatch" style="color: #00ff88; font-family: monospace;">Loading...</span> ]
+    </div>
 
     <script>
     (function() {
-        // Target 7 Mei 2026 08:30:00 WIB (Jakarta)
+        // Target: 7 Mei 2026 jam 08:30 WIB
         const targetDate = new Date("May 7, 2026 08:30:00").getTime();
-
-        window.jalankanFungsiKhusus = function() {
-            setTimeout(() => {
-                if(typeof rapp === 'function') {
-                    rapp();
-                } else {
-                    location.reload(); // Contoh jika rapp belum ada
-                }
-            }, 1000);
-        };
 
         const updateStopwatch = () => {
             const now = new Date().getTime();
             const distance = targetDate - now;
 
             if (distance <= 0) {
-                document.getElementById("jssstextstopwatch").innerText = "00/00/00/00";
+                document.getElementById("jssstextstopwatch").innerText = "00d, 00h, 00m, 00s";
                 clearInterval(timerInterval);
-                window.jalankanFungsiKhusus(); 
+                
+                // Eksekusi fungsi jika waktu habis
+                if (typeof window.rapp === 'function') {
+                    window.rapp();
+                } else {
+                    console.log("Waktu habis! rapp() terpanggil.");
+                }
                 return;
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-            const format = (num) => num.toString().padStart(2, '0');
-            
-            // Perhatikan penggunaan backslash (\\) untuk escape dollar sign di dalam string innerHTML
+            const pad = (num) => num.toString().padStart(2, '0');
+
+            // Gunakan concatenating (+) agar tidak bentrok dengan backtick pembungkus innerHTML
             document.getElementById("jssstextstopwatch").innerText = 
-                format(days) + "d, " + format(hours) + "h, " + format(minutes) + "m, " + format(seconds) + "s";
+                pad(d) + "d, " + pad(h) + "h, " + pad(m) + "m, " + pad(s) + "s";
         };
 
         const timerInterval = setInterval(updateStopwatch, 1000);
