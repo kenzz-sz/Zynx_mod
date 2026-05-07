@@ -1,4 +1,4 @@
-(function(){
+//(function(){
     document.body.innerHTML += '<audio id="myAudio" src="bg.mp3" loop></audio>'
              // 1. Membuat elemen overlay
 const overlay = document.createElement('div');
@@ -51,4 +51,4 @@ function putarAudio() {
 
   // Jalankan saat user klik di mana saja di halaman
   document.addEventListener('click', putarAudio);
-})()
+//})()
