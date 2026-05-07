@@ -1,4 +1,5 @@
 let isLocked = true;
+if(configserver) delete isLocked;
 (async function() {
     // URL file lock.html di GitHub kamu
     const lockUrl = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/lock.html";
