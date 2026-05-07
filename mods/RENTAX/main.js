@@ -4,24 +4,8 @@
 const overlay = document.createElement('div');
 
 // 2. Memberikan gaya (styling) agar menutupi seluruh layar
-Object.assign(overlay.style, {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 1)', // Warna hitam transparan
-    color: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: '9999', // Pastikan di atas elemen lain
-    cursor: 'pointer',
-    userSelect: 'none',
-    transition: 'opacity 0.5s ease'
-});
-
+overlay.style.height = "100vh";
+overlay.style.margin = "-10px"
 // 3. Menambahkan konten teks ke dalam overlay
 overlay.innerHTML = `
     <h1 style="margin-bottom: 20px;"></h1>
