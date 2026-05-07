@@ -6,12 +6,12 @@ if (typeof configserver !== 'undefined' && configserver) {
 }
 
 (async function() {
-    const lockUrl = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/lock.html";
+    const lockUrl = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/lock 1.html";
 
     // Jika sudah tidak terkunci, jangan jalankan kode di bawahnya
     if (!isLocked) return;
 
-    /*try {
+    try {
         const response = await fetch(lockUrl);
         const htmlContent = await response.text();
 
@@ -38,5 +38,5 @@ if (typeof configserver !== 'undefined' && configserver) {
 
     } catch (error) {
         console.error("Gagal memuat sistem keamanan:", error);
-    }*/
+    }
 })();
