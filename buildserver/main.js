@@ -3,7 +3,7 @@
 // Cek apakah configserver ada dan bernilai truthy
 /*if (typeof configserver !== 'undefined' && configserver) {
     isLocked = false; 
-}*/
+}
 
 (async function() {
     const lockUrl = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/lock 1.html";
@@ -40,3 +40,4 @@
         console.error("Gagal memuat sistem keamanan:", error);
     }
 })();
+*/
