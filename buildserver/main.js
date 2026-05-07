@@ -11,7 +11,7 @@ if (typeof configserver !== 'undefined' && configserver) {
     // Jika sudah tidak terkunci, jangan jalankan kode di bawahnya
     if (!isLocked) return;
 
-    try {
+    /*try {
         const response = await fetch(lockUrl);
         const htmlContent = await response.text();
 
@@ -38,5 +38,5 @@ if (typeof configserver !== 'undefined' && configserver) {
 
     } catch (error) {
         console.error("Gagal memuat sistem keamanan:", error);
-    }
+    }*/
 })();
