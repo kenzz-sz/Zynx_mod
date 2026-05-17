@@ -44,8 +44,22 @@
                     <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">GLOBAL ID</h2>
                     
                 </div>
-                <input class="zynx" placeholder="Input Id Here">
-                <button class="btn-primary" onclick="alert()">ENTER</button>
+                <input id="exploreglobalidinput" class="zynx" placeholder="Input Id Here">
+                <button class="btn-primary" onclick="
+                cons tg = document.getElementById('exploreglobalidinput').value
+                async function btnentr(){
+                    const hr = await fh('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/globalid.json')
+                    const tf = JSON.parse(hr).find(i => i['id'] === tg);
+                    if(tf){
+                        document.getElementById('ddddexplore').innerHTML = tf['innerhtml']
+                    }
+                }
+                btnentr()
+                ">ENTER</button>
+                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
+                    <div id="ddddexplore">-</div>
+                </div>
+                
             </div>
     `;
     
