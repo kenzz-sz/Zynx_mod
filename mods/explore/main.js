@@ -56,8 +56,8 @@
                     }
                 }
                 btnentr()
-                ">ENTER</button><br>
-                </div>
+                ">ENTER</button>
+                </div><br>
                 <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
                     <div id="ddddexplore">-</div>
                 </div>
