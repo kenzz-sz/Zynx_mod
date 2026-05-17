@@ -46,12 +46,12 @@
                 </div>
                 <input id="exploreglobalidinput" class="zynx" placeholder="Input Id Here">
                 <button class="btn-primary" onclick="
-                cons tg = document.getElementById('exploreglobalidinput')
+                cons tggs = document.getElementById('exploreglobalidinput')
                 async function btnentr(){
-                    const hr = JSON.parse(await fh('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/globalid.json'))
-                    const tf = hr.find(i => i['id'] === tg.value);
-                    if(tf){
-                        document.getElementById('ddddexplore').innerHTML = tf.innerhtml
+                    const hrs = JSON.parse(await fh('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/globalid.json'))
+                    const tffs = hrs.find(il => il['id'] === tggs.value);
+                    if(tffs){
+                        document.getElementById('ddddexplore').innerHTML = tffs.innerhtml
                     }
                 }
                 btnentr()
