@@ -36,6 +36,19 @@
             </div>
     `;
     
+    maint.innerHTML += `<div id="scene-explore-globalid" class="panel">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
+                        <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
+                    </span>
+                    <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">GLOBAL ID</h2>
+                    
+                </div>
+                <input class="zynx" placeholder="Input Id Here">
+                <button class="btn-primary" onclick="alert()">ENTER</button>
+            </div>
+    `;
+    
   const rc = document.getElementById("consdash")
   const cat = document.createElement("div");
   cat.innerHTML = `<div class="category" id="Axexport">
@@ -47,6 +60,11 @@
                         <div class="cat-inner">
                             <div class="feature-item" onclick="App.changeScene('scene-explore-mods')">
                                 <span>Mods</span>
+                                <span style="color: #0A84FF;">Open</span>
+                            </div>
+                            
+                            <div class="feature-item" onclick="App.changeScene('scene-explore-globalid')">
+                                <span>GLobal ID</span>
                                 <span style="color: #0A84FF;">Open</span>
                             </div>
                             
