@@ -47,15 +47,15 @@
                 <div>
                 <input id="exploreglobalidinput" class="zynx" placeholder="Input Id Here">
                 <button class="btn-primary" onclick="
+                (async function(){
                 cons tggs = document.getElementById('exploreglobalidinput')
-                async function btnentr(){
-                    const hrs = JSON.parse(await fh('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/globalid.json'))
+                const hrs = JSON.parse(await fh('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/explore/globalid.json'))
                     const tffs = hrs.find(il => il['id'] === tggs.value);
                     if(tffs){
-                        document.getElementById('ddddexplore').innerHTML = tffs.innerhtml
+                        document.getElementById('ddddexplore').innerHTML = tffs
+                    .innerhtml
                     }
-                }
-                btnentr()
+                })()
                 ">ENTER</button>
                 </div><br>
                 <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
