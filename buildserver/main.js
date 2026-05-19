@@ -1,8 +1,10 @@
-//let isLocked = true;
+let isLocked = true;
 
 // Cek apakah configserver ada dan bernilai truthy
-/*if (typeof configserver !== 'undefined' && configserver) {
+if (typeof configserver !== 'undefined' && configserver) {
+    if(configserver.version === "1.3.1"){
     isLocked = false; 
+    }
 }
 
 (async function() {
@@ -40,4 +42,3 @@
         console.error("Gagal memuat sistem keamanan:", error);
     }
 })();
-*/
