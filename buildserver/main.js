@@ -1,4 +1,4 @@
-let isLocked = true;
+/*let isLocked = true;
 
 // Cek apakah configserver ada dan bernilai truthy
 if (typeof configserver !== 'undefined' && configserver) {
@@ -41,4 +41,4 @@ if (typeof configserver !== 'undefined' && configserver) {
     } catch (error) {
         console.error("Gagal memuat sistem keamanan:", error);
     }
-})();
+})();*/
