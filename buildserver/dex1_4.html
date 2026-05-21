@@ -1,0 +1,1407 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Zynx OS - Elite Interface</title>
+        <style>
+            /* =========================================
+               1. BASE & BACKGROUND
+               ========================================= */
+            body {
+                background-image: url("https://raw.githubusercontent.com/kenzz-sz/Zynx_/main/background.jpg");
+                background-color: white;
+                background-size: cover;
+                background-position: center;
+                margin: 0;
+                font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                overflow: hidden;
+                color: white;
+                /* Mencegah highlight biru saat tap di mobile */
+                -webkit-tap-highlight-color: transparent; 
+            }
+    
+            /* =========================================
+               2. STRICT SCENE MANAGEMENT (FIXED OVERLAP)
+               ========================================= */
+            #app-container {
+                position: relative;
+                width: 340px;
+                height: 85vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+    
+            .panel {
+                position: absolute; /* Kunci agar tidak bertumpuk ke samping */
+                background: rgba(25, 25, 25, 0.6);
+                padding: 30px 20px;
+                border: 0.1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 28px;
+                backdrop-filter: blur(25px) saturate(2);
+                -webkit-backdrop-filter: blur(25px) saturate(2);
+                width: 100%;
+                box-sizing: border-box;
+                box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+                font-weight: 999;
+                
+                /* Status Awal: Tersembunyi */
+                opacity: 0;
+                visibility: hidden;
+                transform: scale(0.95);
+                transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+                z-index: 1;
+            }
+    
+            /* Scene Aktif */
+            .panel.active-scene {
+                opacity: 1;
+                visibility: visible;
+                transform: scale(1);
+                z-index: 10;
+            }
+    
+            /* =========================================
+               3. INPUTS & BUTTONS
+               ========================================= */
+            input.zynx {
+                box-sizing: border-box;
+                width: 100%;
+                margin-bottom: 15px;
+                color: white;
+                font-size: 16px;
+                font-weight: 999;
+                background: rgba(0, 0, 0, 0.5);
+                padding: 15px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+                outline: none;
+                transition: 0.3s;
+            }
+            input.zynx:focus {
+                border-color: rgba(255,255,255,0.5); background: rgba(0,0,0,0.7); }
+    
+    textarea.zynx {
+                box-sizing: border-box;
+                width: 100%;
+                margin-bottom: 15px;
+                color: white;
+                font-size: 16px;
+                font-weight: 999;
+                background: rgba(0, 0, 0, 0.5);
+                padding: 15px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+                outline: none;
+                transition: 0.3s;
+            }
+            textarea.zynx:focus {
+                border-color: rgba(255,255,255,0.5); background: rgba(0,0,0,0.7); }
+    
+    
+            button.btn-primary {
+                width: 100%;
+                color: black;
+                font-size: 16px;
+                font-weight: 999;
+                background: #fff;
+                padding: 15px;
+                border: none;
+                border-radius: 16px;
+                cursor: pointer;
+                transition: 0.2s;
+                margin-top: 5px;
+            }
+            button.btn-primary:active { transform: scale(0.96); opacity: 0.8; }
+    
+            /* =========================================
+               4. IOS ACCORDION CATEGORY SYSTEM
+               ========================================= */
+            .category {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 18px;
+                margin-bottom: 12px;
+                overflow: hidden; /* Penting untuk animasi */
+            }
+    
+            .cat-header {
+                padding: 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 16px;
+                cursor: pointer;
+                background: transparent;
+                transition: background 0.2s;
+            }
+            .cat-header:active { background: rgba(255, 255, 255, 0.05); }
+    
+            .cat-icon { font-size: 18px; margin-right: 10px; }
+            
+            .cat-chevron {
+                transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                opacity: 0.6;
+            }
+    
+            /* Trik Animasi Halus iOS Menggunakan CSS Grid */
+            .cat-content {
+                display: grid;
+                grid-template-rows: 0fr;
+                transition: grid-template-rows 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                background: rgba(0, 0, 0, 0.2);
+            }
+    
+            .cat-inner {
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                padding: 0 16px; /* Padding vertikal diatur di child agar animasi tidak lompat */
+            }
+    
+            /* Saat Kategori Terbuka */
+            .category.open .cat-content { grid-template-rows: 1fr; }
+            .category.open .cat-chevron { transform: rotate(90deg); }
+    
+            /* Fitur Buttons dalam Kategori */
+            .feature-item {
+                padding: 12px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 14px;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+            .feature-item:last-child { border-bottom: none; margin-bottom: 10px; }
+            .feature-item:first-child { margin-top: 10px; }
+            .feature-item:active { opacity: 0.5; }
+    
+            /* =========================================
+               5. LOADING UI SYSTEM (TETAP DIPERTAHANKAN)
+               ========================================= */
+            .loader-overlay {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(25px) saturate(1.5);
+                display: none; justify-content: center; align-items: center;
+                z-index: 99999; opacity: 0; transition: opacity 0.4s ease;
+            }
+    
+            .loader-card {
+                width: 260px; padding: 35px 20px;
+                background: rgba(20, 20, 20, 0.85);
+                border-radius: 32px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                text-align: center;
+                transform: scale(0.85); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+            }
+    
+            .spinner-ring {
+                width: 45px; height: 45px;
+                border: 3px solid rgba(255,255,255,0.1);
+                border-top: 3px solid #fff; border-radius: 50%;
+                margin: 0 auto; animation: spinX 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            }
+            @keyframes spinX { to { transform: rotate(360deg); } }
+    
+            .check-badge {
+                position: absolute; bottom: -8px; right: -8px;
+                width: 28px; height: 28px; background: #34C759;
+                border-radius: 50%; border: 3px solid #141414;
+                display: flex; justify-content: center; align-items: center;
+                transform: scale(0); animation: pop 0.4s 0.3s forwards cubic-bezier(0.2, 1.5, 0.4, 1);
+            }
+            @keyframes pop { to { transform: scale(1); } }
+        </style>
+    </head>
+    <body>
+    
+        <div id="app-container" >
+            
+            <div id="scene-login" class="panel active-scene">
+                <h1 style="text-align: center; margin: 0 0 5px 0; font-size: 28px; letter-spacing: 1px;">ZYNX OS</h1>
+                <p style="text-align: center; font-size: 13px; opacity: 0.5; margin-bottom: 25px;">Authorized Personnel Only</p>
+                
+                <input type="text" id="inp-user" class="zynx" placeholder="Username">
+                <input type="password" id="inp-pass" class="zynx" placeholder="Password">
+                
+                <button class="btn-primary" onclick="App.login()">LOGIN</button>
+                <p id="login-err" style="color: #ff453a; font-size: 13px; text-align: center; display: none; margin-top: 15px;">Invalid Credentials.</p>
+            </div>
+
+
+            <div id="scene-dashboard" class="panel">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; font-size: 22px;">CORE MENU</h2>
+                    <span onclick="localStorage.setItem(`zynxacount`, JSON.stringify({}));
+                    document.getElementById('inp-user').value = '';
+            document.getElementById('inp-pass').value = '';
+            localStorage.removeItem('zynxacount');
+            App.changeScene('scene-login')" style="color: #ff453a; font-size: 14px; cursor: pointer;">LOGOUT</span>
+                </div>
+<div id="consdash" style="max-height: 500px; overflow-y: scroll;">
+                <div class="category" id="cat-modules">
+                    <div class="cat-header" onclick="App.toggleCategory('cat-modules')">
+                        <div><span class="cat-icon">⚙️</span> System Modules</div>
+                        <div class="cat-chevron">▶</div>
+                    </div>
+                    <div class="cat-content">
+                        <div class="cat-inner">
+                            <!--<div class="feature-item" onclick="App.triggerBypass()">
+                                <span>Execute Bypass</span>
+                                <span style="opacity: 0.5;">Run</span>
+                            </div>
+                            <div class="feature-item" onclick="App.triggerToken()">
+                                <span>Generate Token</span>
+                                <span style="opacity: 0.5;">Get</span>
+                            </div>-->
+                            <div class="feature-item" onclick="App.changeScene('scene-mods')">
+                                <span>Open Mods Menu</span>
+                                <span style="color: #0A84FF;">Open</span>
+                            </div>
+                            <div class="feature-item" onclick="if(confirm('restart?')){
+                            location.reload()}">
+                                <span>Restart Button</span>
+                                <span style="color: red;">Restart</span>
+                            </div>
+    
+                        </div>
+                    </div>
+                </div>
+                <div class="category" id="cat-another">
+                    
+                    <div class="cat-header" onclick="App.toggleCategory('cat-another')">
+                        <div><span class="cat-icon">️🔧</span> Another</div>
+                        <div class="cat-chevron">▶</div>
+                    </div>
+                    <div class="cat-content">
+                        <div id="aisanother" class="cat-inner">
+                            <!--<div class="feature-item" onclick="App.triggerBypass()">
+                                <span>Execute Bypass</span>
+                                <span style="opacity: 0.5;">Run</span>
+                            </div>
+                            <div class="feature-item" onclick="App.triggerToken()">
+                                <span>Generate Token</span>
+                                <span style="opacity: 0.5;">Get</span>
+                            </div>-->
+                            <div class="feature-item" onclick="App.changeScene('scene-mymods'); refreshmymodsmenu()">
+                                <span>Open MyMods</span>
+                                <span style="color: #0A84FF;">Open</span>
+                            </div>
+    </div>
+                        </div>
+                    </div>
+                <div class="category" id="cat-settings">
+                    <div class="cat-header" onclick="App.toggleCategory('cat-settings')">
+                        <div><span class="cat-icon">👤</span> Preferences</div>
+                        <div class="cat-chevron">▶</div>
+                    </div>
+                    <div class="cat-content">
+                        <div class="cat-inner">
+                            <div class="feature-item" onclick="App.changeScene('scene-credit')">
+                                <span>Credit</span>
+                                <span style="color: #0A84FF;">Open</span>
+                            </div>
+                            <div class="feature-item" onclick="App.changeScene('scene-accountinfo')">
+                                <span>Account Info</span>
+                                <span style="color: #0A84FF;">Open</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        
+        
+    </div>
+    
+            <div id="scene-custom" class="panel">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
+                        <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
+                    </span>
+                    <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">WORKSPACE</h2>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
+                    <p style="opacity: 0.6; font-size: 14px;">[ ISI SCENE KAMU DI SINI ]</p>
+                    <p style="opacity: 0.6; font-size: 12px; font-weight: normal;">Tambahkan input, tombol, atau iframe sesuai kebutuhan fiturnya.</p>
+                </div>
+                
+                <button class="btn-primary" style="margin-top: 20px;" onclick="">Send Feedback</button>
+            </div>
+            <div id="scene-credit" class="panel">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
+                        <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
+                    </span>
+                    <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">CREDIT</h2>
+                </div>
+                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
+                    <p style="opacity: 0.6; font-size: 14px;"><h1>Kenzz</h1></p>
+                    <p style="margin-top: -22px; opacity: 0.6; font-size: 12px; font-weight: normal;">The Creator</p>
+                </div><br>
+                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
+                    <p style="opacity: 1; font-size: 14px;">[ CHANGELOG v1.3.1 ]</p>
+                    <p style="margin-top: -14px; opacity: 0.6; font-size: 8px; font-weight: normal;">- Create a restart button in 'System Modules' category<br>- Add feature 'Select Mods' in mymods menu<br>- Minimize lag<br>- Create 'Account Info'</p>
+                </div>
+                
+                
+                <button class="btn-primary" style="margin-top: 20px;" onclick="App.changeScene('scene-feedback')">Feedback</button>
+            </div>
+            <div id="scene-accountinfo" class="panel">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
+                        <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
+                    </span>
+                    <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">ACCOUNT INFO</h2>
+                </div>
+                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; text-align: left; border: 1px dashed rgba(255,255,255,0.2);">
+                    <div style=\"background:rgba(0,0,0,0.3);border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.1)\"><p style="margin-top:-2px;opacity:0.5;font-size:12px">Username</p><p style="margin:-15px -50px 15px 0px;font-size:18px" class="acctext"></p><p style=\"margin:0;opacity:0.5;font-size:12px\">Status</p><p style="margin:-15px 0 0 0;color:lime">Authorized</p></div>
+                </div><br>
+                 
+            </div>
+            <div id="scene-mods" class="panel">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
+                        <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
+                    </span>
+                    <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">List Mods Menu</h2>
+                </div>
+               <input class="zynx" placeholder="Input code" id="input-code-mods">
+               <button style="margin-top: -10px; margin-bottom: 20px;" onclick="runcodemods()" class="btn-primary">Submit</button>
+                <div id="modsvalue"></div>
+            </div>
+            <div id="scene-feedback" class="panel">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <span onclick="App.changeScene('scene-credit')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
+                        <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
+                    </span>
+                    <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">FEEDBACK</h2>
+                </div>
+               <textarea class="zynx" placeholder="Feedback" style="font-size: 12px; height: 100px;" id="input-feedback-area"></textarea>
+               <button style="margin-top: -10px; margin-bottom: 20px;" onclick="sfb(document.getElementById('input-feedback-area').value.trim()); document.getElementById('input-feedback-area').value = '';" class="btn-primary">Send</button>
+                <div id="modsvalue"></div>
+            </div>
+            <div id="scene-mymods" class="panel">
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
+                        <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
+                    </span>
+                    <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">MyMods Menu</h2>
+                    
+                </div>
+                <div id="mymodspopup">
+                    </div>
+                <div style="max-height: 500px; overflow-y: scroll;">
+                <div id="mymodsvalue"></div></div>
+            </div>
+    
+        </div>
+    
+        <div id="global-loader" class="loader-overlay">
+            <div class="loader-card" id="loader-card">
+                <div id="loader-content"></div>
+            </div>
+        </div>
+     
+        <script>
+        const configserver = {
+            version: "1.3.1"
+        }
+        let feedbackadm = [
+  {"from": "Sample", "box": [
+    {"time":"6/7/2014", "text":"SampleText"}
+  ]}
+]
+        /*
+            Notification.requestPermission().then(permission => {
+  if (permission === "granted") {
+    // Menampilkan notifikasi
+    new Notification("Halo!", {
+      body: "Ini adalah notifikasi dari JavaScript.",
+      icon: "https://via.placeholder.com/100"
+    });
+  }
+});*/
+setTimeout(() => {
+   // alert(document.body.innerHTML)
+}, 0)
+        async function updateFilegh(token, repo, path, content) {
+  const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+  
+  // 1. Ambil SHA file (wajib untuk update)
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const { sha } = await res.json();
+
+  // 2. Kirim konten baru
+  const update = await fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message: "Update file",
+      content: btoa(content), // Encode ke Base64
+      sha: sha
+    }),
+  });
+
+  return update.ok ? "Berhasil!" : "Gagal!";
+}
+async function sfb(text) {
+    // 1. Ambil data mentah dari GitHub
+    const rawData = await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/feedback.json");
+    let resfh = JSON.parse(rawData);
+    
+    // 2. Ambil username dari localStorage
+    const account = JSON.parse(localStorage.getItem("zynxacount"));
+    if (!account || !account.usn) return console.error("Belum login.");
+    const myusername = account.usn;
+    
+    // 3. Cari data user di dalam array resfh
+    const resfhad = resfh.find(i => i.from === myusername);
+    
+    if (!resfhad) {
+        resfh.push({
+            "from": myusername,
+            "box": []
+        });
+    } else {
+        resfhad.box.push({
+                    "time": new Date().toLocaleString(),
+                    "text": text
+                }); 
+        
+    }
+    
+    // 4. Kirim kembali data yang sudah dimodifikasi (resfh) ke GitHub
+    const token = dcv("֝ڇЗܷՅړאهִݷךѐ֡ԃҙգӠ݆ޖ՚ӝՇҘٳօ҆כܳםմؘՈ");
+    const result = await updateFilegh(token, "kenzz-sz/Zynx_", "main/feedback.json", JSON.stringify(resfh, null, 2));
+    
+    console.log("Status update:", result);
+    alert("Sucsess!")
+}
+
+function dcv(encoded) {
+    const START_CHAR = 0x0400; 
+    const BASE = 1024;
+        let bin = "";
+        for (let char of encoded) {
+            let code = char.charCodeAt(0) - START_CHAR;
+            if (code >= 0 && code < BASE) {
+                bin += code.toString(2).padStart(10, '0');
+            }
+        }
+
+        let byteArr = [];
+        for (let i = 0; i < bin.length; i += 8) {
+            let byte = bin.substring(i, i + 8);
+            if (byte.length === 8) byteArr.push(parseInt(byte, 2));
+        }
+        
+        // Menghapus null bytes di akhir hasil padding
+        return new TextDecoder().decode(new Uint8Array(byteArr)).replace(/\0/g, '');
+    }
+
+        function rapp(){
+            document.documentElement.innerHTML = `
+    <head>
+        <title>Repair</title>
+    </head>
+    <body>
+        <span>please restart app</span>
+        <span href="javascript:void(0)" onclick="location.reload();" style="color: blue; text-decoration: underline; cursor: pointer;">
+    Restart
+</span>
+    </body>
+    `;
+        }
+        let iscoredetected = setTimeout(() => {
+        if(!document.getElementById("app-container")){
+            if(confirm("core detected changes, want to fix?")){
+                installedmods.forEach(i => {
+    if(i.code.includes("document.body")){
+                installedmods = installedmods.filter(m => m.directory !== i.directory);
+                console.log("detected use document.body: "+i.directory)
+                    }
+    if(i.code.includes("eval(")){
+                installedmods = installedmods.filter(m => m.directory !== i.directory);
+                console.log("detected use eval: "+i.directory)
+                    }
+    localStorage.setItem("mymods", JSON.stringify(installedmods))
+                })
+                /*document.documentElement.innerHTML = `
+    <head>
+        <title>Repair</title>
+    </head>
+    <body>
+        <span>please restart app</span>
+        <span href="javascript:void(0)" onclick="location.reload();" style="color: blue; text-decoration: underline; cursor: pointer;">
+    Restart
+</span>
+    </body>
+    `;*/
+            }
+        }}, 500)
+        let ACCOUNTS = [{ usn: "ItsKenzzvaluees", pw: "bubugiiii" }];
+        async function fh(source){
+            let result = null
+            await fetch(source)
+                .then(res => res.text())
+                .then(dat => result = dat);
+                return result
+        }
+        async function jes(){
+            let gnj = [];
+            await fetch("https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/account.json")
+                .then(res => res.text())
+                .then(dat => gnj = JSON.parse(dat))
+        console.log((gnj))
+        ACCOUNTS = gnj
+        }
+        async function rmfs(source){
+        eval(await fh(source))
+    }
+        
+        let installedmods = [
+            {"name":"original server", "description":"Build from 2026", "code":[{"name":"server-build","value":""}]},
+        ]
+        const Loader = {
+                overlay: document.getElementById('global-loader'),
+                card: document.getElementById('loader-card'),
+                content: document.getElementById('loader-content'),
+    
+                show(text) {
+                    this.content.innerHTML = `<div class="spinner-ring"></div><p style="margin-top: 20px; font-size: 15px; color: rgba(255,255,255,0.8);">${text}</p>`;
+                    this.overlay.style.display = 'flex';
+                    setTimeout(() => { this.overlay.style.opacity = '1'; this.card.style.transform = 'scale(1)'; }, 10);
+                },
+    
+                success(message, callback) {
+                    this.content.style.opacity = '0';
+                    setTimeout(() => {
+                        this.content.innerHTML = `
+                            <div style="position: relative; width: 70px; height: 70px; margin: 0 auto 15px;">
+                                <img src="https://raw.githubusercontent.com/kenzz-sz/SATURN/main/icon.jpg" onerror="this.src='https://via.placeholder.com/70'" style="width: 100%; height: 100%; border-radius: 20px; object-fit: cover;">
+                                <div class="check-badge">
+                                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5L4.5 8.5L9.5 3.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </div>
+                            </div>
+                            <h2 style="margin: 0; font-size: 20px;">${message}</h2>
+                        `;
+                        this.content.style.opacity = '1';
+                        this.card.style.transform = 'scale(1.05)';
+                        setTimeout(() => this.card.style.transform = 'scale(1)', 200);
+                        setTimeout(() => this.close(callback), 2000);
+                    }, 300);
+                },
+    
+                showCopyBox(title, textValue) {
+                    this.content.style.opacity = '0';
+                    setTimeout(() => {
+                        this.content.innerHTML = `
+                            <h3 style="margin: 0 0 15px 0;">${title}</h3>
+                            <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px; font-family: monospace; font-size: 16px; color: #0A84FF; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">${textValue}</div>
+                            <button class="btn-primary" id="btn-copy" onclick="Loader.copy('${textValue}')">COPY TEXT</button>
+                            <button onclick="Loader.close()" style="background:transparent; border:none; color:white; opacity:0.6; margin-top:15px; cursor:pointer; font-weight:bold;">CLOSE</button>
+                        `;
+                        this.content.style.opacity = '1';
+                    }, 300);
+                },
+    
+                copy(text) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        const btn = document.getElementById('btn-copy');
+                        btn.innerText = "COPIED!"; btn.style.background = "#34C759"; btn.style.color = "white";
+                    });
+                },
+    
+                close(callback) {
+                    this.overlay.style.opacity = '0';
+                    this.card.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        this.overlay.style.display = 'none';
+                        if (callback) callback();
+                    }, 400);
+                }
+            };
+        const App = {
+                login() {
+                    const u = document.getElementById('inp-user').value;
+                    const p = document.getElementById('inp-pass').value;
+                    if (ACCOUNTS.find(acc => acc.usn === u && acc.pw === p)) {
+                        Loader.show("AUTHENTICATING...");
+                        setTimeout(() => Loader.success("Welcome Back!", () => this.changeScene('scene-dashboard')), 1500);
+                        localStorage.setItem("zynxacount", JSON.stringify({usn: u, pass: p}))
+                    } else {
+                        const err = document.getElementById('login-err');
+                        err.style.display = 'block';
+                        setTimeout(() => err.style.display = 'none', 3000);
+                    }
+                },
+                logina() {
+                    const u = document.getElementById('inp-user').value;
+                    const p = document.getElementById('inp-pass').value;
+                    if (ACCOUNTS.find(acc => acc.usn === u && acc.pw === p)) {
+                        Loader.show("AUTHENTICATING...");
+                        setTimeout(() => Loader.success("Welcome Back!", () => this.changeScene('scene-dashboard')), 300);
+                        localStorage.setItem("zynxacount", JSON.stringify({usn: u, pass: p}))
+                    } else {
+                        const err = document.getElementById('login-err');
+                        err.style.display = 'block';
+                        setTimeout(() => err.style.display = 'none', 500);
+                    }
+                },
+    
+                // Fungsi pindah scene yang sangat ketat agar tidak tumpang tindih
+                changeScene(sceneId) {
+                    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active-scene'));
+                    document.getElementById(sceneId).classList.add('active-scene');
+                },
+    
+                // Animasi Akordeon Buka Tutup
+                toggleCategory(catId) {
+                    const cat = document.getElementById(catId);
+                    // Tutup kategori lain (opsional, hapus 2 baris di bawah jika ingin bisa buka banyak sekaligus)
+                    document.querySelectorAll('.category').forEach(c => {
+                        if (c.id !== catId) c.classList.remove('open');
+                    });
+                    cat.classList.toggle('open');
+                },
+    
+                // Eksekusi Fitur
+                triggerBypass() {
+                    Loader.show("INJECTING...");
+                    setTimeout(() => Loader.success("Success!", null), 2000);
+                },
+    
+                triggerToken() {
+                    Loader.show("GENERATING...");
+                    setTimeout(() => Loader.showCopyBox("SECURE TOKEN", "ZYNX-8821-X"), 1500);
+                }
+            };
+        const buildinmodsvalue = [
+            {
+  "directory": "build-server",
+  "display": "",
+  "icon": "✅️",
+  "description": "Build Server",
+  "code": "rmfs('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/main.js');",
+  "url": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/main.json",
+  "hide": true
+},
+// Bug
+            /*{
+  "hide": true,
+  "directory": "mod-manager-toolkit",
+  "display": "Mod Manager Toolkit",
+  "description": "Delete Mods Selected - Anti-Ghost Version",
+  "icon": "🧹",
+  "code": "if(!window.MMT_FINAL){window.MMT={isSelectMode:false,selected:[],blacklist:[],injectStyles:function(){if(document.getElementById('mmt-css'))return;const s=document.createElement('style');s.id='mmt-css';s.innerHTML=`#mmt-toggle-input:checked + .mmt-slider { background-color: #34C759; } #mmt-toggle-input:checked + .mmt-slider:before { transform: translateX(18px); } .mmt-slider:before { position:absolute;content:\"\";height:18px;width:18px;left:2px;bottom:2px;background-color:white;transition:.3s;border-radius:50%; } .mmt-cb { appearance:none; -webkit-appearance:none; width:22px; height:22px; border:2px solid #0A84FF; border-radius:50%; margin-right:12px; cursor:pointer; position:relative; flex-shrink:0; display:inline-block; vertical-align:middle; transition: 0.2s; } .mmt-cb:checked { background-color: #0A84FF; border-color: #0A84FF; }`;document.head.appendChild(s);},init:function(){try{const scene=document.getElementById('scene-mymods');const anchor=document.getElementById('mymodspopup');if(!scene||!anchor)return;this.injectStyles();if(!document.getElementById('mmt-header')){const h=document.createElement('div');h.id='mmt-header';h.style='display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;background:rgba(255,255,255,0.1);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);backdrop-filter:blur(5px);';h.innerHTML=`<div style=\"font-size:14px;font-weight:bold;color:white;\">Select Mode</div><div style=\"display:flex;align-items:center;gap:12px;\"><label style=\"position:relative;display:inline-block;width:40px;height:22px;\"><input type=\"checkbox\" id=\"mmt-toggle-input\" style=\"opacity:0;width:0;height:0;\"><span class=\"mmt-slider\" style=\"position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#3a3a3c;transition:.3s;border-radius:22px;\"></span></label><button id=\"mmt-del-btn\" style=\"display:none;background:#FF453A;color:white;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;\">Delete</button></div>`;anchor.parentNode.insertBefore(h,anchor);const tgl=document.getElementById('mmt-toggle-input');if(tgl){tgl.checked=this.isSelectMode;tgl.onchange=(e)=>this.toggle(e.target.checked);}const btn=document.getElementById('mmt-del-btn');if(btn){btn.style.display=this.isSelectMode?'block':'none';btn.onclick=()=>this.deleteBatch();}}this.refresh();}catch(e){}},toggle:function(s){this.isSelectMode=s;this.selected=[];const btn=document.getElementById('mmt-del-btn');if(btn)btn.style.display=s?'block':'none';this.refresh();},refresh:function(){const items=document.querySelectorAll('#mymodsvalue .category');items.forEach(cat=>{const dir=cat.id.replace('cat-','').replace('-mymodsvalueid','');if(this.blacklist.includes(dir)){cat.remove();return;}const h=cat.querySelector('.cat-header');if(!h)return;let cb=h.querySelector('.mmt-cb');if(this.isSelectMode){if(!cb){cb=document.createElement('input');cb.type='checkbox';cb.className='mmt-cb';cb.checked=this.selected.includes(dir);cb.onclick=(e)=>e.stopPropagation();cb.onchange=(e)=>{if(e.target.checked)this.selected.push(dir);else this.selected=this.selected.filter(d=>d!==dir);};const inner=h.querySelector('div');if(inner){inner.style.display='flex';inner.style.alignItems='center';inner.prepend(cb);}else{h.prepend(cb);}}}else if(cb){cb.remove();}});},deleteBatch:function(){if(this.selected.length===0)return;const ov=document.createElement('div');ov.style='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);display:flex;justify-content:center;align-items:center;z-index:999999;opacity:0;transition:0.3s;';ov.innerHTML=`<div style=\"background:rgba(30,30,30,0.9);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:25px;width:260px;text-align:center;transform:scale(0.9);transition:0.3s;\" id=\"mmt-pop\"><h3 style=\"margin:0 0 10px 0;color:white;\">Delete Mods</h3><p style=\"margin:0 0 20px 0;font-size:14px;color:rgba(255,255,255,0.7);\">Hapus ${this.selected.length} mod terpilih secara permanen?</p><div style=\"display:flex;gap:10px;\"><button id=\"mmt-ccl\" style=\"flex:1;background:rgba(255,255,255,0.1);color:white;border:none;padding:12px;border-radius:12px;cursor:pointer;\">Batal</button><button id=\"mmt-ok\" style=\"flex:1;background:#FF453A;color:white;border:none;padding:12px;border-radius:12px;font-weight:bold;cursor:pointer;\">Hapus</button></div></div>`;document.body.appendChild(ov);setTimeout(()=>{ov.style.opacity=1;document.getElementById('mmt-pop').style.transform='scale(1)';},10);document.getElementById('mmt-ccl').onclick=()=>{ov.style.opacity=0;setTimeout(()=>ov.remove(),300);};document.getElementById('mmt-ok').onclick=()=>{this.selected.forEach(d=>{this.blacklist.push(d);const el=document.getElementById('cat-'+d+'-mymodsvalueid');if(el){const cat=el.closest('.category')||el;cat.remove();}});if(window.installedmods){window.installedmods=window.installedmods.filter(m=>m&&!this.blacklist.includes(m.directory));localStorage.setItem('mymods',JSON.stringify(window.installedmods));}this.toggle(false);const t=document.getElementById('mmt-toggle-input');if(t)t.checked=false;ov.style.opacity=0;setTimeout(()=>{ov.remove();if(window.refreshmymodsmenu)window.refreshmymodsmenu();setTimeout(()=>this.refresh(),100);},300);};}};setInterval(()=>window.MMT.init(),500);window.MMT_FINAL=true;setTimeout(()=>window.MMT.init(),500);}"
+},*/
+           /* {
+  "hide": true,
+  "directory": "mmt-pro-animated-v5",
+  "display": "Mod Manager Toolkit Pro V5",
+  "description": "Ultra Stable Fix - Anti Disappear",
+  "icon": "🔥",
+  "code": "if(!window.MMT_PRO_LOADED_V5){window.MMT_PRO_V5={selected:[],isSelect:false,injectCSS:function(){if(document.getElementById('mmt-css-v5'))return;['','-v3','-v4'].forEach(v=>{const old=document.getElementById('mmt-css'+v);if(old)old.remove()});const s=document.createElement('style');s.id='mmt-css-v5';s.innerHTML=`.mmt-panel{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px)}.mmt-sw{position:relative;display:inline-block;width:38px;height:22px;flex-shrink:0}.mmt-sw input{opacity:0;width:0;height:0}.mmt-sl{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#444;transition:.3s;border-radius:24px}.mmt-sl:before{position:absolute;content:'';height:16px;width:16px;left:3px;bottom:3px;background:white;transition:.3s;border-radius:50%}.mmt-sw input:checked+.mmt-sl{background:#34C759}.mmt-sw input:checked+.mmt-sl:before{transform:translateX(16px)}.mmt-del-btn{background:#FF453A;color:white;border:none;border-radius:8px;font-weight:bold;font-size:11px;cursor:pointer;padding:6px 12px;display:none}.mmt-del-btn.show{display:block}.mmt-cb-v5{width:20px;height:20px;margin:0 10px 0 0;appearance:none;-webkit-appearance:none;border:2px solid #0A84FF;border-radius:5px;position:relative;cursor:pointer;flex-shrink:0;display:none;vertical-align:middle}.mmt-cb-v5.show{display:inline-block}.mmt-cb-v5:checked{background:#0A84FF}.mmt-cb-v5:checked:after{content:'✓';position:absolute;color:white;font-size:12px;left:50%;top:50%;transform:translate(-50%,-50%)}`;document.head.appendChild(s)},loop:function(){this.injectCSS();const anchor=document.getElementById('mymodsvalue');if(!anchor)return;let ctrl=document.getElementById('mmt-ctrl-v5');if(!ctrl){['','-v3','-v4'].forEach(v=>{const old=document.getElementById('mmt-ctrl'+v);if(old)old.remove()});ctrl=document.createElement('div');ctrl.id='mmt-ctrl-v5';ctrl.className='mmt-panel';ctrl.innerHTML=`<div style='display:flex;align-items:center;gap:8px'><label class='mmt-sw'><input type='checkbox' id='mmt-tgl-v5'><span class='mmt-sl'></span></label><span style='color:white;font-weight:bold;font-size:13px'>Select Mods</span></div><button id='mmt-del-v5' class='mmt-del-btn'>DELETE (0)</button>`;anchor.parentNode.insertBefore(ctrl,anchor);document.getElementById('mmt-tgl-v5').onchange=(e)=>{this.isSelect=e.target.checked;if(!this.isSelect)this.selected=[];this.refreshUI()};document.getElementById('mmt-del-v5').onclick=()=>this.deleteBatch()}const tgl=document.getElementById('mmt-tgl-v5');if(tgl&&tgl.checked!==this.isSelect)tgl.checked=this.isSelect;this.refreshUI()},refreshUI:function(){try{const btn=document.getElementById('mmt-del-v5');if(btn){if(this.isSelect){btn.classList.add('show');btn.innerText=`DELETE (${this.selected.length})`}else{btn.classList.remove('show')}}}catch(e){}const items=document.querySelectorAll('#mymodsvalue.category');items.forEach(cat=>{try{const dir=cat.id.replace('cat-','').replace('-mymodsvalueid','');const head=cat.querySelector('.cat-header');if(!head)return;head.style.display='flex';head.style.alignItems='center';head.style.justifyContent='flex-start';let cb=head.querySelector('.mmt-cb-v5');if(!cb){const oldCb=head.querySelector('.mmt-cb');if(oldCb)oldCb.remove();cb=document.createElement('input');cb.type='checkbox';cb.className='mmt-cb-v5';cb.onclick=(e)=>e.stopPropagation();cb.onchange=(e)=>{if(e.target.checked){if(!this.selected.includes(dir))this.selected.push(dir)}else{this.selected=this.selected.filter(d=>d!==dir)}this.refreshUI()};head.insertBefore(cb,head.firstChild)}if(this.isSelect){cb.classList.add('show');cb.checked=this.selected.includes(dir)}else{cb.classList.remove('show');cb.checked=false}}catch(e){}})},deleteBatch:function(){if(this.selected.length===0)return;if(confirm(`Hapus ${this.selected.length} mod secara permanen?`)){this.selected.forEach(d=>{if(window.deleteinstalledmods)deleteinstalledmods(d)});this.selected=[];this.isSelect=false;this.refreshUI()}}};setInterval(()=>window.MMT_PRO_V5.loop(),500);window.MMT_PRO_LOADED_V5=true}"
+},*/
+            {
+                "hide": true,
+  "directory": "zynx-ultra-engine",
+  "display": "Ultra Engine",
+  "description": "Hardcore optimization: RequestAnimationFrame syncing, DOM Throttling, and Memory Flush.",
+  "icon": "🚀",
+  "code": "if(!window.ZUE){window.ZUE={init:function(){/* 1. Force High Refresh Rate Sync */ const originalRequestAnimationFrame = window.requestAnimationFrame; window.requestAnimationFrame = function(callback) { return originalRequestAnimationFrame(function(time) { callback(time); }); }; /* 2. CSS Optimization Inject */ const style = document.createElement('style'); style.innerHTML = `* { box-shadow: none !important; -webkit-appearance: none; outline: none; } .panel, .category, .feature-item { contain: content; will-change: transform; } img { content-visibility: auto; }`; document.head.appendChild(style); /* 3. Throttle Heavy Functions */ function throttle(func, limit) { let inThrottle; return function() { const args = arguments; const context = this; if (!inThrottle) { func.apply(context, args); inThrottle = true; setTimeout(() => inThrottle = false, limit); } } } /* 4. Fix Zynx Scene Transitions */ if(window.App && App.changeScene){ const oldChange = App.changeScene; App.changeScene = throttle(function(){ oldChange.apply(this, arguments); /* Garbage Collection Hint */ if(window.gc) window.gc(); }, 300); } /* 5. Disable Smooth Scroll for Performance */ document.documentElement.style.scrollBehavior = 'auto'; console.log('Ultra Engine: Maximum Performance Engaged'); }}; window.ZUE.init(); }"
+},
+            {
+                "hide": true,
+  "directory": "full-screen-fade",
+  "display": "Fade In",
+  "description": "Build In",
+  "icon": "🌑",
+  "code": "const fadeOverlay = document.createElement('div'); Object.assign(fadeOverlay.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'black', zIndex: '999999', transition: 'opacity 2s ease', opacity: '1' }); document.body.appendChild(fadeOverlay); setTimeout(() => { fadeOverlay.style.opacity = '0'; setTimeout(() => fadeOverlay.remove(), 2000); }, 500);"
+}
+        ]
+
+        let iss = {}
+        
+        async function load(){
+            await jes()
+            const isada = localStorage.getItem("zynxacount")
+            const isadb = localStorage.getItem("mymods")
+            const ayama = {"usn": "", "pass": ""}
+            if(isada) iss = JSON.parse(isada);
+            if(isadb) installedmods = JSON.parse(isadb);
+            if (isada){
+            document.getElementById('inp-user').value = iss.usn;
+            document.getElementById('inp-pass').value = iss.pass;
+                App.logina()
+            }}
+        function loadModsFromStorage() {
+        const data = localStorage.getItem("mymods");
+        if (!data) return;
+    
+        installedmods = JSON.parse(data);
+    
+        
+    }
+    
+        load()
+        loadModsFromStorage();
+        const tombols = document.querySelectorAll(".acctext");
+
+tombols.forEach((tombol, index) => {
+    tombol.innerText = (JSON.parse(localStorage.getItem("zynxacount"))).usn;
+    console.log(`Mengubah tombol ke-${index}`);
+});
+        buildinmodsvalue.forEach(bv => {
+    try {
+        // Hapus versi lama jika ada (berdasarkan directory) untuk mencegah duplikat
+        setTimeout(() => {
+        installedmods = installedmods.filter(m => m.directory !== bv.directory);
+        
+        // Masukkan yang baru
+        installedmods.push(bv);
+        
+        // Jalankan kode mod
+        if (bv.code) {
+            try { eval(bv.code); } catch(e) { console.error("Error eval:", e); }
+        }}, 500)
+    } catch(ei) {
+        console.error("Mod Load Error:", ei);
+    }
+});
+        </script>
+        <script>
+        function lg(){
+                const UltraLoading = {
+        overlay: null,
+        card: null,
+        
+        _injectStyles() {
+            if (document.getElementById('ultra-ui-style')) return;
+            const style = document.createElement('style');
+            style.id = 'ultra-ui-style';
+            style.innerHTML = `
+                @keyframes ultra-spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                @keyframes pulse-bg {
+                    0% { opacity: 0.5; transform: scale(1); }
+                    50% { opacity: 0.8; transform: scale(1.05); }
+                    100% { opacity: 0.5; transform: scale(1); }
+                }
+                .spinner-ring {
+                    width: 50px; height: 50px;
+                    border: 3px solid transparent;
+                    border-top: 3px solid #007AFF; /* iOS Blue */
+                    border-right: 3px solid #007AFF;
+                    border-radius: 50%;
+                    animation: ultra-spin 0.6s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+                }
+                .status-text {
+                    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto;
+                    font-weight: 500; letter-spacing: -0.02em;
+                    margin-top: 15px; color: rgba(255,255,255,0.9);
+                }
+            `;
+            document.head.appendChild(style);
+        },
+    
+        show() {
+            this._injectStyles();
+    
+            // 1. Overlay dengan Animasi Gradien Berjalan
+            this.overlay = document.createElement('div');
+            Object.assign(this.overlay.style, {
+                position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+                backgroundColor: 'rgba(0,0,0,0.4)',
+                backdropFilter: 'blur(25px) saturate(180%)',
+                webkitBackdropFilter: 'blur(25px) saturate(180%)',
+                display: 'flex', justifyContent: 'center', alignItems: 'center',
+                zIndex: 99999, opacity: 0, transition: 'opacity 0.6s ease'
+            });
+    
+            // 2. Card UI Komplex (Glassmorphism + Border Gradient)
+            this.card = document.createElement('div');
+            Object.assign(this.card.style, {
+                position: 'relative', width: '220px', padding: '40px 20px',
+                background: 'linear-gradient(135deg, rgba(60,60,60,0.7) 0%, rgba(30,30,30,0.8) 100%)',
+                borderRadius: '32px', border: '1px solid rgba(255,255,255,0.15)',
+                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1)',
+                textAlign: 'center', opacity: 0,
+                transform: 'scale(0.8) translateY(30px)',
+                transition: 'all 0.7s cubic-bezier(0.15, 0.85, 0.35, 1.1)'
+            });
+    
+            this.card.innerHTML = `
+                <div id="ui-content" style="transition: all 0.5s ease;">
+                    <div style="position: relative; display: inline-block;">
+                        <div class="spinner-ring"></div>
+                        <div style="position: absolute; top:50%; left:50%; transform:translate(-50%, -50%); width: 30px; height: 30px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+                    </div>
+                    <div class="status-text">Memproses...</div>
+                </div>
+            `;
+    
+            this.overlay.appendChild(this.card);
+            document.body.appendChild(this.overlay);
+    
+            // Start Animasi
+            requestAnimationFrame(() => {
+                this.overlay.style.opacity = 1;
+                this.card.style.opacity = 1;
+                this.card.style.transform = 'scale(1) translateY(0)';
+            });
+        },
+    
+        finish() {
+            const content = document.getElementById('ui-content');
+            content.style.opacity = 0;
+            content.style.transform = 'translateY(-10px)';
+    
+            setTimeout(() => {
+                // UI Selesai yang lebih keren
+                content.innerHTML = `
+                    <div style="position: relative; margin-bottom: 20px;">
+                        <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 22px; margin: 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
+                             <img src="assets/img/icon.png" onerror="this.src='https://raw.githubusercontent.com/kenzz-sz/SATURN/main/icon.jpg'" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="position: absolute; bottom: -5px; right: 60px; width: 24px; height: 24px; background: #34C759; border-radius: 50%; border: 3px solid #282828; display: flex; align-items: center; justify-content: center;">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5L4.5 8.5L9.5 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
+                    <h2 style="margin: 0; font-size: 22px; font-weight: 700; color: white; font-family: sans-serif;">Hello!</h2>
+                    <p style="margin: 5px 0 0; font-size: 14px; color: rgba(255,255,255,0.5); font-family: sans-serif;">Berhasil dimuat</p>
+                `;
+                content.style.opacity = 1;
+                content.style.transform = 'translateY(0)';
+                
+                // Efek haptic-like bounce pada card
+                this.card.style.transform = 'scale(1.03)';
+                setTimeout(() => this.card.style.transform = 'scale(1)', 200);
+            }, 500);
+    
+            // Tutup otomatis
+            setTimeout(() => this.hide(), 3500);
+        },
+    
+        hide() {
+            if (!this.overlay) return;
+            this.card.style.transform = 'scale(0.9) translateY(20px)';
+            this.card.style.opacity = 0;
+            this.overlay.style.opacity = 0;
+            setTimeout(() => {
+                this.overlay.remove();
+                this.overlay = null;
+            }, 600);
+        }
+    };
+    
+    // Panggil:
+    UltraLoading.show();
+    setTimeout(() => UltraLoading.finish(), 3000);
+    
+            }
+            if(!localStorage.getItem("zynxacount")){
+                const UltraLoading = {
+        overlay: null,
+        card: null,
+        
+        _injectStyles() {
+            if (document.getElementById('ultra-ui-style')) return;
+            const style = document.createElement('style');
+            style.id = 'ultra-ui-style';
+            style.innerHTML = `
+                @keyframes ultra-spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                @keyframes pulse-bg {
+                    0% { opacity: 0.5; transform: scale(1); }
+                    50% { opacity: 0.8; transform: scale(1.05); }
+                    100% { opacity: 0.5; transform: scale(1); }
+                }
+                .spinner-ring {
+                    width: 50px; height: 50px;
+                    border: 3px solid transparent;
+                    border-top: 3px solid #007AFF; /* iOS Blue */
+                    border-right: 3px solid #007AFF;
+                    border-radius: 50%;
+                    animation: ultra-spin 0.6s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+                }
+                .status-text {
+                    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto;
+                    font-weight: 500; letter-spacing: -0.02em;
+                    margin-top: 15px; color: rgba(255,255,255,0.9);
+                }
+            `;
+            document.head.appendChild(style);
+        },
+    
+        show() {
+            this._injectStyles();
+    
+            // 1. Overlay dengan Animasi Gradien Berjalan
+            this.overlay = document.createElement('div');
+            Object.assign(this.overlay.style, {
+                position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+                backgroundColor: 'rgba(0,0,0,0.4)',
+                backdropFilter: 'blur(25px) saturate(180%)',
+                webkitBackdropFilter: 'blur(25px) saturate(180%)',
+                display: 'flex', justifyContent: 'center', alignItems: 'center',
+                zIndex: 99999, opacity: 0, transition: 'opacity 0.6s ease'
+            });
+    
+            // 2. Card UI Komplex (Glassmorphism + Border Gradient)
+            this.card = document.createElement('div');
+            Object.assign(this.card.style, {
+                position: 'relative', width: '220px', padding: '40px 20px',
+                background: 'linear-gradient(135deg, rgba(60,60,60,0.7) 0%, rgba(30,30,30,0.8) 100%)',
+                borderRadius: '32px', border: '1px solid rgba(255,255,255,0.15)',
+                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1)',
+                textAlign: 'center', opacity: 0,
+                transform: 'scale(0.8) translateY(30px)',
+                transition: 'all 0.7s cubic-bezier(0.15, 0.85, 0.35, 1.1)'
+            });
+    
+            this.card.innerHTML = `
+                <div id="ui-content" style="transition: all 0.5s ease;">
+                    <div style="position: relative; display: inline-block;">
+                        <div class="spinner-ring"></div>
+                        <div style="position: absolute; top:50%; left:50%; transform:translate(-50%, -50%); width: 30px; height: 30px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+                    </div>
+                    <div class="status-text">Memproses...</div>
+                </div>
+            `;
+    
+            this.overlay.appendChild(this.card);
+            document.body.appendChild(this.overlay);
+    
+            // Start Animasi
+            requestAnimationFrame(() => {
+                this.overlay.style.opacity = 1;
+                this.card.style.opacity = 1;
+                this.card.style.transform = 'scale(1) translateY(0)';
+            });
+        },
+    
+        finish() {
+            const content = document.getElementById('ui-content');
+            content.style.opacity = 0;
+            content.style.transform = 'translateY(-10px)';
+    
+            setTimeout(() => {
+                // UI Selesai yang lebih keren
+                content.innerHTML = `
+                    <div style="position: relative; margin-bottom: 20px;">
+                        <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 22px; margin: 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
+                             <img src="assets/img/icon.png" onerror="this.src='https://raw.githubusercontent.com/kenzz-sz/SATURN/main/icon.jpg'" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="position: absolute; bottom: -5px; right: 60px; width: 24px; height: 24px; background: #34C759; border-radius: 50%; border: 3px solid #282828; display: flex; align-items: center; justify-content: center;">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5L4.5 8.5L9.5 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
+                    <span style="margin: 0; margin-top: -38px; font-size: 16px; font-weight: 700; color: white; font-family: sans-serif;">Hello!, Welcome To Zynx!</span>
+                    <p style="margin: 5px 0 0; font-size: 14px; color: rgba(255,255,255,0.5); font-family: sans-serif;">Sucsess Instaled</p>
+                `;
+                content.style.opacity = 1;
+                content.style.transform = 'translateY(0)';
+                
+                // Efek haptic-like bounce pada card
+                this.card.style.transform = 'scale(1.03)';
+                setTimeout(() => this.card.style.transform = 'scale(1)', 200);
+            }, 500);
+    
+            // Tutup otomatis
+            setTimeout(() => this.hide(), 3500);
+        },
+    
+        hide() {
+            if (!this.overlay) return;
+            this.card.style.transform = 'scale(0.9) translateY(20px)';
+            this.card.style.opacity = 0;
+            this.overlay.style.opacity = 0;
+            setTimeout(() => {
+                this.overlay.remove();
+                this.overlay = null;
+            }, 600);
+        }
+    };
+    
+    // Panggil:
+    UltraLoading.show();
+    setTimeout(() => UltraLoading.finish(), 3000);
+    
+            }
+        </script>
+        <script>
+    let allowpushdeniedmods = false;
+    let deniedmodsitem = [
+        {
+            "d": "eval(",
+            "type": "ask",
+            "text": "This mods use eval(), this will be dangerous, continue?"
+        },
+        {
+            "d": "document.body",
+            "type": "full",
+            "text": "This mods want to looking to document.body"
+        }
+    ]
+    function createscene(name, title, htmlv, ids, bt="dashboard", atc=true){
+            const s = document.getElementById("app-container");
+            s.innerHTML += `<div id="scene-${ids}" class="panel">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <span onclick="App.changeScene('scene-${bt}')" style="color: #0A84FF; font-size: 16px; cursor: pointer; display: flex; align-items: center;">
+                        <span style="font-size: 20px; margin-right: 5px;">‹</span> Back
+                    </span>
+                    <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">${title}</h2>
+                </div>
+                ${htmlv}</div>`;
+                if(atc == true){
+                   aisanother.innerHTML += `<div class="feature-item" onclick="App.changeScene('scene-${ids}')">
+                                <span>${name}</span>
+                                <span style="color: #0A84FF;">Open</span>
+                            </div>`
+                }
+        }
+    async function runcodemods(){
+    const s = document.getElementById("input-code-mods").value.trim();
+    if(s === "762"){
+        const b = prompt("input link to import mods");
+        await fetch(b)
+        .then(res => res.text())
+        .then(dat => pushmods(dat));
+        
+    }
+    else if(s === "group"){
+        try{
+            const b = prompt("input link to import mods");
+            const urls = JSON.parse(b);
+            
+            // PERBAIKAN: Gunakan for...of agar 'await' berfungsi sempurna
+            for (const i of urls) {
+                await fetch(i)
+                .then(res => res.text())
+                .then(dat => pushmods(dat));
+            }
+        }
+        catch(srr){
+            console.log(srr);
+        }
+    }
+    else if(s === "groupjson"){
+        const b = JSON.parse(prompt("Input Json Here", "[]"))
+        if(b !== []){
+        b.forEach(i => {
+            installedmods.push(i)
+        })
+        localStorage.setItem('mymods', JSON.stringify(installedmods));}
+    }
+    else if(s === "groupurl"){
+        const b = JSON.parse(await fh(prompt("Input URL")))
+        if(b !== []){
+        b.forEach(i => {
+            installedmods.push(i)
+        })
+        localStorage.setItem('mymods', JSON.stringify(installedmods));}
+    }
+    else if(s === "CPM78"){
+        const va = JSON.parse(prompt("input JSON code").trim())
+        pushmods(va);
+    }
+}
+
+    async function downloadmods(source) {
+        if (!source) return;
+        Loader.show("DOWNLOADING MOD...");
+        try {
+            const response = await fetch(source);
+            const datja = await response.json(); // Mengasumsikan response adalah JSON mod tunggal atau array
+            
+            // Cek apakah data sudah ada untuk menghindari duplikat
+            const exists = installedmods.find(m => m.name === datja.name);
+            
+            if (!exists) {
+                installedmods.push(datja);
+                setTimeout(() => {
+                    Loader.success("Mod Installed!", () => {
+                        console.log("Current Mods:", installedmods);
+                    });
+                }, 1000);
+            } else {
+                Loader.close();
+                if(confirm("Mods already downloaded, want update?")){
+                    installedmods = installedmods.filter(m => m.name !== datja.name);
+                    installedmods.push(datja);
+                }
+            }
+        } catch (err) {
+            console.error("Download Error:", err);
+            Loader.close();
+            alert("Gagal mengunduh mod. Pastikan URL benar.");
+        }
+    }
+    function faileda() {
+                    setTimeout(() => Loader.showCopyBox("SECURE TOKEN", "ZYNX-8821-X"), 1500);
+                }
+    
+    function pushmods(vv) {
+    Loader.show("DOWNLOADING...");
+    
+    setTimeout(() => {
+        Loader.close();
+        const v = JSON.parse(vv.replaceAll('`', '"'));
+
+        // --- SECURITY CHECK FIX ---
+        if (allowpushdeniedmods == false) {
+            // Use a standard for loop so we can actually STOP the function
+            for (const item of deniedmodsitem) {
+                if (v.code.includes(item.d)) {
+                    if (item.type === "ask") {
+                        if (!confirm(item.text)) {
+                            console.log("Installation cancelled by user.");
+                            return; // ✅ This now stops the ENTIRE pushmods function
+                        }
+                    }
+                    if (item.type === "full") {
+                        alert("Access denied: " + item.text);
+                        return; // ✅ This stops the function immediately
+                    }
+                }
+            }
+        }
+        // --- END SECURITY CHECK ---
+
+        // Rest of your installation logic...
+        if (v.password) {
+            if (prompt("Enter password") !== v.password) {
+                return alert("Password wrong.");
+            }
+        }
+
+        const exists = installedmods.find(m => m.directory === v.directory);
+        if (!exists) {
+            installedmods.push(v);
+            localStorage.setItem("mymods", JSON.stringify(installedmods));
+            Loader.success("Mod Installed!");
+        } else {
+            // Update logic...
+        }
+    }, 500);
+}
+
+    let resultfetch = [
+                /*{directory:'run-js',
+    descripsion:'in-this-mod-you-can-run-js-code',
+    display:'run-javascript',
+    code:'alert()'}*/
+    ];
+    async function refreshmodsmenu() {
+    await fetch("https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/list.json")
+        .then(res => res.text())
+        .then(dat => resultfetch = JSON.parse(dat));
+
+    const mvin = document.getElementById("modsvalue");
+    if (!mvin) return; 
+    
+    mvin.innerHTML = ""; 
+    
+    resultfetch.forEach((i, index) => { // Added index here
+        const exists = installedmods.find(m => m.directory === i.directory);
+        const btnText = exists ? "Re-install" : "Download";
+        const idthisvalue = "cat-" + i.directory + "-modsvalueid";
+        
+        mvin.innerHTML += `
+        <div class="category" id="${idthisvalue}">
+            <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
+                <div><span class="cat-icon">${i.icon || "📦"}</span> ${i.display}</div>
+                <div class="cat-chevron">▶</div>
+            </div>
+            <div class="cat-content">
+                <div class="cat-inner">
+                    <p style="font-size:12px; opacity:0.6; margin-bottom:10px;">
+                        ${i.descripsion || i.description || 'No description'}
+                    </p>
+                    <div class="feature-item">
+                        <button class="btn-primary" onclick="handleModDownload(${index})" style="margin-top: -10px">
+                            ${btnText}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    });
+}
+
+// Add this helper function to your script
+window.handleModDownload = function(index) {
+    const selectedMod = resultfetch[index];
+    // Convert to string here to satisfy your existing pushmods logic, 
+    // but without the broken .replaceAll backticks
+    pushmods(JSON.stringify(selectedMod));
+};
+
+    function refreshmymodsmenu() {
+            
+        const mvin = document.getElementById("mymodsvalue");
+        if (!mvin) return; 
+        mvin.innerHTML = ""; 
+        
+            let res = "";
+            
+installedmods.forEach(i => {
+    if(!i.disable){
+        const thetarget = installedmods.find(gi => gi.directory === i.directory);
+        if(thetarget){
+            thetarget.disable = false
+        }
+    }
+    if(!i.hide && !i.name){
+        const colorer = i.disable ? "gray" : "white";
+        const isdisable = i.disable ? "Undisable" : "Disable";
+        const idthisvalue = "cat-" + i.directory + "-mymodsvalueid";
+                mvin.innerHTML += `
+                <div class="category" id="${idthisvalue}">
+                    <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
+                        <div><span class="cat-icon">${i.icon || "📦"}</span><span style="color: ${colorer}"> ${i.display || i.name  || "No Display name"}</span> </div>
+                        
+                    </div>
+                    <div class="cat-content">
+                        <div class="cat-inner">
+                            <p style="font-size:12px; opacity:0.6; margin-bottom:10px;">
+                                ${i.descripsion || i.description || 'No description'}
+                            </p>
+                            <div class="feature-item">
+                                <button class="btn-primary" onclick="deleteinstalledmods('${i.directory || null}')" style="margin-top: -10px">
+                                    Delete
+                                </button></div>
+                                <div class="feature-item">
+            <button class="btn-primary" onclick="
+            
+            const av = installedmods.find(ir => ir.directory === '${i.directory}')
+            av.disable = av.disable ? false : true;
+            localStorage.setItem('mymods', JSON.stringify(installedmods));
+      
+            refreshmymodsmenu()
+            " style="margin-top: -10px">
+                                    ${isdisable}
+                                </button>
+                                <div>
+                                ${i.modsconfig || ""}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                console.log(i)
+                console.log(mvin.innerHTML)
+            }});
+    if(installedmods.length == 1){
+                mvin.innerHTML = `
+                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
+                    <p style="opacity: 0.6; font-size: 14px;">[ YOU DONT HAVE ANY MODS ]</p>
+                    <p style="opacity: 0.6; font-size: 12px; font-weight: normal;">Download mods in mods menu.</p>
+                </div>
+            `
+            }
+        }
+    refreshmodsmenu();
+    function deleteinstalledmods(dir){
+            const exists = installedmods.find(m => m.directory === dir);
+            
+            if(!exists) return;
+            
+            Loader.show("DELETING...");
+                        setTimeout(() => Loader.success("Sucsess!", () => {
+            installedmods = installedmods.filter(m => m.directory !== dir);
+            refreshmymodsmenu()
+            refreshmymodsmenu()
+            localStorage.setItem("mymods", JSON.stringify(installedmods));
+                        }), 1500);
+        }
+    installedmods.forEach(i => {
+    try {
+        if (i.code) {
+            // Cek apakah properti disable ada di dalam objek mod 'i'
+            // Jika i.disable adalah true, maka mod tidak dijalankan
+            if (i.disable === true) {
+                console.log("Mod skipped (Disabled): " + (i.display || i.name));
+            } else {
+                // Jalankan kode jika tidak di-disable
+                eval(i.code);
+                console.log("Loaded mod: " + (i.display || i.name));
+            }
+        }
+    } catch (e) {
+        console.error("Error loading mod " + (i.display || i.name) + ": ", e);
+    }
+});
+
+    function copy(t){
+        navigator.clipboard.writeText(t)
+    }
+    function sj(t){
+        return JSON.stringify(t, null, 2)
+    }
+    
+// 1. Buat fungsi global (biar bisa dipanggil langsung dari HTML kayak bawaan game)
+window.mmtToggleSelect = function(e) {
+    if(e) { e.preventDefault(); e.stopPropagation(); } // Tahan klik biar ga tembus
+    window.isSelectMode = !window.isSelectMode;
+    
+    const btn = document.getElementById("mmt-toggle-btn");
+    if(btn) {
+        btn.innerText = window.isSelectMode ? "DISABLE SELECT" : "ENABLE SELECT";
+        btn.style.background = window.isSelectMode ? "#555" : "#0A84FF";
+    }
+    
+    const delBtn = document.getElementById("mmt-del-selected");
+    if(delBtn) {
+        delBtn.style.display = window.isSelectMode ? "block" : "none";
+    }
+    
+    if (typeof refreshmymodsmenu === "function") refreshmymodsmenu();
+};
+
+window.mmtBatchDelete = function(e) {
+    if(e) { e.preventDefault(); e.stopPropagation(); }
+    if (!window.selectedMods || window.selectedMods.length === 0) {
+        alert("Pilih mod dulu!");
+        return;
+    }
+    if (confirm(`Hapus ${window.selectedMods.length} mod sekaligus?`)) {
+        window.selectedMods.forEach(dir => {
+            if (typeof deleteinstalledmods === "function") deleteinstalledmods(dir);
+        });
+        window.selectedMods = [];
+        if (typeof refreshmymodsmenu === "function") refreshmymodsmenu();
+    }
+};
+
+// 2. Fungsi pembuat UI
+
+        </script>
+        <script>
+
+        </script>
+        <script>
+           //alert(JSON.stringify(installedmods.find(i => i.directory === "rentaxzxx---")))
+        </script>
+    </body>
+    </html>

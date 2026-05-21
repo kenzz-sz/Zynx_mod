@@ -1,4 +1,4 @@
-/*let isLocked = true;
+let isLocked = true;
 
 // Cek apakah configserver ada dan bernilai truthy
 if (typeof configserver !== 'undefined' && configserver) {
@@ -8,7 +8,7 @@ if (typeof configserver !== 'undefined' && configserver) {
 }
 
 (async function() {
-    const lockUrl = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/lock 2.html";
+    const lockUrl = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/lock-2.html";
 
     // Jika sudah tidak terkunci, jangan jalankan kode di bawahnya
     if (!isLocked) return;
@@ -42,4 +42,3 @@ if (typeof configserver !== 'undefined' && configserver) {
         console.error("Gagal memuat sistem keamanan:", error);
     }
 })();
-*/
