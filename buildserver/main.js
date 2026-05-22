@@ -44,11 +44,26 @@ if (typeof configserver !== 'undefined' && configserver) {
 })();
 */
 (async function() {
-    const json = JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/update.json"))
-    const jsona = json.find(i => i.downloadsupport === configserver.version);
-    if(jsona){
-        document.getElementById("title-checkupdate").innerHTML = jsona.title;
-        document.getElementById("decs-checkupdate").innerHTML = jsona.desc;
-        document.getElementById("update-checkupdate").onclick = ("fetch('"+jsona.urldownload+"').then(r=>r.blob()).then(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='"+jsona.pkgname+"';a.click();});");
+    // Mengambil data JSON dari GitHub
+    const jsonx = JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/update.json"));
+    const jsonax = jsonx.find(i => i.downloadsupport === configserver.version);
+    
+    if(jsonax){
+        document.getElementById("title-checkupdate").innerHTML = jsonax.title;
+        document.getElementById("decs-checkupdate").innerHTML = jsonax.desc;
+        
+        // PERBAIKAN: Gunakan arrow function () => { ... } bukan string ""
+        document.getElementById("update-checkupdate").onclick = () => {
+            fetch(jsonax.urldownload)
+                .then(r => r.blob())
+                .then(b => {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(b);
+                    a.download = jsonax.pkgname; // Nama file otomatis sesuai data JSON
+                    a.click();
+                    URL.revokeObjectURL(a.href); // Opsional: Membersihkan memori
+                })
+                .catch(err => console.error("Download gagal:", err));
+        };
     }
-})()
+})();
