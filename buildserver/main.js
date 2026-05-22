@@ -48,7 +48,7 @@ if (typeof configserver !== 'undefined' && configserver) {
     const jsona = json.find(i => i.downloadsupport === configserver.version);
     if(jsona){
         document.getElementById("title-checkupdate").innerHTML = jsona.title;
-        document.getElementById("decs-checkupdate").innerHTML = jsona.decs;
+        document.getElementById("decs-checkupdate").innerHTML = jsona.desc;
         document.getElementById("update-checkupdate").onclick = ("fetch('"+jsona.urldownload+"').then(r=>r.blob()).then(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='"+jsona.pkgname+"';a.click();});");
     }
 })()
