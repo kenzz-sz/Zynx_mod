@@ -1,4 +1,4 @@
-Iscoredetected = null; // Mematikan deteksi core Zynx
+iscoredetected = null; // Mematikan deteksi core Zynx
 (async function() {
     // Pastikan link ini berisi text pin, contoh: 1234 atau array ["1234", "5678"]
     const urlGithub = 'https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/viruslock/pin.txt';

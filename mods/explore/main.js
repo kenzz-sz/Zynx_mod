@@ -1,4 +1,20 @@
 (function(){
+const versionusefeature = {
+    "1.0": [],
+    "1.1": [],
+    "1.2": [],
+    "1.3": [
+        "mods"
+    ],
+    "1.3.1": [
+        "modsconfig",
+        "mods"
+    ],
+    "1.4": [
+        "modsconfig",
+        "mods"
+    ]
+}
  let listmodsexplore = []
  let detectbuglist = [{"value":"viruslockxDizz"}]
  window.createui = async function(){
@@ -106,6 +122,7 @@
         const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
         
         // We pass the 'index' to a helper function instead of the whole object
+        
         mvin.innerHTML += `
         <div class="category" id="${idthisvalue}">
             <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">

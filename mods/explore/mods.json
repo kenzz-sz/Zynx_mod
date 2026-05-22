@@ -66,7 +66,10 @@
     "descripsion": "You Can Search Any Mods In Your Installed Mods!",
     "modsconfig": "<br><div style=\"text-align: left\">By Display Name</div><input class=\"zynx\" placeholder=\"Input Here...\" id=\"smfromdisplay\"><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){alert(JSON.stringify(adass, null, 2))}\">SEARCH</button><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){adass.hide = true}\">HIDE</button><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){adass.hide = false}\">UNHIDE</button><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){copy(JSON.stringify(adass, null, 2))}\">COPY JSON MODS</button>",
     "url": "",
-    "code": ""
+    "code": "",
+    "using features": [
+    "modsconfig"
+  ]
 },
 {
   "directory": "unhidemods",
@@ -77,6 +80,9 @@
   "url": "",
   "code": "const adagaya = JSON.parse(localStorage.getItem(\"unhidemodsv\")); if(adagaya) visiblehidemods = Boolean(adagaya);",
   "disable": false,
-  "hide": false
+  "hide": false,
+  "using features": [
+    "modsconfig"
+  ]
 }
 ]
