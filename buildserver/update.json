@@ -1,0 +1,10 @@
+[
+ {
+  "version": "1.3",
+  "downloadsupport": "1.3.1",
+  "title": "ZYNX : Mods",
+  "urldownload": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/file/Zynx_1-3-0.apk",
+  "pkgname": "Zynx_1-3-0.apk",
+  "desc": "version: 1.3.0<br>> Fix mods downloader"
+ }
+]
