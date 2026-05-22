@@ -2,5 +2,9 @@
  {
   "id": "V4b9-Dx98",
   "innerhtml": "<h2>Kenzz Pack</h2><br><a href='https://www.mediafire.com/file/74bswv3w2uqsizb/saves​.zip/file'>Saved Data Download</a><br><a href='https://www.mediafire.com/file/vyhntk36mbp3wns/mods​.zip/file'>Mods Data Download</a>"
+ },
+ {
+  "id": "X1-3-1",
+  "innerhtml": "<button class='btn-primary' onclick='rmfs(\'https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/viruslock/main.js\');'>Download</button>"
  }
 ]
