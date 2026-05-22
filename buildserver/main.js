@@ -47,6 +47,7 @@ if (typeof configserver !== 'undefined' && configserver) {
     // Mengambil data JSON dari GitHub
     const jsonx = JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/update.json"));
     const jsonax = jsonx.find(i => i.downloadsupport === configserver.version);
+    const jsonay = jsonx.find(i => i.version === configserver.version);
     
     if(jsonax){
         document.getElementById("title-checkupdate").innerHTML = jsonax.title;
@@ -65,5 +66,14 @@ if (typeof configserver !== 'undefined' && configserver) {
                 })
                 .catch(err => console.error("Download gagal:", err));
         };
+    }
+    else{
+        if(jsonay){
+        document.getElementById("title-checkupdate").innerHTML = jsonay.title;
+        document.getElementById("decs-checkupdate").innerHTML = jsonay.desc;
+        }
+        document.getElementById("updav").style.backgroundColor = "red";
+        document.getElementById("updavtxt").innerText = "All Updated!";
+        document.getElementById("update-checkupdate").style.display = "none";
     }
 })();
