@@ -58,5 +58,25 @@
   "description": "Write and run HTML code directly inside Zynx. ",
   "icon": "👨‍💻",
   "code": "const studioHtml = '<div style=\"display:flex; flex-direction:column; height:500px; gap:10px; padding:10px; background:#1a1a1a; border-radius:12px;\"><textarea id=\"code-input\" class=\"zynx\" style=\"height:180px; font-family:monospace; font-size:12px; margin-bottom:0;\" placeholder=\"<h1>Hello World</h1>\"></textarea><button class=\"btn-primary\" style=\"margin-top:0;\" onclick=\"const code = document.getElementById(\\'code-input\\').value; const frame = document.getElementById(\\'preview-frame\\'); const doc = frame.contentDocument || frame.contentWindow.document; doc.open(); doc.write(code); doc.close();\">RUN CODE</button><div style=\"flex-grow:1; background:white; border-radius:8px; overflow:hidden;\"><iframe id=\"preview-frame\" style=\"width:100%; height:100%; border:none;\"></iframe></div></div>'; createscene('Studio', 'HTML STUDIO', studioHtml, 'studio-mod');"
+},
+{
+    "directory": "seaechmodfromid",
+    "display": "Search Mods",
+    "icon": "🔎",
+    "descripsion": "You Can Search Any Mods In Your Installed Mods!",
+    "modsconfig": "<br><div style=\"text-align: left\">By Display Name</div><input class=\"zynx\" placeholder=\"Input Here...\" id=\"smfromdisplay\"><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){alert(JSON.stringify(adass, null, 2))}\">SEARCH</button><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){adass.hide = true}\">HIDE</button><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){adass.hide = false}\">UNHIDE</button><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){copy(JSON.stringify(adass, null, 2))}\">COPY JSON MODS</button>",
+    "url": "",
+    "code": ""
+},
+{
+  "directory": "unhidemods",
+  "display": "Unhide Mods",
+  "icon": "🧑‍🧑‍🧒",
+  "descripsion": "Unhide System Mods",
+  "modsconfig": "<button class=\"btn-primary\" onclick=\"if(visiblehidemods === false){visiblehidemods = true}else {visiblehidemods = false}; refreshmymodsmenu(); localStorage.setItem('unhidemodsv', String(visiblehidemods));\">SWITCH</button>",
+  "url": "",
+  "code": "const adagaya = JSON.parse(localStorage.getItem(\"unhidemodsv\")); if(adagaya) visiblehidemods = Boolean(adagaya);",
+  "disable": false,
+  "hide": false
 }
 ]
