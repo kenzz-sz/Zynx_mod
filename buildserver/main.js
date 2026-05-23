@@ -53,30 +53,35 @@ if (typeof configserver !== 'undefined' && configserver) {
         document.getElementById("title-checkupdate").innerHTML = jsonax.title;
         document.getElementById("decs-checkupdate").innerHTML = jsonax.desc;
         
-        // PERBAIKAN: Gunakan arrow function () => { ... } bukan string ""
+        // PERBAIKAN LOGIKA: Jika STATUSNYA EMANG COMING SOON
         if(jsonax.comingsoon === true){
-        document.getElementById("update-checkupdate").onclick = () => {
-            fetch(jsonax.urldownload)
-                .then(r => r.blob())
-                .then(b => {
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(b);
-                    a.download = jsonax.pkgname; // Nama file otomatis sesuai data JSON
-                    a.click();
-                    URL.revokeObjectURL(a.href); // Opsional: Membersihkan memori
-                })
-                .catch(err => console.error("Download gagal:", err));
-        };
-        }else {
             document.getElementById("updav").style.backgroundColor = "yellow";
-        document.getElementById("updavtxt").innerText = "Coming Soon";
-        document.getElementById("update-checkupdate").style.display = "none";
+            document.getElementById("updavtxt").innerText = "Coming Soon";
+            document.getElementById("update-checkupdate").style.display = "none";
+        } else {
+            // Jika TIDAK coming soon (artinya update ready), baru pasang fungsi download
+            document.getElementById("updav").style.backgroundColor = "#238636"; // Warna hijau murni
+            document.getElementById("updavtxt").innerText = "Update Available";
+            document.getElementById("update-checkupdate").style.display = "block"; // Pastikan tombol muncul
+            
+            document.getElementById("update-checkupdate").onclick = () => {
+                fetch(jsonax.urldownload)
+                    .then(r => r.blob())
+                    .then(b => {
+                        const a = document.createElement('a');
+                        a.href = URL.createObjectURL(b);
+                        a.download = jsonax.pkgname;
+                        a.click();
+                        URL.revokeObjectURL(a.href);
+                    })
+                    .catch(err => console.error("Download gagal:", err));
+            };
         }
     }
-    else{
+    else {
         if(jsonay){
-        document.getElementById("title-checkupdate").innerHTML = jsonay.title;
-        document.getElementById("decs-checkupdate").innerHTML = jsonay.desc;
+            document.getElementById("title-checkupdate").innerHTML = jsonay.title;
+            document.getElementById("decs-checkupdate").innerHTML = jsonay.desc;
         }
         document.getElementById("updav").style.backgroundColor = "red";
         document.getElementById("updavtxt").innerText = "All Updated!";
