@@ -1,0 +1,11 @@
+{
+  "directory": "_rootmodeacsess",
+  "display": "RootSystemAcsess",
+  "icon": "🧭",
+  "descripsion": "Root ZynxOs",
+  "modsconfig": "<div id=\"rootgzgz\" style=\"text-align: center; margin-bottom: 12px; font-weight: bold; font-size: 16px;\">Checking...</div><img src=\"x\" onerror=\"this.style.display='none'; var st = localStorage.getItem('rootzynxx') || 'Not Running'; var el = document.getElementById('rootgzgz'); if(el) { el.innerText = st; el.style.color = (st === 'Running') ? '#0076F6' : '#ff3b30'; }\" /><button class=\"btn-primary\" onclick=\"if(confirm('turn on root?, maybe some functions will be broken')){ if(typeof root !== 'undefined' && root){ root.systemacsess = true; localStorage.setItem('rootzynx', JSON.stringify(root)); } else { localStorage.setItem('rootzynx', JSON.stringify({systemacsess: true})); } localStorage.setItem('rootzynxx', 'Running'); } var el = document.getElementById('rootgzgz'); if(el){ el.innerText = 'Running'; el.style.color = '#0076F6'; }\">Enable</button><button class=\"btn-primary\" onclick=\"if(confirm('remove acsess root?')){ localStorage.removeItem('rootzynx'); localStorage.setItem('rootzynxx', 'Not Running'); } var el = document.getElementById('rootgzgz'); if(el){ el.innerText = 'Not Running'; el.style.color = '#ff3b30'; }\">Unable</button>",
+  "url": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/Root/main.json",
+  "code": "console.log('Root Engine Active');",
+  "disable": false,
+  "hide": false
+}
