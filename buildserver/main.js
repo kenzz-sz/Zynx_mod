@@ -54,6 +54,7 @@ if (typeof configserver !== 'undefined' && configserver) {
         document.getElementById("decs-checkupdate").innerHTML = jsonax.desc;
         
         // PERBAIKAN: Gunakan arrow function () => { ... } bukan string ""
+        if(jsonax.comingsoon === true){
         document.getElementById("update-checkupdate").onclick = () => {
             fetch(jsonax.urldownload)
                 .then(r => r.blob())
@@ -66,6 +67,11 @@ if (typeof configserver !== 'undefined' && configserver) {
                 })
                 .catch(err => console.error("Download gagal:", err));
         };
+        }else {
+            document.getElementById("updav").style.backgroundColor = "yellow";
+        document.getElementById("updavtxt").innerText = "Coming Soon";
+        document.getElementById("update-checkupdate").style.display = "none";
+        }
     }
     else{
         if(jsonay){
