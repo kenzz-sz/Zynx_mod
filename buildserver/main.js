@@ -62,37 +62,11 @@ if (typeof configserver !== 'undefined' && configserver) {
             document.getElementById("updavtxt").innerText = "Update Available";
             document.getElementById("update-checkupdate").style.display = "block"; 
             
-            // ==================== PERBAIKAN UNTUK APLIKASI HTML / WEBVIEW ====================
-            /*document.getElementById("update-checkupdate").onclick = () => {
-                try {
-                    // Cari elemen <a> lawas agar tidak menumpuk di memori
-                    const oldLink = document.getElementById('zynx-native-downloader');
-                    if(oldLink) oldLink.remove();
-
-                    // Buat element tautan fisik asli
-                    const a = document.createElement('a');
-                    a.id = 'zynx-native-downloader';
-                    a.href = jsonax.urldownload;
-                    
-                    // Memaksa sistem aplikasi membuka browser luar atau memicu internal download manager
-                    a.setAttribute('download', jsonax.pkgname || 'update.apk');
-                    a.setAttribute('target', '_system'); 
-                    a.setAttribute('rel', 'noopener noreferrer');
-                    
-                    // Sematkan gaya agar tidak merusak tata letak layar
-                    a.style.display = 'none';
-                    document.body.appendChild(a);
-                    
-                    // Eksekusi klik fisik murni
-                    a.click();
-                } catch(err) {
-                    // Failsafe jika klik fisik diblokir total oleh runtime internal: lempar langsung lewat window
-                    window.open(jsonax.urldownload, '_system') || (window.location.href = jsonax.urldownload);
-                }
+            // ==================== PERBAIKAN DI SINI ====================
+            document.getElementById("update-checkupdate").onclick = () => {
+                window.open(jsonax.urldownload, '_blank');
             };
-            */
-            document.getElementById("update-checkupdate").onclick = "window.open('"+jsonax.urldownload+"','_blank')";
-            // =================================================================================
+            // ===========================================================
         }
     }
     else {
