@@ -53,29 +53,44 @@ if (typeof configserver !== 'undefined' && configserver) {
         document.getElementById("title-checkupdate").innerHTML = jsonax.title;
         document.getElementById("decs-checkupdate").innerHTML = jsonax.desc;
         
-        // PERBAIKAN LOGIKA: Jika STATUSNYA EMANG COMING SOON
         if(jsonax.comingsoon === true){
             document.getElementById("updav").style.backgroundColor = "yellow";
             document.getElementById("updavtxt").innerText = "Coming Soon";
             document.getElementById("update-checkupdate").style.display = "none";
         } else {
-            // Jika TIDAK coming soon (artinya update ready), baru pasang fungsi download
-            document.getElementById("updav").style.backgroundColor = "#238636"; // Warna hijau murni
+            document.getElementById("updav").style.backgroundColor = "#238636"; 
             document.getElementById("updavtxt").innerText = "Update Available";
-            document.getElementById("update-checkupdate").style.display = "block"; // Pastikan tombol muncul
+            document.getElementById("update-checkupdate").style.display = "block"; 
             
+            // ==================== PERBAIKAN UNTUK APLIKASI HTML / WEBVIEW ====================
             document.getElementById("update-checkupdate").onclick = () => {
-                fetch(jsonax.urldownload)
-                    .then(r => r.blob())
-                    .then(b => {
-                        const a = document.createElement('a');
-                        a.href = URL.createObjectURL(b);
-                        a.download = jsonax.pkgname;
-                        a.click();
-                        URL.revokeObjectURL(a.href);
-                    })
-                    .catch(err => console.error("Download gagal:", err));
+                try {
+                    // Cari elemen <a> lawas agar tidak menumpuk di memori
+                    const oldLink = document.getElementById('zynx-native-downloader');
+                    if(oldLink) oldLink.remove();
+
+                    // Buat element tautan fisik asli
+                    const a = document.createElement('a');
+                    a.id = 'zynx-native-downloader';
+                    a.href = jsonax.urldownload;
+                    
+                    // Memaksa sistem aplikasi membuka browser luar atau memicu internal download manager
+                    a.setAttribute('download', jsonax.pkgname || 'update.apk');
+                    a.setAttribute('target', '_system'); 
+                    a.setAttribute('rel', 'noopener noreferrer');
+                    
+                    // Sematkan gaya agar tidak merusak tata letak layar
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    
+                    // Eksekusi klik fisik murni
+                    a.click();
+                } catch(err) {
+                    // Failsafe jika klik fisik diblokir total oleh runtime internal: lempar langsung lewat window
+                    window.open(jsonax.urldownload, '_system') || (window.location.href = jsonax.urldownload);
+                }
             };
+            // =================================================================================
         }
     }
     else {
