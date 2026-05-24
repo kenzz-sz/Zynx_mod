@@ -63,7 +63,7 @@ if (typeof configserver !== 'undefined' && configserver) {
             document.getElementById("update-checkupdate").style.display = "block"; 
             
             // ==================== PERBAIKAN UNTUK APLIKASI HTML / WEBVIEW ====================
-            document.getElementById("update-checkupdate").onclick = () => {
+            /*document.getElementById("update-checkupdate").onclick = () => {
                 try {
                     // Cari elemen <a> lawas agar tidak menumpuk di memori
                     const oldLink = document.getElementById('zynx-native-downloader');
@@ -90,6 +90,8 @@ if (typeof configserver !== 'undefined' && configserver) {
                     window.open(jsonax.urldownload, '_system') || (window.location.href = jsonax.urldownload);
                 }
             };
+            */
+            document.getElementById("update-checkupdate").onclick = "window.open('"+jsonax.urldownload+"','_blank')";
             // =================================================================================
         }
     }
