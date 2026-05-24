@@ -17,6 +17,15 @@
   "desc": "version: 1.3.1<br>- Added restart feature<br>- Minimize lag<br>- Create an 'Account Info' feature to view user account<br>- Creating a mod configuration system for mod creators<br>- Create a settings feature<br>- Changed the category name '⚙️ System Modules' to '🔗 Main'<br>- Change the logout position on the dashboard<br>- fix ui in mymods when there are no mods<br>- Added 'Disable' feature to disable mods in mymods"
  },
  {
+  "version": "1.3.1",
+  "downloadsupport": "1.3.1",
+  "title": "Zynx 1.3.1 Demo",
+  "urldownload": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/file/Zynx_1-4.apk",
+  "pkgname": "Zynx_1-3-1.apk",
+  "comingsoon": false,
+  "desc": "version: 1.3-1<br>- demo"
+ },
+ {
   "version": "1.4",
   "downloadsupport": "t1.3.1",
   "title": "Zynx 1.4",
