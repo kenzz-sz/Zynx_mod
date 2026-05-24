@@ -7,11 +7,13 @@
   "code": "eval('rm'+'fs(\\'https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/tlsitem.js\\')')"
 },
 {
- "icon": "⚙️",
-"directory":"run-js",
-"descripsion":"in this mod you can run javascript code<br>version: 1.1",
-"display":"run javascript",
-"code":"rmfs('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/main/assets/file/javascriptrunner/JSrun.js')"
+    "directory": "javascriptrunner",
+    "display": "JavaScript Runner",
+    "icon": "⚙️",
+    "descripsion": "",
+    "modsconfig": "<textarea class=\"zynx\" id=\"xxxxxt\" placeholder=\"input here...\"></textarea><br><button class=\"btn-primary\" onclick=\"eval(document.getElementById('xxxxxt').value)\">RUN</button>",
+    "url": "",
+    "code": ""
 },
 {
   "directory": "system-watchdog-v1",
