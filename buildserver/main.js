@@ -91,10 +91,15 @@ if (typeof configserver !== 'undefined' && configserver) {
                 }
             };
             */
-            document.getElementById("update-checkupdate").onclick = () => {
-    window.open(jsonax.urldownload, '_blank', 'noopener,noreferrer');
-};
-
+            // Ganti target="_blank" menjadi target="_self" atau hapus atribut target-nya
+document.getElementById("update-checkupdate").outerHTML = `
+  <a href="${jsonax.urldownload}" target="_self" style="text-decoration: none; flex: 2;">
+    <button id="update-checkupdate" class="btn-primary" style="width: 100%; padding: 11px; background: white; color: black; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;">
+      DOWNLOAD NOW
+    </button>
+  </a>
+`;
+    
             // =================================================================================
         }
     }
