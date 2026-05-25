@@ -163,5 +163,5 @@ window.handlePushMod = function(index) {
  setTimeout(() => {
      ref();
      detectbug();
- }, 1000)
+ }, 2000)
 })()
