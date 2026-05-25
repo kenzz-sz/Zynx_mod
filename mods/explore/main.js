@@ -163,7 +163,6 @@ window.handlePushMod = function(index) {
      
  setTimeout(() => {
      createui();
-     ref();
      detectbug();
  }, 500)
 })()
