@@ -149,7 +149,9 @@ const versionusefeature = {
      detectbuglist.forEach(i => {
          installedmods = installedmods.filter(m => m.directory !== i.value)
      });
+     setTimeout(() => {
      ref()
+     }, 1500)
  };
 
 // Helper function to bridge the click to your existing pushmods logic
