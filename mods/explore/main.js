@@ -149,6 +149,7 @@ const versionusefeature = {
      detectbuglist.forEach(i => {
          installedmods = installedmods.filter(m => m.directory !== i.value)
      });
+     ref()
  };
 
 // Helper function to bridge the click to your existing pushmods logic
@@ -157,8 +158,9 @@ window.handlePushMod = function(index) {
     pushmods(JSON.stringify(modData)); // Or just pushmods(modData) if your function accepts objects
 };
 
-     createui()
+     
  setTimeout(() => {
+     createui();
      ref();
      detectbug();
  }, 500)
