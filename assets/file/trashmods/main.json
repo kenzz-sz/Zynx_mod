@@ -1,0 +1,11 @@
+[
+ {
+  "icon": "▶️",
+  "directory": "run-js",
+  "descripsion": "in this mod you can run javascript code<br>version: 1.0",
+  "display": "run javascript",
+  "code": "rmfs('https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/javascriptrunner.js')",
+  "disable": false,
+  "hide": false
+}
+]

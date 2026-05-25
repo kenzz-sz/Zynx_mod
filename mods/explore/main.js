@@ -1,3 +1,4 @@
+setTimeout(() => {
 (function(){
 const versionusefeature = {
     "1.0": [],
@@ -162,3 +163,4 @@ window.handlePushMod = function(index) {
      detectbug();
  }, 1000)
 })()
+}, 1000)
