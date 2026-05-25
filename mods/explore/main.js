@@ -1,4 +1,4 @@
-setTimeout(() => {
+
 (function(){
 const versionusefeature = {
     "1.0": [],
@@ -148,7 +148,7 @@ const versionusefeature = {
  window.detectbug = function() {
      detectbuglist.forEach(i => {
          installedmods = installedmods.filter(m => m.directory !== i.value)
-     })
+     });
  };
 
 // Helper function to bridge the click to your existing pushmods logic
@@ -157,10 +157,11 @@ window.handlePushMod = function(index) {
     pushmods(JSON.stringify(modData)); // Or just pushmods(modData) if your function accepts objects
 };
 
- createui()
+ setTimeout(() => {
+     createui()
+ }, 500)
  setTimeout(() => {
      ref();
      detectbug();
  }, 1000)
 })()
-}, 1000)
