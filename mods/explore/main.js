@@ -157,11 +157,9 @@ window.handlePushMod = function(index) {
     pushmods(JSON.stringify(modData)); // Or just pushmods(modData) if your function accepts objects
 };
 
- setTimeout(() => {
      createui()
- }, 500)
  setTimeout(() => {
      ref();
      detectbug();
- }, 2000)
+ }, 500)
 })()
