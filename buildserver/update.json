@@ -23,6 +23,6 @@
   "urldownload": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/file/Zynx_1-4.apk",
   "pkgname": "Zynx_1-4.apk",
   "comingsoon": true,
-  "desc": "version: 1.4<br>- Create a ScrollBar UI, you can disable it in settings or you can also enable it again<br>- Change the fade in color when entering the application"
+  "desc": "version: 1.4<br>- Create a ScrollBar UI, you can disable it in settings or you can also enable it again<br>- Change the fade in color when entering the application<br>- Create a 'Data Manager' feature to modify data and so on<br>- Improve Perfomance"
  }
 ]
