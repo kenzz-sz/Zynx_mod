@@ -51,7 +51,7 @@
     ]
 },
 {
-    "directory": "advanced-installer",
+    "directory": "advanced-installer-2.0",
     "display": "Advanced Installer (Only Support Zynx v1.3.1+)",
     "icon": "🎞",
     "descripsion": "Version 2.0<br>Improved direct installer that syncs with Zynx core logic.",
