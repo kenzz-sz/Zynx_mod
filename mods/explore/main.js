@@ -16,8 +16,8 @@ const versionusefeature = {
     ]
 }
 
-// 1. TENTUKAN VERSI APLIKASI SAAT INI
-const currentVersion = "1.4"; 
+// Ganti dengan variabel sistem bawaan Zynx OS Anda, misalnya:
+const currentVersion = (configserver.version || "1.0"); 
 
 // 2. FUNGSI PEMBANTU UNTUK CEK DUKUNGAN FITUR
 function isModSupported(mod) {
