@@ -172,7 +172,8 @@ function isModSupported(mod) {
     // Menggabungkan pesan peringatan versi di bagian paling atas UI
     const warningNotice = `<div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);" class="allowslidetext">${String(unsupportmods)} Mods have been removed from the UI, because these mods are not compatible with your Zynx OS version</div><br>`;
     
-    mvin.innerHTML = warningNotice + HTMLContent;
+    if(unsupportmods > 0){
+    mvin.innerHTML = warningNotice + HTMLContent;}
 };
 
  window.detectbug = function() {
