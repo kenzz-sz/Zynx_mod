@@ -138,9 +138,9 @@ function isModSupported(mod) {
     
     listmodsexplore.forEach((i, index) => {
         if (!isModSupported(i)) {
-            unsupportmods++; // Jalankan hitungan jika mod tidak support versi OS
-            return; 
+            unsupportmods = (unsupportmods+1)
         }
+        if (isModSupported(i)){
         
         // Pastikan installedmods sudah terdefinisi secara global di sistem Anda
         const exists = typeof installedmods !== 'undefined' ? installedmods.find(m => m.directory === i.directory) : false;
@@ -166,11 +166,11 @@ function isModSupported(mod) {
                             <br>
                         </div>
                     </div>
-                </div>`;
+                </div>`;}
     });
     
     // Menggabungkan pesan peringatan versi di bagian paling atas UI
-    const warningNotice = `<div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">${unsupportmods} Mods have been removed from the UI, because these mods are not compatible with your Zynx OS version</div><br>`;
+    const warningNotice = `<div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);" class="allowslidetext">${String(unsupportmods)} Mods have been removed from the UI, because these mods are not compatible with your Zynx OS version</div><br>`;
     
     mvin.innerHTML = warningNotice + HTMLContent;
 };
