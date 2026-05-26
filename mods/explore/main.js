@@ -1,4 +1,3 @@
-
 (function(){
 const versionusefeature = {
     "1.0": [],
@@ -16,6 +15,25 @@ const versionusefeature = {
         "mods"
     ]
 }
+
+// 1. TENTUKAN VERSI APLIKASI SAAT INI
+// Anda bisa mengubah "1.4" menjadi versi dinamis dari sistem Anda (misal: window.appVersion)
+const currentVersion = "1.4"; 
+
+// 2. FUNGSI PEMBANTU UNTUK CEK DUKUNGAN FITUR
+function isModSupported(mod) {
+    // Jika mod tidak memerlukan fitur khusus, izinkan untuk tampil
+    if (!mod["using-features"] || !Array.isArray(mod["using-features"])) {
+        return true; 
+    }
+    
+    // Ambil daftar fitur yang didukung oleh versi saat ini
+    const supportedFeatures = versionusefeature[currentVersion] || [];
+    
+    // Pastikan SEMUA fitur yang diminta mod ada di dalam daftar fitur versi saat ini
+    return mod["using-features"].every(feature => supportedFeatures.includes(feature));
+}
+
  let listmodsexplore = []
  let detectbuglist = [{"value":"viruslockxDizz"}]
  window.createui = async function(){
@@ -113,38 +131,46 @@ const versionusefeature = {
                 rc.appendChild(cat)
                 
  }
+ 
  window.ref = async function() {
     const mvin = document.getElementById("AXdivexploremods");
     mvin.innerHTML = "";
     
-    listmodsexplore.forEach((i, index) => { // Added index here
+    listmodsexplore.forEach((i, index) => {
+        // 3. PROSES PENYARINGAN (FILTERING) SEBELUM DI-RENDER
+        if (!isModSupported(i)) {
+            return; // Lewati mod ini dan jangan tampilkan di UI jika tidak support
+        }
+        
         const exists = installedmods.find(m => m.directory === i.directory);
         const btnText = exists ? "Re-install" : "Download";
         const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
-        
-        // We pass the 'index' to a helper function instead of the whole object
-        
         mvin.innerHTML += `
-        <div class="category" id="${idthisvalue}">
-            <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
-                <div><span class="cat-icon">${i.icon || "📦"}</span> ${i.display}</div>
-                <div class="cat-chevron">▶</div>
-            </div>
-            <div class="cat-content">
-                <div class="cat-inner">
-                    <p style="font-size:12px; opacity:0.6; margin-bottom:10px;">
-                        ${i.description || i.descripsion || 'No description'}
-                    </p>
-                    <div class="feature-item">
-                        <button class="btn-primary" onclick="handlePushMod(${index})" style="margin-top: -10px">
+                <div class="category" id="${idthisvalue}">
+                    <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
+                        <div style=""><span class="cat-icon">${i.icon || "📦"}</span>
+                        
+                        <span class="allowselect" style="color: ${colorer}">${i.display || i.name  || "No Display name"}</span> </div>
+                        
+                    </div>
+                    <div class="cat-content">
+                        <div class="cat-inner">
+                            <p style="white-space: nowrap; overflow-x: scroll; font-size:12px; opacity:0.6; margin-bottom:10px;">
+                                ${i.descripsion || i.description || 'No description'}
+                            </p>
+                            <div class="feature-item">
+                                <button class="btn-primary" onclick="handlePushMod(${index})" style="margin-top: -10px">
                             ${btnText}
                         </button>
+                                </div>
+                                
+                                <br>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>`;
+                </div>`;
     });
 };
+
  window.detectbug = function() {
      detectbuglist.forEach(i => {
          installedmods = installedmods.filter(m => m.directory !== i.value)
@@ -154,10 +180,9 @@ const versionusefeature = {
      }, 1500)
  };
 
-// Helper function to bridge the click to your existing pushmods logic
 window.handlePushMod = function(index) {
     const modData = listmodsexplore[index];
-    pushmods(JSON.stringify(modData)); // Or just pushmods(modData) if your function accepts objects
+    pushmods(JSON.stringify(modData));
 };
 
      

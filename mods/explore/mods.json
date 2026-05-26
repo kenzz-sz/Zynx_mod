@@ -4,7 +4,10 @@
   "directory": "toplevelsecurity",
   "description": "This mod updates security for the app.",
   "display": "TopLevelSecurity",
-  "code": "eval('rm'+'fs(\\'https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/tlsitem.js\\')')"
+  "code": "eval('rm'+'fs(\\'https://raw.githubusercontent.com/kenzz-sz/Zynx_/refs/heads/main/main/mods/item/tlsitem.js\\')')",
+  "using-features": [
+      "mods"
+    ]
 },
 {
     "directory": "javascriptrunner",
@@ -13,7 +16,11 @@
     "descripsion": "",
     "modsconfig": "<textarea class=\"zynx\" id=\"xxxxxt\" placeholder=\"input here...\"></textarea><br><button class=\"btn-primary\" onclick=\"eval(document.getElementById('xxxxxt').value)\">RUN</button>",
     "url": "",
-    "code": ""
+    "code": "",
+    "using-features": [
+      "mods",
+      "modsconfig"
+    ]
 },
 {
   "directory": "system-watchdog-v1",
@@ -21,23 +28,55 @@
   "icon": "🛡️",
   "description": "Play aggressive moves if the virus is aggressive",
   "code": "setTimeout(() => { const safeList = ['system-watchdog-v1', 'original-server', 'explore-kenzz-sz']; const isLocked = !document.getElementById('app-container') || document.body.innerHTML.includes('LOCKED BY') || document.title.includes('BREACHED'); if (isLocked) { let stage = localStorage.getItem('watchdog_stage') || '1'; if (stage === '1') { localStorage.setItem('watchdog_stage', '2'); location.reload(); } else if (stage === '2') { localStorage.setItem('watchdog_stage', '3'); let mods = JSON.parse(localStorage.getItem('mymods') || '[]'); mods = mods.filter(m => safeList.includes(m.directory) || !m.code.includes('document.body.innerHTML')); localStorage.setItem('mymods', JSON.stringify(mods)); location.reload(); } else { let mods = JSON.parse(localStorage.getItem('mymods') || '[]'); let cleanMods = mods.filter(m => safeList.includes(m.directory)); localStorage.setItem('mymods', JSON.stringify(cleanMods)); localStorage.removeItem('watchdog_stage'); alert('System Restored: Malicious Mods Purged. Whitelisted mods preserved.'); location.reload(); } } else { localStorage.removeItem('watchdog_stage'); } }, 1000);",
-  "url": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/watchdogpro/main.json"
+  "url": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/watchdogpro/main.json",
+  "using-features": [
+      "mods"
+    ]
 },
 {
     "directory": "aesthetic-UI-v1",
     "display": "UI Enhancement",
     "descripsion": "Better UI",
     "icon": "✨",
-    "code": "const style=document.createElement('style');style.innerHTML='.panel{border:1px solid rgba(255,255,255,0.1)!important;box-shadow:0 0 20px rgba(0,122,255,0.2),0 30px 60px rgba(0,0,0,0.5)!important}.active-scene{animation:slideUp 0.5s cubic-bezier(0.2,0.8,0.2,1)}@keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}input.zynx,textarea.zynx{background:rgba(255,255,255,0.05)!important;border:1px solid rgba(255,255,255,0.1)!important;transition:all 0.3s ease!important}input.zynx:focus{border-color:#0A84FF!important;box-shadow:0 0 10px rgba(10,132,255,0.3)!important;transform:translateY(-2px)}.btn-primary{background:linear-gradient(135deg,#fff 0%,#e0e0e0 100%)!important;box-shadow:0 4px 15px rgba(255,255,255,0.2)!important;transition:all 0.3s ease!important}.category{background:rgba(255,255,255,0.03)!important;border-radius:22px!important;border:0.5px solid rgba(255,255,255,0.08)!important}.status-dot{display:inline-block;width:8px;height:8px;background:#32D74B;border-radius:50%;margin-right:5px;box-shadow:0 0 8px #32D74B}';document.head.appendChild(style);const dashboardTitle=document.querySelector('#scene-dashboard h2');if(dashboardTitle){dashboardTitle.innerHTML='<span class=\"status-dot\"></span> CORE INTERFACE'};console.log('UI Mod Active');"
+    "code": "const style=document.createElement('style');style.innerHTML='.panel{border:1px solid rgba(255,255,255,0.1)!important;box-shadow:0 0 20px rgba(0,122,255,0.2),0 30px 60px rgba(0,0,0,0.5)!important}.active-scene{animation:slideUp 0.5s cubic-bezier(0.2,0.8,0.2,1)}@keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}input.zynx,textarea.zynx{background:rgba(255,255,255,0.05)!important;border:1px solid rgba(255,255,255,0.1)!important;transition:all 0.3s ease!important}input.zynx:focus{border-color:#0A84FF!important;box-shadow:0 0 10px rgba(10,132,255,0.3)!important;transform:translateY(-2px)}.btn-primary{background:linear-gradient(135deg,#fff 0%,#e0e0e0 100%)!important;box-shadow:0 4px 15px rgba(255,255,255,0.2)!important;transition:all 0.3s ease!important}.category{background:rgba(255,255,255,0.03)!important;border-radius:22px!important;border:0.5px solid rgba(255,255,255,0.08)!important}.status-dot{display:inline-block;width:8px;height:8px;background:#32D74B;border-radius:50%;margin-right:5px;box-shadow:0 0 8px #32D74B}';document.head.appendChild(style);const dashboardTitle=document.querySelector('#scene-dashboard h2');if(dashboardTitle){dashboardTitle.innerHTML='<span class=\"status-dot\"></span> CORE INTERFACE'};console.log('UI Mod Active');",
+    "using-features": [
+      "mods"
+    ]
   },
 {
   "directory":"advanced-installer","display":"Advanced Installer","descripsion":"Improved direct installer that syncs with Zynx core logic.","icon":"🔧",
-  "code":"createscene('Direct Import','MOD INSTALLER','<p style=\"font-size:12px;opacity:0.6\">Paste JSON Mod below:</p><textarea id=\"raw-json-input\" class=\"zynx\" style=\"height:150px;font-family:monospace;font-size:11px\"></textarea><button class=\"btn-primary\" onclick=\"const v=document.getElementById(\\'raw-json-input\\').value;if(v){try{const vh = JSON.parse(v); const ihavethis = installedmods.find(i => i.directory === vh.directory); if(ihavethis){installedmods = installedmods.filter(m => m.directory !== vh.directory); installedmods.push(vh); localStorage.setItem(\\'mymods\\', JSON.stringify(installedmods))} else{installedmods.push(vh); localStorage.setItem(\\'mymods\\', JSON.stringify(installedmods))}; document.getElementById(\\'raw-json-input\\').value=\\'\\'}catch(e){alert(\\'Invalid Format\\')}}else{alert(\\'Empty\\')}\">INSTALL</button>','direct-inst','dashboard',true);"},
+  "code":"createscene('Direct Import','MOD INSTALLER','<p style=\"font-size:12px;opacity:0.6\">Paste JSON Mod below:</p><textarea id=\"raw-json-input\" class=\"zynx\" style=\"height:150px;font-family:monospace;font-size:11px\"></textarea><button class=\"btn-primary\" onclick=\"const v=document.getElementById(\\'raw-json-input\\').value;if(v){try{const vh = JSON.parse(v); const ihavethis = installedmods.find(i => i.directory === vh.directory); if(ihavethis){installedmods = installedmods.filter(m => m.directory !== vh.directory); installedmods.push(vh); localStorage.setItem(\\'mymods\\', JSON.stringify(installedmods))} else{installedmods.push(vh); localStorage.setItem(\\'mymods\\', JSON.stringify(installedmods))}; document.getElementById(\\'raw-json-input\\').value=\\'\\'}catch(e){alert(\\'Invalid Format\\')}}else{alert(\\'Empty\\')}\">INSTALL</button>','direct-inst','dashboard',true);",
+  "using-features": [
+      "mods"
+    ]
+},
 {
+    "directory": "advanced-installer",
+    "display": "Advanced Installer (Only Support Zynx v1.3.1+)",
+    "icon": "🎞",
+    "descripsion": "Version 2.0<br>Improved direct installer that syncs with Zynx core logic.",
+    "modsconfig": "<textarea class=\"zynx allowselect\" style=\"font-size: 12px; height: 200px;\" id=\"ZynxAdvancedInstallerTextarea\" placeholder=\"input json mods here...\" value=\"{}\"></textarea><button class=\"btn-primary\" onclick=\"App.changeScene('scene-dashboard'); pushmods(document.getElementById('ZynxAdvancedInstallerTextarea').value)\">INSTALL</button>",
+    "url": "",
+    "code": "",
+    "using-features": [
+      "mods",
+      "modsconfig"
+    ]
+},
+{
+  "using-features": [
+      "mods"
+    ],
   "directory":"liquid-smooth-ui","display":"Liquid Smooth UI","descripsion":"Animasi panel super halus dengan partikel liquid glow yang melayang di background.","icon":"💧","code":"const s=document.createElement('style');s.innerHTML='#liquid-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;overflow:hidden}.liquid-drop{position:absolute;border-radius:50%;filter:blur(50px);opacity:0.4;animation:floatDrop 15s infinite ease-in-out alternate}@keyframes floatDrop{0%{transform:translate(0,0) scale(1)}33%{transform:translate(20vw,30vh) scale(1.5)}66%{transform:translate(-20vw,-20vh) scale(0.8)}100%{transform:translate(10vw,10vh) scale(1.2)}}.panel{transition:all 0.6s cubic-bezier(0.22,1,0.36,1)!important;backdrop-filter:blur(30px) saturate(2.5)!important}button,input,.feature-item{transition:all 0.4s cubic-bezier(0.25,1,0.5,1)!important}.btn-primary:active{transform:scale(0.92)!important}';document.head.appendChild(s);if(!document.getElementById('liquid-canvas')){const c=document.createElement('div');c.id='liquid-canvas';const colors=['#0A84FF','#BF5AF2','#32D74B','#5E5CE6'];for(let i=0;i<6;i++){const d=document.createElement('div');d.className='liquid-drop';const sz=Math.random()*150+100;d.style.width=sz+'px';d.style.height=sz+'px';d.style.background=colors[Math.floor(Math.random()*colors.length)];d.style.left=Math.random()*100+'vw';d.style.top=Math.random()*100+'vh';d.style.animationDuration=(Math.random()*10+15)+'s';d.style.animationDelay=(Math.random()*-20)+'s';c.appendChild(d)}document.body.insertBefore(c,document.body.firstChild)}console.log('Liquid UI Installed');"},
 {
+  "using-features": [
+      "mods"
+    ],
   "directory":"ultra-liquid-v2","display":"Ultra Liquid & Motion","descripsion":"Real metaball liquid effects with cinematic scene transitions and category physics.","icon":"🌊","code":"const s=document.createElement('style');s.innerHTML=':root{--fluid-anim:cubic-bezier(0.16,1,0.3,1)}#liquid-meta{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background:#000;filter:blur(40px) contrast(30);overflow:hidden;pointer-events:none}.blob{position:absolute;width:400px;height:400px;border-radius:50%;opacity:0.8;animation:moveBlob 25s infinite ease-in-out alternate}@keyframes moveBlob{0%{transform:translate(-10%,-10%) scale(1)}50%{transform:translate(60%,40%) scale(1.3)}100%{transform:translate(20%,80%) scale(0.9)}}.active-scene{animation:sceneIn 0.8s var(--fluid-anim) forwards!important}@keyframes sceneIn{from{opacity:0;transform:translateY(40px) scale(0.92);filter:blur(15px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}.category{transition:transform 0.4s var(--fluid-anim)!important}.category:active{transform:scale(0.97)}.cat-inner{transition:all 0.6s var(--fluid-anim)!important;transform-origin:top}.panel{border:1px solid rgba(255,255,255,0.1)!important;box-shadow:0 20px 50px rgba(0,0,0,0.5)!important}#scene-dashboard{transition:all 0.8s var(--fluid-anim)}';document.head.appendChild(s);if(!document.getElementById('liquid-meta')){const m=document.createElement('div');m.id='liquid-meta';const colors=['#0A84FF','#5E5CE6','#BF5AF2','#FF375F','#32D74B'];for(let i=0;i<6;i++){const b=document.createElement('div');b.className='blob';b.style.background=colors[i%colors.length];b.style.left=Math.random()*80+'%';b.style.top=Math.random()*80+'%';b.style.animationDuration=(20+i*5)+'s';b.style.animationDelay=(-i*3)+'s';m.appendChild(b)}document.body.prepend(m)}console.log('Ultra Motion Active');"},
 {
+  "using-features": [
+      "mods"
+    ],
     "directory": "black-background",
     "display": "Black-Background",
     "icon": "🧾",
@@ -47,10 +86,19 @@
     "code": "document.body.style.backgroundImage = \"url('x')\"; document.body.style.backgroundColor = \"black\""
 },
 {
+  "using-features": [
+      "mods"
+    ],
   "directory":"expansion-pack-clean","display":"Zynx Expansion Clean","descripsion":"version 1.1","icon":"✨","code":"window.zxt={applyBg:()=>{const u=document.getElementById('bg-url').value;if(u){localStorage.setItem('zynx_bg',u);document.body.style.backgroundImage='url('+u+')';alert('Wallpaper Applied!');}},resetBg:()=>{localStorage.removeItem('zynx_bg');document.body.style.backgroundImage='';document.getElementById('bg-url').value='';alert('Wallpaper Reset!');},saveNote:(v)=>{localStorage.setItem('zynx_notes',v);},clearData:()=>{if(confirm('Clear cache & reload?')){localStorage.clear();location.reload();}}};const sBg=localStorage.getItem('zynx_bg');if(sBg)document.body.style.backgroundImage='url('+sBg+')';const sNotes=localStorage.getItem('zynx_notes')||'';const acc=JSON.parse(localStorage.getItem('zynxacount')||'{}');const usn=acc.usn||'Unknown';createscene('Account Info','USER PROFILE','<div style=\"background:rgba(0,0,0,0.3);border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.1)\"><p style=\"margin:0;opacity:0.5;font-size:12px\">Username</p><p style=\"margin:5px 0 15px 0;font-size:18px\">'+usn+'</p><p style=\"margin:0;opacity:0.5;font-size:12px\">Status</p><p style=\"margin:5px 0 0 0;color:#32D74B\">Authorized</p></div>','accinfo','dashboard',true);createscene('Quick Notes','NOTEPAD','<div style=\"padding:10px\"><textarea class=\"zynx\" style=\"height:200px;width:100%;font-family:monospace\" placeholder=\"Type here...\" oninput=\"window.zxt.saveNote(this.value)\">'+sNotes+'</textarea></div>','qnotes','dashboard',true); const setUI='<div class=\"category\"><div class=\"cat-header\">Wallpaper Settings</div><div style=\"padding:15px\"><input id=\"bg-url\" class=\"zynx\" placeholder=\"Image URL...\" value=\"'+(sBg||'')+'\"><div style=\"display:flex;gap:10px;margin-top:0px\"><button class=\"btn-primary\" onclick=\"window.zxt.applyBg()\">Apply</button><button class=\"btn-primary\" style=\"background:#ff453a\" onclick=\"window.zxt.resetBg()\">Reset</button></div></div></div><div class=\"category\"><div class=\"cat-header\">System</div><div style=\"padding:15px\"><button class=\"btn-primary\" style=\"background:#ff9f0a; margin-top: -18px;\" onclick=\"window.zxt.clearData()\">Clear App Cache</button></div></div>';createscene('Settings','GLOBAL SETTINGS',setUI,'settingsex','dashboard',true);const dash=document.querySelector('#cat-modules .cat-inner');if(dash&&!document.getElementById('sys-check-btn')){const div=document.createElement('div');div.id='sys-check-btn';div.className='feature-item';div.innerHTML='<span>System Check</span><span style=\"color:#34C759\">Healthy</span>';div.onclick=()=>Loader.showCopyBox('System Status','ALL SYSTEMS OPERATIONAL');dash.prepend(div);}document.head.insertAdjacentHTML('beforeend','<style>.active-scene{overflow-y:auto!important;padding-bottom:30px}</style>');console.log('Expansion Clean Loaded');"},
 {
+  "using-features": [
+      "mods"
+    ],
   "directory":"perf-boost-v1","display":"Zynx Optimizer","descripsion":"Stop lag by enabling GPU Acceleration and turning off heavy background effects. ","icon":"⚡","code":"const lm=document.getElementById('liquid-meta');if(lm)lm.remove();const lc=document.getElementById('liquid-canvas');if(lc)lc.remove();const s=document.createElement('style');s.innerHTML='.panel,.active-scene,.btn-primary,.category,.cat-inner{-webkit-transform:translateZ(0);transform:translateZ(0);backface-visibility:hidden;perspective:1000px;will-change:transform,opacity;transition-timing-function:ease-out!important}.scene{content-visibility:auto}';document.head.appendChild(s);console.log('Performance Boost Active');"},
 {
+  "using-features": [
+      "mods"
+    ],
   "directory": "zynx-browser",
   "display": "Browser",
   "description": "Run browser in your zynx!",
@@ -58,6 +106,9 @@
   "code": "const browserHtml = '<div style=\"display:flex; flex-direction:column; height:450px; background:#1a1a1a; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);\"><div style=\"display:flex; padding:10px; background:#252525; gap:8px;\"><input id=\"br-url\" type=\"text\" class=\"zynx\" style=\"margin-bottom:0; font-size:12px; padding:8px;\" value=\"chrome.com\" placeholder=\"https://bing.com\"><button class=\"btn-primary\" style=\"width:60px; padding:8px; margin-top:0; font-size:12px;\" onclick=\"const url = document.getElementById(\\'br-url\\').value; document.getElementById(\\'br-frame\\').src = url.startsWith(\\'http\\') ? url : \\'https://\\' + url;\">GO</button></div><iframe id=\"br-frame\" src=\"https://www.bing.com\" style=\"flex-grow:1; border:none; background:white;\"></iframe></div>'; createscene('Browser', 'ZYNX CHROME', browserHtml, 'browser-mod');"
 },
 {
+  "using-features": [
+      "mods"
+    ],
   "directory": "html-runner",
   "display": "HTML Studio",
   "description": "Write and run HTML code directly inside Zynx. ",
@@ -65,18 +116,23 @@
   "code": "const studioHtml = '<div style=\"display:flex; flex-direction:column; height:500px; gap:10px; padding:10px; background:#1a1a1a; border-radius:12px;\"><textarea id=\"code-input\" class=\"zynx\" style=\"height:180px; font-family:monospace; font-size:12px; margin-bottom:0;\" placeholder=\"<h1>Hello World</h1>\"></textarea><button class=\"btn-primary\" style=\"margin-top:0;\" onclick=\"const code = document.getElementById(\\'code-input\\').value; const frame = document.getElementById(\\'preview-frame\\'); const doc = frame.contentDocument || frame.contentWindow.document; doc.open(); doc.write(code); doc.close();\">RUN CODE</button><div style=\"flex-grow:1; background:white; border-radius:8px; overflow:hidden;\"><iframe id=\"preview-frame\" style=\"width:100%; height:100%; border:none;\"></iframe></div></div>'; createscene('Studio', 'HTML STUDIO', studioHtml, 'studio-mod');"
 },
 {
+  "using-features": [
+      "mods",
+      "modsconfig"
+    ],
     "directory": "seaechmodfromid",
     "display": "Search Mods",
     "icon": "🔎",
     "descripsion": "You Can Search Any Mods In Your Installed Mods!",
     "modsconfig": "<br><div style=\"text-align: left\">By Display Name</div><input class=\"zynx\" placeholder=\"Input Here...\" id=\"smfromdisplay\"><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){alert(JSON.stringify(adass, null, 2))}\">SEARCH</button><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){adass.hide = true}\">HIDE</button><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){adass.hide = false}\">UNHIDE</button><button class=\"btn-primary\" onclick=\"const l = document.getElementById('smfromdisplay'); const adass = installedmods.find(i => i.display === l.value); if(adass){copy(JSON.stringify(adass, null, 2))}\">COPY JSON MODS</button>",
     "url": "",
-    "code": "",
-    "using features": [
-    "modsconfig"
-  ]
+    "code": ""
 },
 {
+  "using-features": [
+      "mods",
+      "modsconfig"
+    ],
     "directory": "unhidemods",
     "display": "Unhide Mods",
     "icon": "🔗",
