@@ -174,6 +174,9 @@ function isModSupported(mod) {
     
     if(unsupportmods > 0){
     mvin.innerHTML = warningNotice + HTMLContent;}
+else {
+    mvin.innerHTML = HTMLContent;
+}
 };
 
  window.detectbug = function() {
