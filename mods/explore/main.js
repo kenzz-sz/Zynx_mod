@@ -17,20 +17,14 @@ const versionusefeature = {
 }
 
 // 1. TENTUKAN VERSI APLIKASI SAAT INI
-// Anda bisa mengubah "1.4" menjadi versi dinamis dari sistem Anda (misal: window.appVersion)
 const currentVersion = "1.4"; 
 
 // 2. FUNGSI PEMBANTU UNTUK CEK DUKUNGAN FITUR
 function isModSupported(mod) {
-    // Jika mod tidak memerlukan fitur khusus, izinkan untuk tampil
     if (!mod["using-features"] || !Array.isArray(mod["using-features"])) {
         return true; 
     }
-    
-    // Ambil daftar fitur yang didukung oleh versi saat ini
     const supportedFeatures = versionusefeature[currentVersion] || [];
-    
-    // Pastikan SEMUA fitur yang diminta mod ada di dalam daftar fitur versi saat ini
     return mod["using-features"].every(feature => supportedFeatures.includes(feature));
 }
 
@@ -134,24 +128,30 @@ function isModSupported(mod) {
  
  window.ref = async function() {
     const mvin = document.getElementById("AXdivexploremods");
+    if (!mvin) return;
     mvin.innerHTML = "";
     
+    // PERBAIKAN: Inisialisasi variabel pendukung agar tidak ReferenceError
+    let unsupportmods = 0; 
+    const colorer = "#ffffff"; // Mengatur warna default teks judul mod
+    let HTMLContent = ""; // Menggunakan temporary string builder (lebih bersih & performant)
+    
     listmodsexplore.forEach((i, index) => {
-        // 3. PROSES PENYARINGAN (FILTERING) SEBELUM DI-RENDER
         if (!isModSupported(i)) {
-            return; // Lewati mod ini dan jangan tampilkan di UI jika tidak support
+            unsupportmods++; // Jalankan hitungan jika mod tidak support versi OS
+            return; 
         }
         
-        const exists = installedmods.find(m => m.directory === i.directory);
+        // Pastikan installedmods sudah terdefinisi secara global di sistem Anda
+        const exists = typeof installedmods !== 'undefined' ? installedmods.find(m => m.directory === i.directory) : false;
         const btnText = exists ? "Re-install" : "Download";
         const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
-        mvin.innerHTML += `
+        
+        HTMLContent += `
                 <div class="category" id="${idthisvalue}">
                     <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
                         <div style=""><span class="cat-icon">${i.icon || "📦"}</span>
-                        
                         <span class="allowselect" style="color: ${colorer}">${i.display || i.name  || "No Display name"}</span> </div>
-                        
                     </div>
                     <div class="cat-content">
                         <div class="cat-inner">
@@ -160,30 +160,37 @@ function isModSupported(mod) {
                             </p>
                             <div class="feature-item">
                                 <button class="btn-primary" onclick="handlePushMod(${index})" style="margin-top: -10px">
-                            ${btnText}
-                        </button>
-                                </div>
-                                
-                                <br>
+                                    ${btnText}
+                                </button>
+                            </div>
+                            <br>
                         </div>
                     </div>
                 </div>`;
     });
-    mvin.innerHTML = (`<div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">${unsupportmods} Mods have been removed from the UI, because these mods are not compatible with your Zynx OS version</div><br>`+mvin.innerHTML);
+    
+    // Menggabungkan pesan peringatan versi di bagian paling atas UI
+    const warningNotice = `<div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">${unsupportmods} Mods have been removed from the UI, because these mods are not compatible with your Zynx OS version</div><br>`;
+    
+    mvin.innerHTML = warningNotice + HTMLContent;
 };
 
  window.detectbug = function() {
-     detectbuglist.forEach(i => {
-         installedmods = installedmods.filter(m => m.directory !== i.value)
-     });
+     if (typeof installedmods !== 'undefined') {
+         detectbuglist.forEach(i => {
+             installedmods = installedmods.filter(m => m.directory !== i.value)
+         });
+     }
      setTimeout(() => {
-     ref()
+         ref()
      }, 1500)
  };
 
 window.handlePushMod = function(index) {
     const modData = listmodsexplore[index];
-    pushmods(JSON.stringify(modData));
+    if (typeof pushmods === 'function') {
+        pushmods(JSON.stringify(modData));
+    }
 };
 
      
