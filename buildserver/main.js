@@ -44,70 +44,85 @@ if (typeof configserver !== 'undefined' && configserver) {
 })();
 */
 (async function() {
-    // Mengambil data JSON dari GitHub
+    // === HELPER FUNCTION FOR COMPACT ENGLISH TIMELINE ===
+    function getTimeAgo(dateStr) {
+        if (!dateStr) return "";
+        
+        // Fallback if the JSON date is already plain text
+        if (!dateStr.includes("/")) {
+            return `Released: ${dateStr}`;
+        }
+
+        const parts = dateStr.split('/');
+        if (parts.length < 5) return "";
+
+        // Format: Day/Month/Year/Hour/Minute -> JS Month is 0-indexed
+        const updateDate = new Date(parts[2], parts[1] - 1, parts[0], parts[3], parts[4]);
+        const now = new Date();
+        const diffMs = now - updateDate;
+
+        // If the update date is set in the future
+        if (diffMs < 0) {
+            return "Coming soon";
+        }
+
+        const seconds = Math.floor(diffMs / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const weeks = Math.floor(days / 7);
+
+        // Compact English formatting
+        if (weeks > 0) return `${weeks} wk${weeks > 1 ? 's' : ''} ago`;
+        if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+        if (hours > 0) return `${hours}h ago`;
+        if (minutes > 0) return `${minutes}m ago`;
+        if (seconds > 0) return `${seconds}s ago`;
+        
+        return "Just now";
+    }
+
+    // Fetching JSON data from GitHub
     const jsonx = JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/update.json"));
     const jsonax = jsonx.find(i => i.downloadsupport === configserver.version);
     const jsonay = jsonx.find(i => i.version === configserver.version);
     
     if(jsonax){
         document.getElementById("title-checkupdate").innerHTML = jsonax.title;
-        document.getElementById("decs-checkupdate").innerHTML = jsonax.desc;
+        
+        // Calculate and display relative time ago
+        const releaseTime = jsonax.date ? `<div style="font-size: 11px; color: #8b949e; margin-bottom: 8px; font-weight: normal; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px;">🕒 ${getTimeAgo(jsonax.date)}</div>` : '';
+        document.getElementById("decs-checkupdate").innerHTML = releaseTime + jsonax.desc;
         
         if(jsonax.comingsoon === true){
             document.getElementById("updav").style.backgroundColor = "yellow";
             document.getElementById("updavtxt").innerText = "Coming Soon";
-            document.getElementById("update-checkupdate").style.display = "none";
+            document.getElementById("update-checkupdate").style.style.display = "none";
         } else {
             document.getElementById("updav").style.backgroundColor = "#238636"; 
             document.getElementById("updavtxt").innerText = "Update Available";
             document.getElementById("update-checkupdate").style.display = "block"; 
             
-            // ==================== PERBAIKAN UNTUK APLIKASI HTML / WEBVIEW ====================
-            /*document.getElementById("update-checkupdate").onclick = () => {
-                try {
-                    // Cari elemen <a> lawas agar tidak menumpuk di memori
-                    const oldLink = document.getElementById('zynx-native-downloader');
-                    if(oldLink) oldLink.remove();
-
-                    // Buat element tautan fisik asli
-                    const a = document.createElement('a');
-                    a.id = 'zynx-native-downloader';
-                    a.href = jsonax.urldownload;
-                    
-                    // Memaksa sistem aplikasi membuka browser luar atau memicu internal download manager
-                    a.setAttribute('download', jsonax.pkgname || 'update.apk');
-                    a.setAttribute('target', '_system'); 
-                    a.setAttribute('rel', 'noopener noreferrer');
-                    
-                    // Sematkan gaya agar tidak merusak tata letak layar
-                    a.style.display = 'none';
-                    document.body.appendChild(a);
-                    
-                    // Eksekusi klik fisik murni
-                    a.click();
-                } catch(err) {
-                    // Failsafe jika klik fisik diblokir total oleh runtime internal: lempar langsung lewat window
-                    window.open(jsonax.urldownload, '_system') || (window.location.href = jsonax.urldownload);
-                }
-            };
-            */
-            // Ganti target="_blank" menjadi target="_self" atau hapus atribut target-nya
-document.getElementById("update-checkupdate").outerHTML = `
-  <a href="${jsonax.urldownload}" target="_blank" style="text-decoration: none; flex: 2;">
-   <button id="update-checkupdate" class="btn-primary" style="flex: 2; padding: 11px; background: white; color: black; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 12px rgba(35, 134, 54, 0.2); width: 100%" onmouseover="this.style.background='white'" onmouseout="this.style.background='grey'">
-      DOWNLOAD PKG
-    </button>
-  </a>
-`;
-    
-            // =================================================================================
+            document.getElementById("update-checkupdate").outerHTML = `
+              <a href="${jsonax.urldownload}" target="_blank" style="text-decoration: none; flex: 2;">
+               <button id="update-checkupdate" class="btn-primary" style="flex: 2; padding: 11px; background: white; color: black; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 12px rgba(35, 134, 54, 0.2); width: 100%" onmouseover="this.style.background='white'" onmouseout="this.style.background='grey'">
+                  DOWNLOAD PKG
+                </button>
+              </a>
+            `;
         }
     }
     else {
         if(jsonay){
             document.getElementById("title-checkupdate").innerHTML = jsonay.title;
-            document.getElementById("decs-checkupdate").innerHTML = jsonay.desc;
+            
+            const releaseTimeAy = jsonay.date ? `<div style="font-size: 11px; color: #8b949e; margin-bottom: 8px; font-weight: normal; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px;">🕒 ${getTimeAgo(jsonay.date)}</div>` : '';
+            document.getElementById("decs-checkupdate").innerHTML = releaseTimeAy + jsonay.desc;
+        } else {
+            document.getElementById("title-checkupdate").innerHTML = "System Up to Date";
+            document.getElementById("decs-checkupdate").innerHTML = "You are currently running the latest version of Zynx OS.";
         }
+        
         document.getElementById("updav").style.backgroundColor = "red";
         document.getElementById("updavtxt").innerText = "All Updated!";
         document.getElementById("update-checkupdate").style.display = "none";
