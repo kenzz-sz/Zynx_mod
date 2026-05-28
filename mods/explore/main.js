@@ -150,7 +150,7 @@ function isModSupported(mod) {
         HTMLContent += `
                 <div class="category" id="${idthisvalue}">
                     <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
-                        <div style=""><span class="cat-icon">${i.icon || "📦"}</span>
+                        <div style="white-space: nowrap; overflow-x: scroll;"><span class="cat-icon">${i.icon || "📦"}</span>
                         <span class="allowselect" style="color: ${colorer}">${i.display || i.name  || "No Display name"}</span> </div>
                     </div>
                     <div class="cat-content">
