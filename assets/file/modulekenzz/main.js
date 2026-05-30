@@ -1,5 +1,5 @@
 (function () {
-    /*==========================================
+    /* ==========================================
        1. DATA KONFIGURASI
        ========================================== */
     const menuConfig = [
@@ -64,10 +64,10 @@
                                 
                                 const btn = document.createElement('button');
                                 btn.className = 'img-copy-btn';
-                                btn.innerText = 'Salin URL';
+                                btn.innerText = 'Copy URL';
                                 btn.onclick = function() {
                                     navigator.clipboard.writeText(srcUrl);
-                                    alert('URL Gambar #' + (index + 1) + ' berhasil disalin!');
+                                    
                                 };
                                 
                                 iBox.appendChild(idx);
@@ -203,7 +203,7 @@
                                 pVid.src = srcUrl;
                                 pVid.autoplay = false;
                                 pVid.controls = true;
-                                pVid.muted = true;
+                                pVid.muted = false;
                                 pVid.preload = 'metadata';
                                 pBox.appendChild(pVid);
                                 
@@ -223,7 +223,7 @@
                                 
                                 const btn = document.createElement('button');
                                 btn.className = 'video-copy-btn';
-                                btn.innerText = 'Salin URL';
+                                btn.innerText = 'Copy URL';
                                 
                                 const currentIdx = index + 1;
                                 btn.onclick = function() {
@@ -700,7 +700,7 @@
     menu.innerHTML = `
         <div class="menu-header">
             <h3>Kenzz Module</h3>
-            <button class="close-btn">Minimize</button>
+            <button class="close-btn">Close</button>
         </div>
         <div class="search-container">
             <input type="text" class="search-input" id="widget-search" placeholder="🔍 Search for features or categories...">
