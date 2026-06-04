@@ -97,7 +97,7 @@ if (typeof configserver !== 'undefined' && configserver) {
         if(jsonax.comingsoon === true){
             document.getElementById("updav").style.backgroundColor = "yellow";
             document.getElementById("updavtxt").innerText = "Coming Soon";
-            document.getElementById("update-checkupdate").style.style.display = "none";
+            document.getElementById("update-checkupdate").style.display = "none";
         } else {
             document.getElementById("updav").style.backgroundColor = "#238636"; 
             document.getElementById("updavtxt").innerText = "Update Available";
