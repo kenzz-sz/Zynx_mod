@@ -150,7 +150,7 @@ window.ref = async function() {
             const namaMod = i.display || i.name || "No Display name";
             
             // PERBAIKAN 3: Lakukan pencarian berdasarkan namaMod yang sudah aman
-            if (!((namaMod || "").toLowerCase()).includes(cvalexplore.toLowerCase())) return;
+            if (!((i.display || "").toLowerCase()).includes(cvalexplore.toLowerCase())) return;
             
             const exists = typeof installedmods !== 'undefined' ? installedmods.find(m => m.directory === i.directory) : false;
             const btnText = exists ? "Re-install" : "Download";
