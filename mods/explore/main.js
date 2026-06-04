@@ -41,6 +41,7 @@ function isModSupported(mod) {
                     </span>
                     <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">EXPLORE - MODS</h2>
                 </div>
+                <input class="zynx" placeholder="Search..." id="input-text-mods-explore" oninput="window.ref()">
                 <div style="max-height: 500px; overflow-y: scroll;">
                 <div id="AXdivexploremods"></div></div>
             </div>
@@ -135,14 +136,16 @@ function isModSupported(mod) {
     let unsupportmods = 0; 
     const colorer = "#ffffff"; // Mengatur warna default teks judul mod
     let HTMLContent = ""; // Menggunakan temporary string builder (lebih bersih & performant)
-    
+    const cvalexplore = document.getElementById("input-text-mods-explore").value
     listmodsexplore.forEach((i, index) => {
+        
         if (!isModSupported(i)) {
             unsupportmods = (unsupportmods+1)
         }
         if (isModSupported(i)){
-        
-        // Pastikan installedmods sudah terdefinisi secara global di sistem Anda
+        if(typeof cvalexplore !== undefined){
+        if(!(i.display.toLowerCase()).includes(cval.toLowerCase())) return;
+    }
         const exists = typeof installedmods !== 'undefined' ? installedmods.find(m => m.directory === i.directory) : false;
         const btnText = exists ? "Re-install" : "Download";
         const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
