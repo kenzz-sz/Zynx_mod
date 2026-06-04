@@ -144,7 +144,7 @@ function isModSupported(mod) {
         }
         if (isModSupported(i)){
         if(typeof cvalexplore !== undefined){
-        if(!(i.display.toLowerCase()).includes(cval.toLowerCase())) return;
+        if(!(i.display.toLowerCase()).includes(cvalexplore.toLowerCase())) return;
     }
         const exists = typeof installedmods !== 'undefined' ? installedmods.find(m => m.directory === i.directory) : false;
         const btnText = exists ? "Re-install" : "Download";
