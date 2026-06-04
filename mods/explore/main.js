@@ -127,34 +127,42 @@ function isModSupported(mod) {
                 
  }
  
- window.ref = async function() {
+ // PERBAIKAN 1: Gunakan 'window' dengan huruf kecil
+window.ref = async function() {
     const mvin = document.getElementById("AXdivexploremods");
     if (!mvin) return;
     mvin.innerHTML = "";
     
-    // PERBAIKAN: Inisialisasi variabel pendukung agar tidak ReferenceError
     let unsupportmods = 0; 
-    const colorer = "#ffffff"; // Mengatur warna default teks judul mod
-    let HTMLContent = ""; // Menggunakan temporary string builder (lebih bersih & performant)
-    const cvalexplore = document.getElementById("input-text-mods-explore").value
+    const colorer = "#ffffff"; 
+    let HTMLContent = ""; 
+    const cvalexplore = document.getElementById("input-text-mods-explore").value;
+
     listmodsexplore.forEach((i, index) => {
         
         if (!isModSupported(i)) {
-            unsupportmods = (unsupportmods+1)
+            unsupportmods = (unsupportmods + 1);
+            return; // Lewati mod yang tidak disupport
         }
-        if (isModSupported(i)){
-        if(typeof cvalexplore !== undefined){
-        if(!(i.display.toLowerCase()).includes(cvalexplore.toLowerCase())) return;
-    }
-        const exists = typeof installedmods !== 'undefined' ? installedmods.find(m => m.directory === i.directory) : false;
-        const btnText = exists ? "Re-install" : "Download";
-        const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
-        
-        HTMLContent += `
+
+        if (isModSupported(i)) {
+            // PERBAIKAN 2: Ambil nama mod dengan aman (gunakan fallback i.name jika i.display kosong)
+            const namaMod = i.display || i.name || "No Display name";
+            
+            // PERBAIKAN 3: Lakukan pencarian berdasarkan namaMod yang sudah aman
+            if (!(namaMod.toLowerCase()).includes(cvalexplore.toLowerCase())) return;
+
+            const exists = typeof installedmods !== 'undefined' ? installedmods.find(m => m.directory === i.directory) : false;
+            const btnText = exists ? "Re-install" : "Download";
+            const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
+            
+            HTMLContent += `
                 <div class="category" id="${idthisvalue}">
                     <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
-                        <div style="white-space: nowrap; overflow-x: scroll;"><span class="cat-icon">${i.icon || "📦"}</span>
-                        <span class="allowselect" style="color: ${colorer}">${i.display || i.name  || "No Display name"}</span> </div>
+                        <div style="white-space: nowrap; overflow-x: scroll;">
+                            <span class="cat-icon">${i.icon || "📦"}</span>
+                            <span class="allowselect" style="color: ${colorer}">${namaMod}</span> 
+                        </div>
                     </div>
                     <div class="cat-content">
                         <div class="cat-inner">
@@ -169,18 +177,19 @@ function isModSupported(mod) {
                             <br>
                         </div>
                     </div>
-                </div>`;}
+                </div>`;
+        }
     });
     
-    // Menggabungkan pesan peringatan versi di bagian paling atas UI
     const warningNotice = `<div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);" class="allowslidetext">${String(unsupportmods)} Mods have been removed from the UI, because these mods are not compatible with your Zynx OS version</div><br>`;
     
-    if(unsupportmods > 0){
-    mvin.innerHTML = warningNotice + HTMLContent;}
-else {
-    mvin.innerHTML = HTMLContent;
-}
+    if (unsupportmods > 0) {
+        mvin.innerHTML = warningNotice + HTMLContent;
+    } else {
+        mvin.innerHTML = HTMLContent;
+    }
 };
+
 
  window.detectbug = function() {
      if (typeof installedmods !== 'undefined') {
