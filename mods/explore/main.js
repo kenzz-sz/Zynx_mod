@@ -128,58 +128,62 @@ function isModSupported(mod) {
  }
  
  // PERBAIKAN 1: Gunakan 'window' dengan huruf kecil
-window.ref = function() {
+window.ref = async function() {
     const mvin = document.getElementById("AXdivexploremods");
     if (!mvin) return;
     mvin.innerHTML = "";
     
     let unsupportmods = 0; 
+    const colorer = "#ffffff"; 
     let HTMLContent = ""; 
-
-    // PERBAIKAN: Validasi aman sebelum melakukan toLowerCase() pada input search box
-    const searchInput = document.getElementById("input-text-mods-explore");
-    const cvalexplore = searchInput ? searchInput.value.toLowerCase() : "";
+    const cvalexplore = document.getElementById("input-text-mods-explore").value;
 
     listmodsexplore.forEach((i, index) => {
+        
         if (!isModSupported(i)) {
-            unsupportmods++;
-            return; 
+            unsupportmods = (unsupportmods + 1);
+            return; // Lewati mod yang tidak disupport
         }
 
-        // PERBAIKAN: Ambil nama mod dengan aman dan konversi ke string
-        const namaMod = String(i.display || i.name || "No Display name");
-        if (!namaMod.toLowerCase().includes(cvalexplore)) return;
-
-        // Cek status instalasi mod di database lokal
-        const exists = (typeof installedmods !== 'undefined') ? installedmods.find(m => m.directory === i.directory) : false;
-        const btnText = exists ? "🔄 Re-install" : "📥 Download";
-        const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
-        
-        HTMLContent += `
-            <div class="category" id="${idthisvalue}">
-                <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
-                    <div style="white-space: nowrap; overflow-x: scroll;">
-                        <span class="cat-icon">${i.icon || "📦"}</span>
-                        <span class="allowselect" style="color: #ffffff">${namaMod}</span> 
-                    </div>
-                </div>
-                <div class="cat-content">
-                    <div class="cat-inner">
-                        <p style="font-size:12px; opacity:0.6; margin-bottom:10px;">
-                            ${i.descripsion || i.description || 'No description'}
-                        </p>
-                        <div class="feature-item">
-                            <button class="btn-primary" onclick="window.handlePushMod(${index})" style="margin-top: -5px; padding: 6px 14px; border-radius:8px;">
-                                ${btnText}
-                            </button>
+        if (isModSupported(i)) {
+            // PERBAIKAN 2: Ambil nama mod dengan aman (gunakan fallback i.name jika i.display kosong)
+            const namaMod = i.display || i.name || "No Display name";
+            
+            // PERBAIKAN 3: Lakukan pencarian berdasarkan namaMod yang sudah aman
+            if (!((namaMod || "").toLowerCase()).includes((cvalexplore || "").toLowerCase())) return;
+            
+            const exists = typeof installedmods !== 'undefined' ? installedmods.find(m => m.directory === i.directory) : false;
+            const btnText = exists ? "Re-install" : "Download";
+            const idthisvalue = "cat-" + i.directory + "-modsvalueid-explore-mods";
+            
+            HTMLContent += `
+                <div class="category" id="${idthisvalue}">
+                    <div class="cat-header" onclick="App.toggleCategory('${idthisvalue}')">
+                        <div style="white-space: nowrap; overflow-x: scroll;">
+                            <span class="cat-icon">${i.icon || "📦"}</span>
+                            <span class="allowselect" style="color: ${colorer}">${namaMod}</span> 
                         </div>
                     </div>
-                </div>
-            </div>`;
+                    <div class="cat-content">
+                        <div class="cat-inner">
+                            <p style="white-space: nowrap; overflow-x: scroll; font-size:12px; opacity:0.6; margin-bottom:10px;">
+                                ${i.descripsion || i.description || 'No description'}
+                            </p>
+                            <div class="feature-item">
+                                <button class="btn-primary" onclick="handlePushMod(${index})" style="margin-top: -10px">
+                                    ${btnText}
+                                </button>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>`;
+        }
     });
     
+    const warningNotice = `<div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);" class="allowslidetext">${String(unsupportmods)} Mods have been removed from the UI, because these mods are not compatible with your Zynx OS version</div><br>`;
+    
     if (unsupportmods > 0) {
-        const warningNotice = `<div style="background: rgba(255,59,48,0.15); color: #ff453a; border-radius: 12px; padding: 12px; text-align: center; font-size:12px; border: 1px solid rgba(255,59,48,0.3);" class="allowslidetext">⚠️ ${unsupportmods} Mods hidden due to incompatibility with your current Zynx OS version.</div><br>`;
         mvin.innerHTML = warningNotice + HTMLContent;
     } else {
         mvin.innerHTML = HTMLContent;
@@ -200,25 +204,8 @@ window.ref = function() {
 
 window.handlePushMod = function(index) {
     const modData = listmodsexplore[index];
-    if (!modData) return;
-
     if (typeof pushmods === 'function') {
-        // Jalankan perintah download core OS
         pushmods(JSON.stringify(modData));
-
-        // PERBAIKAN: Masukkan data mod ke array installedmods lokal jika belum terdaftar
-        if (typeof installedmods !== 'undefined') {
-            const isExist = installedmods.some(m => m.directory === modData.directory);
-            if (!isExist) {
-                installedmods.push(modData);
-            }
-        }
-
-        // PERBAIKAN: Jalankan fungsi ref() agar UI langsung berganti tulisan tombol secara real-time
-        window.ref();
-        console.log(`Successfully pushed mod: ${modData.display}`);
-    } else {
-        alert("❌ Error: Core function 'pushmods' not found in this OS!");
     }
 };
 
