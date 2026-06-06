@@ -106,7 +106,7 @@ function isModSupported(mod) {
                     </div>
                     <div class="cat-content">
                         <div class="cat-inner">
-                            <div class="feature-item" onclick="App.changeScene('scene-explore-mods')">
+                            <div class="feature-item" onclick="App.changeScene('scene-explore-mods'); window.refexploremods()">
                                 <span>Mods</span>
                                 <span style="color: #0A84FF;">Open</span>
                             </div>
@@ -128,7 +128,7 @@ function isModSupported(mod) {
  }
  
  // PERBAIKAN 1: Gunakan 'window' dengan huruf kecil
-window.ref = async function() {
+window.refexploremods = async function() {
     const mvin = document.getElementById("AXdivexploremods");
     if (!mvin) return;
     mvin.innerHTML = "";
@@ -198,7 +198,7 @@ window.ref = async function() {
          });
      }
      setTimeout(() => {
-         ref()
+         refexploremods()
      }, 1500)
  };
 
