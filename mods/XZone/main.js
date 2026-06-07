@@ -1,10 +1,23 @@
+window.xzoneset = {
+    "music": false
+}
+if(localStorage.getItem("xzoneset")){
+    xzoneset = JSON.parse(localStorage.getItem("xzoneset"))
+}
+
 document.getElementById('scene-dashboard').insertAdjacentHTML('afterbegin', '<video style="border-radius: 18px;" width="300px" autoplay muted loop playsinline src="https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/dashboardvid.mp4"></video>');
+if(xzoneset.music === true){
 let bgm = new Audio('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/backsound.mp3'); 
 bgm.loop = true; 
 const startSound = () => bgm.play().catch(() => {});
 startSound(); 
 document.addEventListener('click', startSound, { once: true });
+}
 document.body.style.backgroundImage = "url('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/wallpaper.jpg')"
+
+window.savexzone = function(){
+    localStorage.setItem("xzoneset", JSON.stringify(xzoneset))
+}
 
 window.createuixzone = async function(){
     const maint = document.getElementById("app-container")
@@ -15,7 +28,18 @@ window.createuixzone = async function(){
                     </span>
                     <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">XZone</h2>
                 </div>
-                
+                <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; border: 1px dashed rgba(255,255,255,0.2);"><div class="allowslidetext" style="text-align: center;">
+                    MUSIC</div>
+                    <div style="white-space: nowrap; text-align: center;">
+                        <span style="color: #0A84FF; font-size: 16px; cursor: pointer;" onclick="xzoneset.music = false; window.savexzone()">
+                        OFF
+                    </span>
+                    <span style="color: #0A84FF; margin-left: 10px;  font-size: 16px; cursor: pointer;" onclick="xzoneset.music = true; window.savexzone()">
+                        ON
+                    </span>
+                    </div>
+                    </div>
+                    
             </div>`;
             const rc = document.getElementById("consdash")
   const cat = document.createElement("div");
