@@ -8,7 +8,7 @@ if(localStorage.getItem("xzoneset")){
 }
 
 // Menambahkan video ke dashboard
-document.getElementById('scene-dashboard').insertAdjacentHTML('afterbegin', '<video style="border-radius: 18px;" width="300px" autoplay muted loop playsinline src="https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/dashboardvid.mp4"></video>');
+document.getElementById('scene-dashboard').innerHTML = ('<video style="border-radius: 18px;" width="300px" autoplay muted loop playsinline src="https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/dashboardvid.mp4"></video>'+document.getElementById('scene-dashboard').innerHTML);
 
 if(window.xzoneset.music === true){
     let bgm = new Audio('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/backsound.mp3'); 
