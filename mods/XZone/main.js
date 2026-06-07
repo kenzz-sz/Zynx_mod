@@ -60,3 +60,6 @@ window.createuixzone = async function(){
                 </div>`;
                 rc.appendChild(cat)
  }
+ setTimeout(() => {
+ window.createuixzone()
+ }, 1500)
