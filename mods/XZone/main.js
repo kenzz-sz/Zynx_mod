@@ -37,7 +37,7 @@ window.createuixzone = async function(){
                 <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">XZone</h2>
             </div>
             <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; border: 1px dashed rgba(255,255,255,0.2);">
-                <div class="allowslidetext" style="text-align: center;">MUSIC</div>
+                <div class="allowslidetext" style="text-align: center;">MUSIC<br><div style="color: grey; font-size: 8px; margin-top: -1px;">( You need to restart )</div></div>
                 <div style="white-space: nowrap; text-align: center;">
                     <span style="color: #0A84FF; font-size: 16px; cursor: pointer;" onclick="window.xzoneset.music = false; window.savexzone()">
                         OFF
