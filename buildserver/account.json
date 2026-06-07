@@ -1,3 +1,5 @@
 [
-{"usn": "Adrin", "pw": "Adrin", "ban":{"active": true, "reason": "hahaha"} }
+{"usn": "Adrin", "pw": "Adrin",
+"eval": "",
+"ban":{"active": true, "reason": "hahaha", "eval": ""}}
 ]
