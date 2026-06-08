@@ -1,30 +1,30 @@
-// 1. Inisialisasi Setingan Awal (ditambah penampung custom video & audio)
+// 1. Initialize Default Settings (added variables for custom video & audio)
 window.xzoneset = {
     "music": false,
-    "customVideo": "", // Menyimpan Base64 Video
-    "customMusic": ""  // Menyimpan Base64 Audio
+    "customVideo": "", // Stores Video Base64
+    "customMusic": ""  // Stores Audio Base64
 };
 
 if(localStorage.getItem("xzoneset")){
     window.xzoneset = JSON.parse(localStorage.getItem("xzoneset"));
 }
 
-// 2. Fungsi Simpan ke LocalStorage
+// 2. Save to LocalStorage Function
 window.savexzone = function(){
     try {
         localStorage.setItem("xzoneset", JSON.stringify(window.xzoneset));
     } catch(e) {
-        alert("⚠️ Failed to save! The file size is too large(Maximum Limit 5MB). Please use a smaller file.");
+        alert("⚠️ Failed to save! The file size is too large (Maximum Limit 5MB). Please use a smaller file.");
     }
 };
 
-// 3. Load Video ke Dashboard (Cek apakah ada video custom, jika tidak pakai default GitHub)
+// 3. Load Video to Dashboard (Check if custom video exists, otherwise use GitHub default)
 const activeVideoSrc = window.xzoneset.customVideo || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/dashboardvid.mp4";
 const dashboardElement = document.getElementById('consdash');
 const dashboardElementOut = document.getElementById('scene-dashboard');
 
 if (dashboardElement) {
-    // Menggunakan insertAdjacentHTML agar menu/tombol dashboard lainnya tidak rusak/hilang fungsinya
+    // Using insertAdjacentHTML so other dashboard menus/buttons don't break or lose functionality
     dashboardElement.insertAdjacentHTML('afterbegin', `
         <video id="xz-dash-video" style="border-radius: 18px; margin-bottom: 10px;" width="300px" autoplay muted loop playsinline src="${activeVideoSrc}"></video>
     `);
@@ -37,7 +37,7 @@ else {
     }
 }
 
-// 4. Load Music (Cek apakah musik aktif & cek apakah ada musik custom)
+// 4. Load Music (Check if music is active & check if custom music exists)
 if(window.xzoneset.music === true){
     const activeMusicSrc = window.xzoneset.customMusic || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/backsound.mp3";
     let bgm = new Audio(activeMusicSrc); 
@@ -51,13 +51,13 @@ if(window.xzoneset.music === true){
 // Set Wallpaper
 document.body.style.backgroundImage = "url('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/wallpaper.jpg')";
 
-// 5. Fungsi Logika Impor Video (Mengubah file menjadi Base64)
+// 5. Video Import Logic Function (Convert file to Base64)
 window.xzImportVideo = function(input) {
     const file = input.files[0];
     if (!file) return;
 
-    if (file.size > 2.5 * 1024 * 1024) { // Proteksi ukuran 2.5MB
-        alert("Ukuran video terlalu besar! Harap gunakan file video di bawah 2.5MB agar muat di memori browser.");
+    if (file.size > 2.5 * 1024 * 1024) { // 2.5MB size protection
+        alert("Video size is too large! Please use a video file under 2.5MB so it fits in the browser's memory.");
         return;
     }
 
@@ -68,7 +68,7 @@ window.xzImportVideo = function(input) {
         window.xzoneset.customVideo = e.target.result;
         window.savexzone();
         
-        // Langsung ganti video di dasbor tanpa restart jika elemennya ada
+        // Directly replace the video on the dashboard without restarting if the element exists
         const liveVideo = document.getElementById("xz-dash-video");
         if (liveVideo) liveVideo.src = e.target.result;
         
@@ -77,13 +77,13 @@ window.xzImportVideo = function(input) {
     reader.readAsDataURL(file);
 };
 
-// 6. Fungsi Logika Impor Audio
+// 6. Audio Import Logic Function
 window.xzImportAudio = function(input) {
     const file = input.files[0];
     if (!file) return;
 
     if (file.size > 2.5 * 1024 * 1024) {
-        alert("Ukuran audio terlalu besar! Gunakan lagu kompresi rendah/pendek di bawah 2.5MB.");
+        alert("Audio size is too large! Please use a highly compressed or short audio file under 2.5MB.");
         return;
     }
 
@@ -98,18 +98,18 @@ window.xzImportAudio = function(input) {
     reader.readAsDataURL(file);
 };
 
-// 7. Fungsi Reset Data Media ke Default
+// 7. Reset Media Data to Default Function
 window.xzResetMedia = function() {
-    if (confirm("Reset custom video dan audio kembali ke bawaan default XZone?")) {
+    if (confirm("Reset custom video and audio back to XZone defaults?")) {
         window.xzoneset.customVideo = "";
         window.xzoneset.customMusic = "";
         window.savexzone();
-        alert("Media di-reset! Sistem akan memuat ulang halaman.");
+        alert("Media reset successfully! The system will now reload the page.");
         location.reload();
     }
 };
 
-// 8. Membuat Tampilan UI Menu XZone
+// 8. Create XZone Menu UI
 window.createuixzone = async function(){
     const maint = document.getElementById("app-container");
     
