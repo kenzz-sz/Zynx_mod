@@ -1,8 +1,8 @@
 {
-    "directory": "xzone-bugger",
+    "directory": "xzoneofc",
     "display": "XZone",
-    "icon": "💍",
-    "descripsion": " ",
+    "icon": "✨️",
+    "descripsion": "Made a lot of new features!",
     "modsconfig": "",
     "url": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/main.json",
     "code": "rmfs('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/main.js');"
