@@ -39,7 +39,7 @@ else {
 
 // 4. Load Music (Check if music is active & check if custom music exists)
 if(window.xzoneset.music === true){
-    const activeMusicSrc = window.xzoneset.customMusic || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/backsound.mp3";
+    const activeMusicSrc = window.xzoneset.customMusic || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/backsounds.mp3";
     let bgm = new Audio(activeMusicSrc); 
     bgm.loop = true; 
     
