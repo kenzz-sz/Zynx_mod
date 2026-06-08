@@ -1,3 +1,75 @@
+// Menggunakan karakter Unicode dari blok CJK agar aman disimpan di localStorage
+window.OFFSET = 0x4E00; 
+window.encodeBase1024 = function(text) {
+    if (!text) return "";
+    
+    const encoder = new TextEncoder();
+    const bytes = encoder.encode(text);
+    const len = bytes.length;
+    
+    let bitBuffer = 0;
+    let bitCount = 0;
+    let encodedStr = "";
+
+    for (let i = 0; i < len; i++) {
+        bitBuffer = (bitBuffer << 8) | bytes[i];
+        bitCount += 8;
+
+        while (bitCount >= 10) {
+            bitCount -= 10;
+            const value = (bitBuffer >> bitCount) & 0x3FF; // Ambil 10 bit
+            encodedStr += String.fromCharCode(window.OFFSET + value);
+            bitBuffer &= (1 << bitCount) - 1; // FIX: Bersihkan bit yang sudah diambil agar tidak overflow
+        }
+    }
+
+    // Jika ada sisa bit yang tidak genap 10 bit, tambahkan padding bit 0
+    if (bitCount > 0) {
+        const value = (bitBuffer << (10 - bitCount)) & 0x3FF;
+        encodedStr += String.fromCharCode(window.OFFSET + value);
+    }
+
+    // Pasang metadata panjang byte asli di awal string untuk mengatasi masalah padding saat decode
+    return `${len}_${encodedStr}`;
+}
+
+window.decodeBase1024 = function(encodedData) {
+    if (!encodedData) return "";
+
+    // Pisahkan penanda panjang asli (metadata) dengan isi data
+    const separatorIndex = encodedData.indexOf('_');
+    if (separatorIndex === -1) throw new Error("Format data tidak valid");
+
+    const targetLength = parseInt(encodedData.substring(0, separatorIndex), 10);
+    const encodedStr = encodedData.substring(separatorIndex + 1);
+
+    let bitBuffer = 0;
+    let bitCount = 0;
+    const bytes = new Uint8Array(targetLength);
+    let byteIdx = 0;
+
+    for (let i = 0; i < encodedStr.length; i++) {
+        const value = encodedStr.charCodeAt(i) - window.OFFSET;
+        if (value < 0 || value >= 1024) throw new Error("Karakter Base1024 tidak valid");
+
+        bitBuffer = (bitBuffer << 10) | value;
+        bitCount += 10;
+
+        while (bitCount >= 8) {
+            bitCount -= 8;
+            const byte = (bitBuffer >> bitCount) & 0xFF; // Ambil 8 bit (1 byte)
+            if (byteIdx < targetLength) {
+                bytes[byteIdx++] = byte;
+            }
+            bitBuffer &= (1 << bitCount) - 1; // FIX: Bersihkan bit yang sudah diambil
+        }
+    }
+
+    const decoder = new TextDecoder();
+    return decoder.decode(bytes);
+}
+
+
 // 1. Initialize Default Settings (added variables for custom video & audio)
 window.xzoneset = {
     "music": false,
@@ -6,38 +78,34 @@ window.xzoneset = {
 };
 
 if(localStorage.getItem("xzoneset")){
-    window.xzoneset = JSON.parse(localStorage.getItem("xzoneset"));
+        window.xzoneset = JSON.parse(window.decodeBase1024(localStorage.getItem("xzoneset")));
+   
 }
 
 // 2. Save to LocalStorage Function
 window.savexzone = function(){
-    try {
-        localStorage.setItem("xzoneset", JSON.stringify(window.xzoneset));
-    } catch(e) {
-        alert("⚠️ Failed to save! The file size is too large (Maximum Limit 5MB). Please use a smaller file.");
-    }
+    
+        localStorage.setItem("xzoneset", (window.encodeBase1024(JSON.stringify(window.xzoneset))));
+    
 };
 
-// 3. Load Video to Dashboard (Check if custom video exists, otherwise use GitHub default)
+// 3. Load Video to Dashboard
 const activeVideoSrc = window.xzoneset.customVideo || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/dashboardvid.mp4";
-const dashboardElement = document.getElementById('consdash');
-const dashboardElementOut = document.getElementById('scene-dashboard');
+const dashboardElement = document.getElementById('topdashboard');
+const dashboardElementOut = document.getElementById('consdash');
 
 if (dashboardElement) {
-    // Using insertAdjacentHTML so other dashboard menus/buttons don't break or lose functionality
-    dashboardElement.insertAdjacentHTML('afterbegin', `
+    dashboardElement.innerHTML += (`
         <video id="xz-dash-video" style="border-radius: 18px; margin-bottom: 10px;" width="300px" autoplay muted loop playsinline src="${activeVideoSrc}"></video>
     `);
 }
-else {
-    {
-        dashboardElementOut.insertAdjacentHTML('afterbegin', `
+else if (dashboardElementOut) {
+    dashboardElementOut.insertAdjacentHTML('afterbegin', `
         <video id="xz-dash-video" style="border-radius: 18px; margin-bottom: 10px;" width="300px" autoplay muted loop playsinline src="${activeVideoSrc}"></video>
     `);
-    }
 }
 
-// 4. Load Music (Check if music is active & check if custom music exists)
+// 4. Load Music
 if(window.xzoneset.music === true){
     const activeMusicSrc = window.xzoneset.customMusic || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/backsounds.mp3";
     let bgm = new Audio(activeMusicSrc); 
@@ -51,13 +119,14 @@ if(window.xzoneset.music === true){
 // Set Wallpaper
 document.body.style.backgroundImage = "url('https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/wallpaper.jpg')";
 
-// 5. Video Import Logic Function (Convert file to Base64)
+// 5. Video Import Logic Function (FIXED LIMIT TO 3.5MB)
 window.xzImportVideo = function(input) {
     const file = input.files[0];
     if (!file) return;
 
-    if (file.size > 2.5 * 1024 * 1024) { // 2.5MB size protection
-        alert("Video size is too large! Please use a video file under 2.5MB so it fits in the browser's memory.");
+    // FIX: Limit diturunkan ke 3.5MB karena limit mutlak localStorage adalah 5MB string
+    if (file.size > 5 * 1024 * 1024) { 
+        alert("Ukuran video terlalu besar! Gunakan video di bawah 5MB agar muat di penyimpanan browser.");
         return;
     }
 
@@ -68,22 +137,22 @@ window.xzImportVideo = function(input) {
         window.xzoneset.customVideo = e.target.result;
         window.savexzone();
         
-        // Directly replace the video on the dashboard without restarting if the element exists
         const liveVideo = document.getElementById("xz-dash-video");
         if (liveVideo) liveVideo.src = e.target.result;
         
-        document.getElementById("xz-vid-status").innerText = "✅ Video Saved Successfully!";
+        document.getElementById("xz-vid-status").innerText = "✅ Video Berhasil Disimpan!";
     };
     reader.readAsDataURL(file);
 };
 
-// 6. Audio Import Logic Function
+// 6. Audio Import Logic Function (FIXED LIMIT TO 3.5MB)
 window.xzImportAudio = function(input) {
     const file = input.files[0];
     if (!file) return;
 
-    if (file.size > 2.5 * 1024 * 1024) {
-        alert("Audio size is too large! Please use a highly compressed or short audio file under 2.5MB.");
+    // FIX: Limit diturunkan ke 3.5MB
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Ukuran audio terlalu besar! Gunakan file audio di bawah 5MB.");
         return;
     }
 
@@ -93,7 +162,7 @@ window.xzImportAudio = function(input) {
     reader.onload = function(e) {
         window.xzoneset.customMusic = e.target.result;
         window.savexzone();
-        document.getElementById("xz-aud-status").innerText = "✅ Audio Saved! (Restart App To Play)";
+        document.getElementById("xz-aud-status").innerText = "✅ Audio Disimpan! (Restart App Untuk Memutar)";
     };
     reader.readAsDataURL(file);
 };
@@ -136,14 +205,14 @@ window.createuixzone = async function(){
                 <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px; text-align: center;">📥 IMPORT DASHBOARD VIDEO</div>
                 <input type="file" id="xz-file-video" accept="video/*" style="display: none;" onchange="window.xzImportVideo(this)">
                 <button onclick="document.getElementById('xz-file-video').click()" style="width: 100%; background: #0A84FF; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer;">Choose Video</button>
-                <div id="xz-vid-status" style="font-size: 10px; color: #8e8e93; text-align: center; margin-top: 6px;">Max recommended size: 2.5MB</div>
+                <div id="xz-vid-status" style="font-size: 10px; color: #8e8e93; text-align: center; margin-top: 6px;">Max size: 5MB</div>
             </div>
 
             <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px;">
                 <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px; text-align: center;">📥 IMPORT BACKGROUND MUSIC</div>
                 <input type="file" id="xz-file-audio" accept="audio/*" style="display: none;" onchange="window.xzImportAudio(this)">
                 <button onclick="document.getElementById('xz-file-audio').click()" style="width: 100%; background: #0A84FF; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer;">Choose Audio (MP3)</button>
-                <div id="xz-aud-status" style="font-size: 10px; color: #8e8e93; text-align: center; margin-top: 6px;">Max recommended size: 2.5MB</div>
+                <div id="xz-aud-status" style="font-size: 10px; color: #8e8e93; text-align: center; margin-top: 6px;">Max size: 5MB</div>
             </div>
 
             <button onclick="window.xzResetMedia()" style="width: 100%; background: rgba(255,59,48,0.2); color: #FF3B30; border: 1px solid rgba(255,59,48,0.4); padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer;">
