@@ -20,13 +20,20 @@ window.savexzone = function(){
 
 // 3. Load Video ke Dashboard (Cek apakah ada video custom, jika tidak pakai default GitHub)
 const activeVideoSrc = window.xzoneset.customVideo || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/dashboardvid.mp4";
-const dashboardElement = document.getElementById('scene-dashboard');
+const dashboardElement = document.getElementById('innerdashboard');
+const dashboardElementOut = document.getElementById('scene-dashboard');
 
 if (dashboardElement) {
     // Menggunakan insertAdjacentHTML agar menu/tombol dashboard lainnya tidak rusak/hilang fungsinya
     dashboardElement.insertAdjacentHTML('afterbegin', `
         <video id="xz-dash-video" style="border-radius: 18px; margin-bottom: 10px;" width="300px" autoplay muted loop playsinline src="${activeVideoSrc}"></video>
     `);
+} else {
+    {
+        dashboardElementOut.insertAdjacentHTML('afterbegin', `
+        <video id="xz-dash-video" style="border-radius: 18px; margin-bottom: 10px;" width="300px" autoplay muted loop playsinline src="${activeVideoSrc}"></video>
+    `);
+    }
 }
 
 // 4. Load Music (Cek apakah musik aktif & cek apakah ada musik custom)
