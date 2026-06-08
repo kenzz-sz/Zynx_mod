@@ -14,13 +14,13 @@ window.savexzone = function(){
     try {
         localStorage.setItem("xzoneset", JSON.stringify(window.xzoneset));
     } catch(e) {
-        alert("⚠️ Gagal menyimpan! Ukuran file terlalu besar untuk LocalStorage (Batas Maksimal 5MB). Silakan gunakan file yang lebih kecil.");
+        alert("⚠️ Failed to save! The file size is too large(Maximum Limit 5MB). Please use a smaller file.");
     }
 };
 
 // 3. Load Video ke Dashboard (Cek apakah ada video custom, jika tidak pakai default GitHub)
 const activeVideoSrc = window.xzoneset.customVideo || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/dashboardvid.mp4";
-const dashboardElement = document.getElementById('innerdashboard');
+const dashboardElement = document.getElementById('consdash');
 const dashboardElementOut = document.getElementById('scene-dashboard');
 
 if (dashboardElement) {
@@ -28,7 +28,8 @@ if (dashboardElement) {
     dashboardElement.insertAdjacentHTML('afterbegin', `
         <video id="xz-dash-video" style="border-radius: 18px; margin-bottom: 10px;" width="300px" autoplay muted loop playsinline src="${activeVideoSrc}"></video>
     `);
-} else {
+}
+else {
     {
         dashboardElementOut.insertAdjacentHTML('afterbegin', `
         <video id="xz-dash-video" style="border-radius: 18px; margin-bottom: 10px;" width="300px" autoplay muted loop playsinline src="${activeVideoSrc}"></video>
