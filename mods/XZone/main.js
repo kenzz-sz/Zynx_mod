@@ -125,7 +125,7 @@ window.loadXZoneWallpaper = function() {
             const bgVidSrc = window.xzoneset.customBgVideo || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/snaptik_7642236110743080212_v3.mp4";
             const vidHtml = `<video id="xz-bg-video-element" autoplay muted loop playsinline style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -999; opacity: 0.6;" src="${bgVidSrc}"></video>`;
             document.body.insertAdjacentHTML('afterbegin', vidHtml);
-     window.xzToggleSetting('bgType', 'video', document.getElementByid("vxxzzz"))
+     window.xzToggleSetting('bgType', 'video', document.getElementById("vxxzzz"))
         } else {
             const defaultWall = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/wallpaper.jpg";
             document.body.style.backgroundImage = `url('${window.xzoneset.customWallpaper || defaultWall}')`;
