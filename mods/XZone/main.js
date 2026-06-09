@@ -70,7 +70,7 @@ xzStyle.innerHTML = `
     .xz-row-label { display: flex; flex-direction: column; gap: 2px; text-align: left; }
     .xz-lbl-main { font-size: 14px; font-weight: 600; color: #fff; }
     .xz-lbl-sub { font-size: 11px; color: rgba(255, 255, 255, 0.4); }
-    .xz-toggle-span { font-size: 13px; font-weight: bold; cursor: pointer; padding: 6px 12px; border-radius: 8px; transition: background 0.2s; }
+    .xz-toggle-span { font-size: 13px; font-weight: bold; cursor: pointer; padding: 6px 12px; border-radius: 8px; transition: all 0.2s ease; }
     .xz-action-btn { width: 100%; background: #0A84FF; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 8px; }
 `;
 document.head.appendChild(xzStyle);
@@ -147,13 +147,40 @@ if(window.xzoneset.music === true){
 }
 
 // ========================================================
-// 5. FILE IMPORT HANDLERS (Binary-to-Text Pipelines)
+// 5. LIVE RE-RENDERING & TOGGLE CONTROLLERS
 // ========================================================
+window.xzToggleSetting = function(key, targetValue, eventNode) {
+    // 1. Update State & LocalStorage
+    window.xzoneset[key] = targetValue;
+    window.savexzone();
+    
+    // 2. Refresh active environment engines
+    if (key === 'wallpaperEnabled') window.loadXZoneWallpaper();
+    if (key === 'videoEnabled') window.loadXZoneVideo();
+    if (key === 'music') {
+        location.reload(); // Audio engine requires hardware state restart
+        return;
+    }
+    
+    // 3. Dynamic UI Render Pipeline (No-reload sliding effect)
+    const switchContainer = eventNode.parentElement;
+    const items = switchContainer.querySelectorAll('.xz-toggle-span');
+    items.forEach(el => {
+        const componentVal = el.getAttribute('data-val') === 'true';
+        if (componentVal === targetValue) {
+            el.style.background = '#0A84FF';
+            el.style.color = '#fff';
+        } else {
+            el.style.background = 'transparent';
+            el.style.color = '#8e8e93';
+        }
+    });
+};
+
 window.xzImportFile = function(input, targetKey, statusId) {
     const file = input.files[0];
     if (!file) return;
 
-    // Standard local storage threshold warning
     if (file.size > 4.5 * 1024 * 1024) { 
         alert("File size is too heavy! Keep individual media assets small to avoid exceeding browser string memory limits.");
         return;
@@ -174,9 +201,9 @@ window.xzImportFile = function(input, targetKey, statusId) {
     reader.readAsDataURL(file);
 };
 
-window.xzSwitchTab = function(tabName) {
+window.xzSwitchTab = function(tabName, eventObj) {
     document.querySelectorAll('.xz-tab-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+    eventObj.target.classList.add('active');
     document.querySelectorAll('.xz-tab-panel').forEach(p => p.style.display = 'none');
     document.getElementById('xz-panel-' + tabName).style.display = 'block';
 };
@@ -198,7 +225,7 @@ window.createuixzone = async function(){
     
     if (!document.getElementById("scene-xzone-main")) {
         maint.insertAdjacentHTML('beforeend', `
-        <div id="scene-xzone-main" class="panel xz-panel-container" style="">
+        <div id="scene-xzone-main" class="panel xz-panel-container">
             
             <div style="display: flex; align-items: center; margin-bottom: 20px;">
                 <span onclick="App.changeScene('scene-dashboard')" style="color: #0A84FF; font-size: 15px; cursor: pointer; display: flex; align-items: center; font-weight: 600;">
@@ -208,8 +235,8 @@ window.createuixzone = async function(){
             </div>
 
             <div class="xz-tab-box">
-                <button class="xz-tab-btn active" onclick="window.xzSwitchTab('toggles')">System Toggles</button>
-                <button class="xz-tab-btn" onclick="window.xzSwitchTab('media')">Custom Storage</button>
+                <button class="xz-tab-btn active" onclick="window.xzSwitchTab('toggles', event)">System Toggles</button>
+                <button class="xz-tab-btn" onclick="window.xzSwitchTab('media', event)">Custom Storage</button>
             </div>
 
             <div id="xz-panel-toggles" class="xz-tab-panel">
@@ -221,8 +248,8 @@ window.createuixzone = async function(){
                             <span class="xz-lbl-sub">Toggle continuous background audio (Requires refresh)</span>
                         </div>
                         <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 10px;">
-                            <span class="xz-toggle-span" style="background: ${!window.xzoneset.music ? '#0A84FF' : 'transparent'}; color: ${!window.xzoneset.music ? '#fff' : '#8e8e93'}" onclick="window.xzoneset.music = false; window.savexzone(); location.reload()">OFF</span>
-                            <span class="xz-toggle-span" style="background: ${window.xzoneset.music ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.music ? '#fff' : '#8e8e93'}" onclick="window.xzoneset.music = true; window.savexzone(); location.reload()">ON</span>
+                            <span class="xz-toggle-span" data-val="false" style="background: ${!window.xzoneset.music ? '#0A84FF' : 'transparent'}; color: ${!window.xzoneset.music ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('music', false, this)">OFF</span>
+                            <span class="xz-toggle-span" data-val="true" style="background: ${window.xzoneset.music ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.music ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('music', true, this)">ON</span>
                         </div>
                     </div>
 
@@ -232,8 +259,8 @@ window.createuixzone = async function(){
                             <span class="xz-lbl-sub">Toggle the dashboard looping background video</span>
                         </div>
                         <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 10px;">
-                            <span class="xz-toggle-span" style="background: ${!window.xzoneset.videoEnabled ? '#0A84FF' : 'transparent'}; color: ${!window.xzoneset.videoEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzoneset.videoEnabled = false; window.savexzone(); window.loadXZoneVideo()">OFF</span>
-                            <span class="xz-toggle-span" style="background: ${window.xzoneset.videoEnabled ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.videoEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzoneset.videoEnabled = true; window.savexzone(); window.loadXZoneVideo()">ON</span>
+                            <span class="xz-toggle-span" data-val="false" style="background: ${!window.xzoneset.videoEnabled ? '#0A84FF' : 'transparent'}; color: ${!window.xzoneset.videoEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('videoEnabled', false, this)">OFF</span>
+                            <span class="xz-toggle-span" data-val="true" style="background: ${window.xzoneset.videoEnabled ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.videoEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('videoEnabled', true, this)">ON</span>
                         </div>
                     </div>
 
@@ -243,8 +270,8 @@ window.createuixzone = async function(){
                             <span class="xz-lbl-sub">Toggle system-wide custom wallpaper interface backdrop</span>
                         </div>
                         <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 10px;">
-                            <span class="xz-toggle-span" style="background: ${!window.xzoneset.wallpaperEnabled ? '#0A84FF' : 'transparent'}; color: ${!window.xzoneset.wallpaperEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzoneset.wallpaperEnabled = false; window.savexzone(); window.loadXZoneWallpaper()">OFF</span>
-                            <span class="xz-toggle-span" style="background: ${window.xzoneset.wallpaperEnabled ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.wallpaperEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzoneset.wallpaperEnabled = true; window.savexzone(); window.loadXZoneWallpaper()">ON</span>
+                            <span class="xz-toggle-span" data-val="false" style="background: ${!window.xzoneset.wallpaperEnabled ? '#0A84FF' : 'transparent'}; color: ${!window.xzoneset.wallpaperEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('wallpaperEnabled', false, this)">OFF</span>
+                            <span class="xz-toggle-span" data-val="true" style="background: ${window.xzoneset.wallpaperEnabled ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.wallpaperEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('wallpaperEnabled', true, this)">ON</span>
                         </div>
                     </div>
 
