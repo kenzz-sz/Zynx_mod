@@ -125,6 +125,7 @@ window.loadXZoneWallpaper = function() {
             const bgVidSrc = window.xzoneset.customBgVideo || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/snaptik_7642236110743080212_v3.mp4";
             const vidHtml = `<video id="xz-bg-video-element" autoplay muted loop playsinline style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -999; opacity: 0.6;" src="${bgVidSrc}"></video>`;
             document.body.insertAdjacentHTML('afterbegin', vidHtml);
+     window.xzToggleSetting('bgType', 'video', document.getElementByid("vxxzzz"))
         } else {
             const defaultWall = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/wallpaper.jpg";
             document.body.style.backgroundImage = `url('${window.xzoneset.customWallpaper || defaultWall}')`;
@@ -348,7 +349,7 @@ window.createuixzone = async function(){
                         </div>
                         <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 10px;">
                             <span class="xz-toggle-span" data-val="image" style="background: ${window.xzoneset.bgType === 'image' ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.bgType === 'image' ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('bgType', 'image', this)">IMAGE</span>
-                            <span class="xz-toggle-span" data-val="video" style="background: ${window.xzoneset.bgType === 'video' ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.bgType === 'video' ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('bgType', 'video', this)">VIDEO</span>
+                            <span class="xz-toggle-span" data-val="video" style="background: ${window.xzoneset.bgType === 'video' ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.bgType === 'video' ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('bgType', 'video', this)" id="vxxzzz">VIDEO</span>
                         </div>
                     </div>
 
