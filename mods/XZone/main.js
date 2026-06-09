@@ -14,7 +14,7 @@ window.encodeBase32768 = function(text) {
         bitCount += 8;
         while (bitCount >= 15) {
             bitCount -= 15;
-            const value = (bitBuffer >> bitCount) & 0x7FFF; // Extract 15 bits
+            const value = (bitBuffer >> bitCount) & 0x7FFF;
             encodedStr += String.fromCharCode(window.OFFSET + value);
             bitBuffer &= (1 << bitCount) - 1;
         }
@@ -65,13 +65,22 @@ xzStyle.innerHTML = `
     .xz-tab-btn { flex: 1; padding: 10px; border-radius: 9px; border: none; background: transparent; color: #a1a1a6; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s; }
     .xz-tab-btn.active { background: #0A84FF; color: #fff; }
     .xz-card-group { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 14px; padding: 4px 16px; margin-bottom: 16px; }
-    .xz-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+    .xz-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); flex-wrap: wrap; }
     .xz-row:last-child { border-bottom: none; }
-    .xz-row-label { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+    .xz-row-label { display: flex; flex-direction: column; gap: 4px; text-align: left; width: 100%; }
+    .xz-lbl-header-container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
     .xz-lbl-main { font-size: 14px; font-weight: 600; color: #fff; }
-    .xz-lbl-sub { font-size: 11px; color: rgba(255, 255, 255, 0.4); }
+    .xz-lbl-sub { font-size: 11px; color: rgba(255, 255, 255, 0.4); margin-top: 2px; }
+    .xz-status-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .xz-badge-default { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+    .xz-badge-custom { background: rgba(10,132,255,0.15); color: #0A84FF; border: 1px solid rgba(10,132,255,0.2); }
     .xz-toggle-span { font-size: 13px; font-weight: bold; cursor: pointer; padding: 6px 12px; border-radius: 8px; transition: all 0.2s ease; }
-    .xz-action-btn { width: 100%; background: #0A84FF; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 8px; }
+    .xz-action-btn { background: #0A84FF; color: white; border: none; padding: 10px 12px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 8px; }
+    .xz-preview-box { width: 100%; margin-top: 10px; border-radius: 10px; overflow: hidden; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; position: relative; }
+    .xz-preview-vid { width: 100%; max-height: 140px; object-fit: cover; display: block; }
+    .xz-preview-img { width: 100%; max-height: 140px; object-fit: cover; display: block; }
+    audio::-webkit-media-controls-panel { background-color: rgba(255,255,255,0.1); }
+    audio::-webkit-media-controls-current-time-display, audio::-webkit-media-controls-time-remaining-display { color: #fff; }
 `;
 document.head.appendChild(xzStyle);
 
@@ -82,14 +91,17 @@ window.xzoneset = {
     "music": false,
     "videoEnabled": true,
     "wallpaperEnabled": true,
-    "customVideo": "", 
+    "bgType": "image", // "image" or "video"
+    "customVideo": "", // Dashboard video
     "customMusic": "",
-    "customWallpaper": ""
+    "customWallpaper": "", // Background Image
+    "customBgVideo": "" // Background Video
 };
 
 if(localStorage.getItem("xzoneset")){
     try {
-        window.xzoneset = JSON.parse(window.decodeBase32768(localStorage.getItem("xzoneset")));
+        const parsed = JSON.parse(window.decodeBase32768(localStorage.getItem("xzoneset")));
+        window.xzoneset = { ...window.xzoneset, ...parsed };
     } catch(e) { 
         console.error("Failed parsing compressed configurations, falling back to defaults."); 
     }
@@ -103,15 +115,23 @@ window.savexzone = function(){
 // 4. PIPELINE RENDER ENGINES
 // ========================================================
 window.loadXZoneWallpaper = function() {
-    const defaultWall = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/wallpaper.jpg";
+    const existingBgVid = document.getElementById("xz-bg-video-element");
+    if (existingBgVid) existingBgVid.remove();
+    document.body.style.backgroundImage = "none";
+    document.body.style.backgroundColor = "#121214";
+
     if (window.xzoneset.wallpaperEnabled === true) {
-        document.body.style.backgroundImage = `url('${window.xzoneset.customWallpaper || defaultWall}')`;
-    } else {
-        document.body.style.backgroundImage = "none";
-        document.body.style.backgroundColor = "#121214";
+        if (window.xzoneset.bgType === 'video') {
+            const bgVidSrc = window.xzoneset.customBgVideo || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/background_vid.mp4";
+            const vidHtml = `<video id="xz-bg-video-element" autoplay muted loop playsinline style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -999; opacity: 0.6;" src="${bgVidSrc}"></video>`;
+            document.body.insertAdjacentHTML('afterbegin', vidHtml);
+        } else {
+            const defaultWall = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/wallpaper.jpg";
+            document.body.style.backgroundImage = `url('${window.xzoneset.customWallpaper || defaultWall}')`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundAttachment = "fixed";
+        }
     }
-    document.body.style.backgroundSize = "cover";
-    document.body.style.backgroundAttachment = "fixed";
 };
 
 window.loadXZoneVideo = function() {
@@ -137,11 +157,12 @@ window.loadXZoneWallpaper();
 window.loadXZoneVideo();
 
 // Independent Music Initialization
+window.xzBgmInstance = null;
 if(window.xzoneset.music === true){
     const activeMusicSrc = window.xzoneset.customMusic || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/backsounds.mp3";
-    let bgm = new Audio(activeMusicSrc); 
-    bgm.loop = true;
-    const startSound = () => bgm.play().catch(() => {});
+    window.xzBgmInstance = new Audio(activeMusicSrc); 
+    window.xzBgmInstance.loop = true;
+    const startSound = () => window.xzBgmInstance.play().catch(() => {});
     startSound(); 
     document.addEventListener('click', startSound, { once: true });
 }
@@ -150,39 +171,50 @@ if(window.xzoneset.music === true){
 // 5. LIVE RE-RENDERING & TOGGLE CONTROLLERS
 // ========================================================
 window.xzToggleSetting = function(key, targetValue, eventNode) {
-    // 1. Update State & LocalStorage
     window.xzoneset[key] = targetValue;
     window.savexzone();
     
-    // 2. Refresh active environment engines
-    if (key === 'wallpaperEnabled') window.loadXZoneWallpaper();
+    if (key === 'wallpaperEnabled' || key === 'bgType') window.loadXZoneWallpaper();
     if (key === 'videoEnabled') window.loadXZoneVideo();
-    if (key === 'music') {
-        location.reload(); // Audio engine requires hardware state restart
-        return;
-    }
+    if (key === 'music') { location.reload(); return; }
     
-    // 3. Dynamic UI Render Pipeline (No-reload sliding effect)
     const switchContainer = eventNode.parentElement;
     const items = switchContainer.querySelectorAll('.xz-toggle-span');
     items.forEach(el => {
-        const componentVal = el.getAttribute('data-val') === 'true';
-        if (componentVal === targetValue) {
-            el.style.background = '#0A84FF';
-            el.style.color = '#fff';
+        const componentVal = el.getAttribute('data-val');
+        let isMatch = false;
+        if (typeof targetValue === 'boolean') {
+            isMatch = (componentVal === 'true') === targetValue;
         } else {
-            el.style.background = 'transparent';
-            el.style.color = '#8e8e93';
+            isMatch = componentVal === targetValue;
+        }
+
+        if (isMatch) {
+            el.style.background = '#0A84FF'; el.style.color = '#fff';
+        } else {
+            el.style.background = 'transparent'; el.style.color = '#8e8e93';
         }
     });
 };
 
-window.xzImportFile = function(input, targetKey, statusId) {
+window.xzUpdateBadge = function(badgeId, isCustom) {
+    const badge = document.getElementById(badgeId);
+    if (!badge) return;
+    badge.className = isCustom ? "xz-status-badge xz-badge-custom" : "xz-status-badge xz-badge-default";
+    badge.innerText = isCustom ? "Custom" : "Default";
+};
+
+window.xzUpdatePreviewNode = function(nodeId, src) {
+    const node = document.getElementById(nodeId);
+    if (node) node.src = src;
+};
+
+window.xzImportFile = function(input, targetKey, statusId, badgeId, previewNodeId) {
     const file = input.files[0];
     if (!file) return;
 
-    if (file.size > 4.5 * 1024 * 1024) { 
-        alert("File size is too heavy! Keep individual media assets small to avoid exceeding browser string memory limits.");
+    if (file.size > 5 * 1024 * 1024) { 
+        alert("File is too heavy! Keep media small (~4MB) to avoid browser storage limits.");
         return;
     }
 
@@ -193,12 +225,29 @@ window.xzImportFile = function(input, targetKey, statusId) {
         window.xzoneset[targetKey] = e.target.result;
         window.savexzone();
         
-        if (targetKey === 'customWallpaper') window.loadXZoneWallpaper();
+        if (targetKey === 'customWallpaper' || targetKey === 'customBgVideo') window.loadXZoneWallpaper();
         if (targetKey === 'customVideo') window.loadXZoneVideo();
         
+        window.xzUpdateBadge(badgeId, true);
+        window.xzUpdatePreviewNode(previewNodeId, e.target.result);
         document.getElementById(statusId).innerText = "✅ Saved Successfully!";
     };
     reader.readAsDataURL(file);
+};
+
+window.xzResetSingle = function(targetKey, statusId, badgeId, previewNodeId, defaultSrc) {
+    if (confirm("Reset this specific media item back to system default?")) {
+        window.xzoneset[targetKey] = "";
+        window.savexzone();
+        
+        if (targetKey === 'customWallpaper' || targetKey === 'customBgVideo') window.loadXZoneWallpaper();
+        if (targetKey === 'customVideo') window.loadXZoneVideo();
+        
+        window.xzUpdateBadge(badgeId, false);
+        window.xzUpdatePreviewNode(previewNodeId, defaultSrc);
+        const statusNode = document.getElementById(statusId);
+        if (statusNode) statusNode.innerText = "✅ Reset to default!";
+    }
 };
 
 window.xzSwitchTab = function(tabName, eventObj) {
@@ -209,8 +258,8 @@ window.xzSwitchTab = function(tabName, eventObj) {
 };
 
 window.xzResetMedia = function() {
-    if (confirm("Reset all environment configurations back to engine defaults?")) {
-        window.xzoneset = { music: false, videoEnabled: true, wallpaperEnabled: true, customVideo: "", customMusic: "", customWallpaper: "" };
+    if (confirm("Factory reset ALL environment configurations?")) {
+        window.xzoneset = { music: false, videoEnabled: true, wallpaperEnabled: true, bgType: 'image', customVideo: "", customMusic: "", customWallpaper: "", customBgVideo: "" };
         window.savexzone();
         location.reload();
     }
@@ -224,6 +273,23 @@ window.createuixzone = async function(){
     if (!maint) return;
     
     if (!document.getElementById("scene-xzone-main")) {
+        // Defaults
+        const defWall = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/wallpaper.jpg";
+        const defDashVid = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/dashboardvid.mp4";
+        const defMusic = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/backsounds.mp3";
+        
+        // Active Assets
+        const actDashVid = window.xzoneset.customVideo || defDashVid;
+        const actBgVid = window.xzoneset.customBgVideo || defDashVid;
+        const actMusic = window.xzoneset.customMusic || defMusic;
+        const actWall = window.xzoneset.customWallpaper || defWall;
+
+        // Badges
+        const vBadge = window.xzoneset.customVideo ? 'xz-badge-custom">Custom' : 'xz-badge-default">Default';
+        const aBadge = window.xzoneset.customMusic ? 'xz-badge-custom">Custom' : 'xz-badge-default">Default';
+        const wBadge = window.xzoneset.customWallpaper ? 'xz-badge-custom">Custom' : 'xz-badge-default">Default';
+        const bvBadge = window.xzoneset.customBgVideo ? 'xz-badge-custom">Custom' : 'xz-badge-default">Default';
+
         maint.insertAdjacentHTML('beforeend', `
         <div id="scene-xzone-main" class="panel xz-panel-container">
             
@@ -266,12 +332,23 @@ window.createuixzone = async function(){
 
                     <div class="xz-row">
                         <div class="xz-row-label">
-                            <span class="xz-lbl-main">Environment Wallpaper</span>
-                            <span class="xz-lbl-sub">Toggle system-wide custom wallpaper interface backdrop</span>
+                            <span class="xz-lbl-main">Main Environment Backdrop</span>
+                            <span class="xz-lbl-sub">Toggle the system-wide custom interface backdrop</span>
                         </div>
                         <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 10px;">
                             <span class="xz-toggle-span" data-val="false" style="background: ${!window.xzoneset.wallpaperEnabled ? '#0A84FF' : 'transparent'}; color: ${!window.xzoneset.wallpaperEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('wallpaperEnabled', false, this)">OFF</span>
                             <span class="xz-toggle-span" data-val="true" style="background: ${window.xzoneset.wallpaperEnabled ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.wallpaperEnabled ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('wallpaperEnabled', true, this)">ON</span>
+                        </div>
+                    </div>
+
+                    <div class="xz-row" style="border-top: 1px solid rgba(255,255,255,0.06);">
+                        <div class="xz-row-label">
+                            <span class="xz-lbl-main">Backdrop Type</span>
+                            <span class="xz-lbl-sub">Choose static image or live video format</span>
+                        </div>
+                        <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 10px;">
+                            <span class="xz-toggle-span" data-val="image" style="background: ${window.xzoneset.bgType === 'image' ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.bgType === 'image' ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('bgType', 'image', this)">IMAGE</span>
+                            <span class="xz-toggle-span" data-val="video" style="background: ${window.xzoneset.bgType === 'video' ? '#0A84FF' : 'transparent'}; color: ${window.xzoneset.bgType === 'video' ? '#fff' : '#8e8e93'}" onclick="window.xzToggleSetting('bgType', 'video', this)">VIDEO</span>
                         </div>
                     </div>
 
@@ -283,39 +360,99 @@ window.createuixzone = async function(){
                     
                     <div class="xz-row" style="flex-direction: column; align-items: flex-start;">
                         <div class="xz-row-label">
-                            <span class="xz-lbl-main">Import Dashboard Video</span>
-                            <span class="xz-lbl-sub" id="xz-vid-status">Recommended compressed mp4 loops up to ~4MB</span>
+                            <div class="xz-lbl-header-container">
+                                <span class="xz-lbl-main">Import Background Music</span>
+                                <span id="xz-badge-aud" class="xz-status-badge ${aBadge}</span>
+                            </div>
+                            <span class="xz-lbl-sub" id="xz-aud-status">Recommended compressed mp3 up to ~4MB</span>
                         </div>
-                        <input type="file" id="xz-file-video" accept="video/*" style="display: none;" onchange="window.xzImportFile(this, 'customVideo', 'xz-vid-status')">
-                        <button class="xz-action-btn" onclick="document.getElementById('xz-file-video').click()">Choose Video File</button>
+                        <input type="file" id="xz-file-audio" accept="audio/*" style="display: none;" onchange="window.xzImportFile(this, 'customMusic', 'xz-aud-status', 'xz-badge-aud', 'prev-bg-audio')">
+                        <div class="xz-preview-box" style="padding: 12px 10px; background: rgba(0,0,0,0.4);">
+                            <audio id="prev-bg-audio" controls src="${actMusic}" style="width: 100%; height: 40px; outline: none; border-radius: 6px;"></audio>
+                        </div>
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                            <button class="xz-action-btn" style="flex: 1;" onclick="document.getElementById('xz-file-audio').click()">Choose Audio File</button>
+                            <button class="xz-action-btn" style="flex: none; width: auto; background: rgba(255,59,48,0.12); color: #FF3B30; border: 1px solid rgba(255,59,48,0.25);" onclick="window.xzResetSingle('customMusic', 'xz-aud-status', 'xz-badge-aud', 'prev-bg-audio', '${defMusic}')">Reset</button>
+                        </div>
                     </div>
 
                     <div class="xz-row" style="flex-direction: column; align-items: flex-start;">
                         <div class="xz-row-label">
-                            <span class="xz-lbl-main">Import Background Music</span>
-                            <span class="xz-lbl-sub" id="xz-aud-status">Recommended highly compressed audio formats up to ~4MB</span>
+                            <div class="xz-lbl-header-container">
+                                <span class="xz-lbl-main">Import Dashboard Video</span>
+                                <span id="xz-badge-vid" class="xz-status-badge ${vBadge}</span>
+                            </div>
+                            <span class="xz-lbl-sub" id="xz-vid-status">Header dashboard looping preview</span>
                         </div>
-                        <input type="file" id="xz-file-audio" accept="audio/*" style="display: none;" onchange="window.xzImportFile(this, 'customMusic', 'xz-aud-status')">
-                        <button class="xz-action-btn" onclick="document.getElementById('xz-file-audio').click()">Choose Audio File</button>
+                        <div class="xz-preview-box">
+                            <video id="prev-dash-vid" class="xz-preview-vid" controls muted src="${actDashVid}"></video>
+                        </div>
+                        <input type="file" id="xz-file-video" accept="video/*" style="display: none;" onchange="window.xzImportFile(this, 'customVideo', 'xz-vid-status', 'xz-badge-vid', 'prev-dash-vid')">
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                            <button class="xz-action-btn" style="flex: 1;" onclick="document.getElementById('xz-file-video').click()">Choose Video</button>
+                            <button class="xz-action-btn" style="flex: none; width: auto; background: rgba(255,59,48,0.12); color: #FF3B30; border: 1px solid rgba(255,59,48,0.25);" onclick="window.xzResetSingle('customVideo', 'xz-vid-status', 'xz-badge-vid', 'prev-dash-vid', '${defDashVid}')">Reset</button>
+                        </div>
                     </div>
 
                     <div class="xz-row" style="flex-direction: column; align-items: flex-start;">
                         <div class="xz-row-label">
-                            <span class="xz-lbl-main">Import Custom Wallpaper</span>
-                            <span class="xz-lbl-sub" id="xz-wall-status">Supported image files (PNG/JPG) up to ~2MB</span>
+                            <div class="xz-lbl-header-container">
+                                <span class="xz-lbl-main">Import Image Backdrop</span>
+                                <span id="xz-badge-wall" class="xz-status-badge ${wBadge}</span>
+                            </div>
+                            <span class="xz-lbl-sub" id="xz-wall-status">Static wallpaper background image</span>
                         </div>
-                        <input type="file" id="xz-file-wall" accept="image/*" style="display: none;" onchange="window.xzImportFile(this, 'customWallpaper', 'xz-wall-status')">
-                        <button class="xz-action-btn" onclick="document.getElementById('xz-file-wall').click()">Choose Wallpaper Image</button>
+                        <div class="xz-preview-box">
+                            <img id="prev-wall-img" class="xz-preview-img" src="${actWall}">
+                        </div>
+                        <input type="file" id="xz-file-wall" accept="image/*" style="display: none;" onchange="window.xzImportFile(this, 'customWallpaper', 'xz-wall-status', 'xz-badge-wall', 'prev-wall-img')">
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                            <button class="xz-action-btn" style="flex: 1;" onclick="document.getElementById('xz-file-wall').click()">Choose Image</button>
+                            <button class="xz-action-btn" style="flex: none; width: auto; background: rgba(255,59,48,0.12); color: #FF3B30; border: 1px solid rgba(255,59,48,0.25);" onclick="window.xzResetSingle('customWallpaper', 'xz-wall-status', 'xz-badge-wall', 'prev-wall-img', '${defWall}')">Reset</button>
+                        </div>
+                    </div>
+
+                    <div class="xz-row" style="flex-direction: column; align-items: flex-start;">
+                        <div class="xz-row-label">
+                            <div class="xz-lbl-header-container">
+                                <span class="xz-lbl-main">Import Video Backdrop</span>
+                                <span id="xz-badge-bgvid" class="xz-status-badge ${bvBadge}</span>
+                            </div>
+                            <span class="xz-lbl-sub" id="xz-bgvid-status">Live moving wallpaper background</span>
+                        </div>
+                        <div class="xz-preview-box">
+                            <video id="prev-bgvid-vid" class="xz-preview-vid" controls muted src="${actBgVid}"></video>
+                        </div>
+                        <input type="file" id="xz-file-bgvid" accept="video/*" style="display: none;" onchange="window.xzImportFile(this, 'customBgVideo', 'xz-bgvid-status', 'xz-badge-bgvid', 'prev-bgvid-vid')">
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                            <button class="xz-action-btn" style="flex: 1;" onclick="document.getElementById('xz-file-bgvid').click()">Choose Video</button>
+                            <button class="xz-action-btn" style="flex: none; width: auto; background: rgba(255,59,48,0.12); color: #FF3B30; border: 1px solid rgba(255,59,48,0.25);" onclick="window.xzResetSingle('customBgVideo', 'xz-bgvid-status', 'xz-badge-bgvid', 'prev-bgvid-vid', '${defDashVid}')">Reset</button>
+                        </div>
                     </div>
 
                 </div>
 
                 <button onclick="window.xzResetMedia()" style="width: 100%; background: rgba(255,59,48,0.12); color: #FF3B30; border: 1px solid rgba(255,59,48,0.25); padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 13px; margin-top: 8px;">
-                    Reset Environment to Default
+                    Factory Reset Everything
                 </button>
             </div>
 
         </div>`);
+
+        // Sync Audio Player Preview with Global Music
+        const audPrev = document.getElementById('prev-bg-audio');
+        if (audPrev) {
+            // Auto-catch timestamp if music is actively playing in the background
+            if (window.xzBgmInstance && !window.xzBgmInstance.paused) {
+                audPrev.currentTime = window.xzBgmInstance.currentTime;
+                audPrev.play().catch(()=>{});
+                window.xzBgmInstance.pause();
+            }
+            // Ensure global music stays paused when you preview it in settings
+            audPrev.addEventListener('play', () => {
+                if (window.xzBgmInstance) window.xzBgmInstance.pause();
+            });
+        }
     }
                 
     const rc = document.getElementById("consdash");
