@@ -117,14 +117,13 @@ window.savexzone = function(){
 window.loadXZoneWallpaper = function() {
     const existingBgVid = document.getElementById("xz-bg-video-element");
     if (existingBgVid) existingBgVid.remove();
-    document.body.style.backgroundImage = "none";
-    document.body.style.backgroundColor = "#121214";
-
+// orr?
     if (window.xzoneset.wallpaperEnabled === true) {
         if (window.xzoneset.bgType === 'video') {
             document.body.style.background = "none";
             const bgVidSrc = window.xzoneset.customBgVideo || "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/XZone/assets/snaptik_7642236110743080212_v3.mp4";
-            const vidHtml = `<video id="xz-bg-video-element" autoplay muted loop playsinline style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -999; opacity: 0.6;" src="./data/video/wallpapervid.mp4" onerror="this.src = '${bgVidSrc}'"></video>`;
+            const vidHtml = `<video id="xz-bg-video-element" autoplay muted loop playsinline style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -999; opacity: 1; filter: saturate(2)" src="./data/video/wallpapervid.mp4" onerror="this.src = '${bgVidSrc}'"></video>`;
+            console.log("XZone LogURL:", bgVidSrc)
             document.body.insertAdjacentHTML('afterbegin', vidHtml);
             
         } else {
