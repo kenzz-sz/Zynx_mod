@@ -42,7 +42,7 @@ function isModSupported(mod) {
                     <h2 style="margin: 0; font-size: 20px; text-align: center; flex-grow: 1; padding-right: 40px;">EXPLORE - MODS</h2>
                 </div>
                 <input class="zynx" placeholder="Search..." id="input-text-mods-explore" oninput="window.refexploremods()">
-                <div style="max-height: 500px; overflow-y: scroll;">
+                <div style="border-radius: 18px; transition: 1s; max-height: 70vh; overflow-y: auto; padding-right: 6px;">
                 <div id="AXdivexploremods"></div></div>
             </div>
     `;
