@@ -1,48 +1,4 @@
-/*let isLocked = true;
 
-// Cek apakah configserver ada dan bernilai truthy
-if (typeof configserver !== 'undefined' && configserver) {
-    if(configserver.version === "1.3.1"){
-    isLocked = false; 
-    }
-}
-
-(async function() {
-    const lockUrl = "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/lock-2.html";
-
-    // Jika sudah tidak terkunci, jangan jalankan kode di bawahnya
-    if (!isLocked) return;
-
-    try {
-        const response = await fetch(lockUrl);
-        const htmlContent = await response.text();
-
-        const lockIframe = document.createElement('iframe');
-        lockIframe.id = "zynx-lock-iframe";
-        
-        Object.assign(lockIframe.style, {
-            position: 'fixed',
-            top: '0',
-            left: '0',
-            width: '100vw',
-            height: '100vh',
-            zIndex: '9999999',
-            border: 'none',
-            backgroundColor: '#121212'
-        });
-
-        lockIframe.srcdoc = htmlContent;
-
-        document.body.style.backgroundColor = "white";
-        document.body.style.backgroundImage = "url()";
-        document.body.style.color = "black";
-        document.body.appendChild(lockIframe);
-
-    } catch (error) {
-        console.error("Gagal memuat sistem keamanan:", error);
-    }
-})();
-*/
 (async function() {
     // === HELPER FUNCTION FOR COMPACT ENGLISH TIMELINE ===
     function getTimeAgo(dateStr) {
@@ -103,9 +59,14 @@ if (typeof configserver !== 'undefined' && configserver) {
             document.getElementById("updavtxt").innerText = "Update Available";
             document.getElementById("update-checkupdate").style.display = "block"; 
             
+            // PERBAIKAN: Set lebar penuh (100%), hilangkan teks patah, dan beri transisi halus
             document.getElementById("update-checkupdate").outerHTML = `
-              <a href="${jsonax.urldownload}" target="_blank" style="text-decoration: none; flex: 2;">
-               <button id="update-checkupdate" class="btn-primary" style="" onmouseover="this.style.background='white'" onmouseout="this.style.background='grey'">
+              <a href="${jsonax.urldownload}" target="_blank" style="text-decoration: none; width: 100%; display: block; margin-top: 20px;">
+               <button id="update-checkupdate" style="width: 100%; background: #ffffff !important; color: #121218 !important; border: none !important; border-radius: 16px !important; padding: 14px !important; font-weight: 700; font-size: 13px; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease; white-space: nowrap;" 
+                       onmouseover="this.style.opacity='0.85'" 
+                       onmouseout="this.style.opacity='1'"
+                       onmousedown="this.style.transform='scale(0.97)'"
+                       onmouseup="this.style.transform='scale(1)'">
                   DOWNLOAD PKG
                 </button>
               </a>
