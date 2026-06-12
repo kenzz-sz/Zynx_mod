@@ -27,5 +27,15 @@
   "comingsoon": false,
   "desc": "version: 1.4<br>- Create a ScrollBar UI, you can disable it in settings or you can also enable it again<br>- Change the fade in color when entering the application<br>- Create a 'Data Manager' feature to modify data and so on<br>- Improve Perfomance<br>- Copy display name feature in mymods<br>- Creating a search feature in mymods<br>- Create a feature to import mods<br>- Create a selection feature in mymods to select a mod to disable or delete<br>- Improved the settings UI<br>- Creating a notification feature<br>- Improve Auto Adjust Height",
   "date": "12/6/2026/09/11"
+ },
+ {
+  "version": "1.5",
+  "downloadsupport": "1.4-",
+  "title": "ZenX",
+  "urldownload": "https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/file/Zynx_1-5-0.apk",
+  "pkgname": "Zynx_1-5-0.apk",
+  "comingsoon": false,
+  "desc": "version: 1.5<br>",
+  "date": "12/6/2026/09/11"
  }
 ]
