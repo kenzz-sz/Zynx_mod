@@ -105,7 +105,7 @@ if (typeof configserver !== 'undefined' && configserver) {
             
             document.getElementById("update-checkupdate").outerHTML = `
               <a href="${jsonax.urldownload}" target="_blank" style="text-decoration: none; flex: 2;">
-               <button id="update-checkupdate" class="btn-primary" style="flex: 2; padding: 11px; background: white; color: black; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 12px rgba(35, 134, 54, 0.2); /*width: 100%*/" onmouseover="this.style.background='white'" onmouseout="this.style.background='grey'">
+               <button id="update-checkupdate" class="btn-primary" style="" onmouseover="this.style.background='white'" onmouseout="this.style.background='grey'">
                   DOWNLOAD PKG
                 </button>
               </a>
