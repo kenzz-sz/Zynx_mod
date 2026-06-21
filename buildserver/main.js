@@ -40,8 +40,8 @@
 
     // Fetching JSON data from GitHub
     const jsonx = JSON.parse(await fh("https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/buildserver/update.json"));
-    const jsonax = jsonx.find(i => i.downloadsupport === configserver.version);
-    const jsonay = jsonx.find(i => i.version === configserver.version);
+    const jsonax = jsonx.find(i => i.downloadsupport === (configserver.version || "1.3"));
+    const jsonay = jsonx.find(i => i.version === (configserver.version  || "1.3"));
     
     if(jsonax){
         document.getElementById("title-checkupdate").innerHTML = jsonax.title;
