@@ -13,6 +13,10 @@ const versionusefeature = {
     "1.4": [
         "modsconfig",
         "mods"
+    ],
+    "1.5": [
+        "modsconfig",
+        "mods"
     ]
 }
 
@@ -181,7 +185,7 @@ window.refexploremods = async function() {
         }
     });
     
-    const warningNotice = `<div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);" class="allowslidetext">${String(unsupportmods)} Mods have been removed from the UI, because these mods are not compatible with your Zynx OS version</div><br>`;
+    const warningNotice = `<div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.2); font-size: 10px;" class="allowslidetext">${String(unsupportmods)} Mods have been removed from the UI, because these mods are not compatible with your Zynx OS version</div><br>`;
     
     if (unsupportmods > 0) {
         mvin.innerHTML = warningNotice + HTMLContent;
